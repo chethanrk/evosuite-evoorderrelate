@@ -24,7 +24,7 @@
     -->
 	<script type="text/javascript">
 		window["sap-ushell-config"] = {
-			defaultRenderer : "fiori",
+			defaultRenderer : "fiori2",
 			renderers: {
 				fiori: {
 					componentData: {
@@ -64,7 +64,7 @@
 		sap.ui.getCore().attachInit(function() {
 
 			sap.ui.require([
-				"com/evorait/test/localService/mockserver"
+				"com/evorait/evosuite/evomanagedepend/localService/mockserver"
 			], function (mockserver) {
 				// set up test service for local testing
 				mockserver.init();
