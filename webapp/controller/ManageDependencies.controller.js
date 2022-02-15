@@ -1,12 +1,12 @@
 sap.ui.define([
-	"sap/ui/core/mvc/Controller",
+	"com/evorait/evosuite/evomanagedepend/controller/BaseController",
 	"sap/ui/model/json/JSONModel",
 	"sap/gantt/misc/Format",
 	"sap/gantt/misc/Utility"
-], function (Controller, JSONModel, Format, Utility) {
+], function (BaseController, JSONModel, Format, Utility) {
 	"use strict";
 
-	return Controller.extend("com.evorait.evosuite.evomanagedepend.controller.ManageDependencies", {
+	return BaseController.extend("com.evorait.evosuite.evomanagedepend.controller.ManageDependencies", {
 
 		/**
 		 * Called when a controller is instantiated and its View controls (if available) are already created.
@@ -42,9 +42,8 @@ sap.ui.define([
 				}
 			};
 			var oModel = new JSONModel(data);
-			this.getView().setModel(oModel);
-			//var Items = ['enableNowLine', 'enableAdhocLine', 'enableStatusBar'];
-			//sap.ui.getCore().byId("gantt").getParent().setProperty('hideSettingsItem', Items);
+			this.getView().byId("idTableDependencies").setModel(oModel);
+
 		},
 		fnTimeConverter: function (sTimestamp) {
 			return Format.abapTimestampToDate(sTimestamp);

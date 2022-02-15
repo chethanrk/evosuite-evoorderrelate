@@ -1,16 +1,18 @@
-/*global QUnit*/
-
 sap.ui.define([
-	"com/evorait/evosuite/evomanagedepend/controller/App.controller"
-], function (Controller) {
+	"com/evorait/evosuite/evomanagedepend/controller/App.controller",
+	"sap/ui/core/Control",
+	"sap/ui/model/json/JSONModel",
+	"sap/ui/thirdparty/sinon",
+	"sap/ui/thirdparty/sinon-qunit"
+], function (AppController, Control, JSONModel) {
 	"use strict";
 
-	QUnit.module("App Controller");
+	QUnit.module("AppController");
 
-	QUnit.test("I should test the App controller", function (assert) {
-		var oAppController = new Controller();
-		oAppController.onInit();
-		assert.ok(oAppController);
-	});
+	// QUnit.test("I should test the App controller", function (assert) {
+	// 	var oAppController = new Controller();
+	// 	oAppController.onInit();
+	// 	assert.ok(oAppController);
+	// });
 
 });

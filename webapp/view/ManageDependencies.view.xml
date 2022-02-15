@@ -1,6 +1,6 @@
 <mvc:View controllerName="com.evorait.evosuite.evomanagedepend.controller.ManageDependencies" xmlns:html="http://www.w3.org/1999/xhtml"
 	xmlns:mvc="sap.ui.core.mvc" displayBlock="true" xmlns="sap.m" xmlns:f="sap.f" xmlns:core="sap.ui.core" xmlns:l="sap.ui.layout" height="100%">
-	<Page id="idPageManageDepend" title="{i18n>title}" class="sapUiNoContentPadding" titleAlignment="Center">
+	<Page id="idPageManageDepend" title="{i18n>title}" class="sapUiNoContentPadding">
 		<customHeader>
 			<Bar>
 				<contentLeft>
@@ -10,7 +10,7 @@
 					<Title text="{i18n>title}"/>
 				</contentMiddle>
 				<contentRight>
-					<Button id="idButtonAboutIcon" tooltip="{i18n>xbut.about}" icon="sap-icon://sys-help" press="onIconPress"/>
+					<Button id="idButtonAboutIcon" tooltip="About" icon="sap-icon://sys-help" press="onIconPress"/>
 				</contentRight>
 			</Bar>
 		</customHeader>
@@ -21,11 +21,9 @@
 						<l:PaneContainer orientation="Vertical">
 							<l:SplitPane requiredParentWidth="800">
 								<core:Fragment fragmentName="com.evorait.evosuite.evomanagedepend.view.fragments.Dependencies" type="XML"/>
-								<!--<Label text="Test1"/>-->
 							</l:SplitPane>
 							<l:SplitPane requiredParentWidth="800">
 								<core:Fragment fragmentName="com.evorait.evosuite.evomanagedepend.view.fragments.OrderTable" type="XML"/>
-								<!--<Label text="Test2"/>-->
 							</l:SplitPane>
 						</l:PaneContainer>
 					</l:ResponsiveSplitter>

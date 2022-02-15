@@ -1,0 +1,21 @@
+{
+	"d": {
+		"results": [{
+			"__metadata": {
+				"id": "https://eq1.evorait.net:50103/sap/opu/odata/EVORA/EO_MAIN_SRV/WOHeaderSet('000000827963')",
+				"uri": "https://eq1.evorait.net:50103/sap/opu/odata/EVORA/EO_MAIN_SRV/WOHeaderSet('000000827963')",
+				"type": "com.evorait.evoorder.WOHeader"
+			},
+			"ObjectKey": "000000827963",
+			"HeaderObjectKey": "000000827963",
+			"ORDER_NUMBER": "827963",
+			"ORDER_TYPE": "EVO1",
+			"ORDER_TYPE_DESCRIPTION": "Maintenance Order",
+			"ORDER_DESCRIPTION": "Abluftschlauch reparieren",
+			"PLANT": "4000",
+			"WORKCENTRE": "D0051",
+			"WORKCENTRE_DESCRIPTION": "Production Line A"
+
+		}]
+	}
+}

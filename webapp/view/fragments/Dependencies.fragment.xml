@@ -16,8 +16,8 @@
 				</axistime:ProportionZoomStrategy>
 			</axisTimeStrategy>
 			<table>
-				<table:TreeTable selectionMode="Single" visibleRowCountMode="Auto" minAutoRowCount="12" selectionBehavior="RowSelector"
-					enableColumnReordering="true" rows="{ path: '/root', parameters: { arrayNames: ['children'], numberOfExpandedLevels: 1 } }">
+				<table:Table id="idTableDependencies" selectionMode="Single" visibleRowCountMode="Auto" selectionBehavior="RowSelector"
+					enableColumnReordering="true" rows="{ path: '/root'}">
 					<table:columns>
 						<table:Column label="Col 1" template="text"/>
 					</table:columns>
@@ -32,7 +32,7 @@
 							</shapes2>
 						</GanttRowSettings>
 					</table:rowSettingsTemplate>
-				</table:TreeTable>
+				</table:Table>
 			</table>
 		</GanttChartWithTable>
 	</GanttChartContainer>

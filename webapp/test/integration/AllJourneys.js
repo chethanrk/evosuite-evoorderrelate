@@ -1,13 +1,13 @@
-sap.ui.define([
+sap.ui.require([
 	"sap/ui/test/Opa5",
-	"./arrangements/Startup",
-	"./NavigationJourney"
+	"com/evorait/evosuite/evomanagedepend/test/integration/arrangements/Startup",
+	"com/evorait/evosuite/evomanagedepend/test/integration/pages/App"
 ], function (Opa5, Startup) {
 	"use strict";
-
 	Opa5.extendConfig({
-		arrangements: new Startup(),
+		autoWait: true,
 		viewNamespace: "com.evorait.evosuite.evomanagedepend.view.",
-		autoWait: true
+		viewName: "App",
+		arrangements: new Startup()
 	});
 });
