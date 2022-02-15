@@ -6,7 +6,7 @@
 		<edmx:Include Namespace="com.sap.vocabularies.Common.v1" Alias="COMMON"/>
 	</edmx:Reference>
 	<edmx:DataServices m:DataServiceVersion="2.0">
-		<Schema xmlns="http://schemas.microsoft.com/ado/2008/09/edm" Namespace="com.evorait.evomanagedepend" xml:lang="en" sap:schema-version="1">
+		<Schema xmlns="http://schemas.microsoft.com/ado/2008/09/edm" Namespace="com.evorait.evoorder" xml:lang="en" sap:schema-version="1">
 			<EntityType Name="WOHeader" sap:content-version="1">
 				<Key>
 					<PropertyRef Name="ObjectKey"/>
@@ -25,10 +25,10 @@
 				<Property Name="WORKCENTRE_DESCRIPTION" Type="Edm.String" MaxLength="40" sap:label="Short Description" sap:creatable="false"
 					sap:updatable="false" sap:is-extension-field="true"/>
 			</EntityType>
-			<EntityContainer Name="com_evorait_evomanagedepend_Entities" m:IsDefaultEntityContainer="true" sap:supported-formats="atom json xlsx">
-				<EntitySet Name="WOHeaderSet" EntityType="com.evorait.evomanagedepend.WOHeader" sap:content-version="1"/>
+			<EntityContainer Name="com_evorait_evoorder_Entities" m:IsDefaultEntityContainer="true" sap:supported-formats="atom json xlsx">
+				<EntitySet Name="WOHeaderSet" EntityType="com.evorait.evoorder.WOHeader" sap:content-version="1"/>
 			</EntityContainer>
-			<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="com.evorait.evomanagedepend.WOHeader">
+			<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="com.evorait.evoorder.WOHeader">
 				<Annotation Term="com.sap.vocabularies.UI.v1.LineItem">
 					<Collection>
 						<Record Type="com.sap.vocabularies.UI.v1.DataField">

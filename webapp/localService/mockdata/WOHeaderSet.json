@@ -1,6 +1,7 @@
 {
 	"d": {
-		"results": [{
+		"results": [
+			{
 			"__metadata": {
 				"id": "https://eq1.evorait.net:50103/sap/opu/odata/EVORA/EO_MAIN_SRV/WOHeaderSet('000000827963')",
 				"uri": "https://eq1.evorait.net:50103/sap/opu/odata/EVORA/EO_MAIN_SRV/WOHeaderSet('000000827963')",
@@ -14,8 +15,149 @@
 			"ORDER_DESCRIPTION": "Abluftschlauch reparieren",
 			"PLANT": "4000",
 			"WORKCENTRE": "D0051",
-			"WORKCENTRE_DESCRIPTION": "Production Line A"
-
+			"WORKCENTRE_DESCRIPTION": "Production Line A",
+			"BASIC_START_DATE": "\/Date(1638748800000)\/",
+			"BASIC_FINISH_DATE": "\/Date(1638835200000)\/",
+			"RELEASE_DATE": "\/Date(1618185600000)\/",
+			"FUNCTIONAL_LOCATION": "087-B01",
+			"FUNCTIONAL_LOCATION_DESC": "Produktion Bereitstellung Linie 8",
+			"EQUIPMENT": "10006957",
+			"EQUIPMENT_DESCRIPTION": "exhaust hose",
+			"PLANNER_GROUP": "",
+			"MAINTENANCE_PLANT": "",
+			"MAINTENANCE_ACTIVITY_TYPE": "001",
+			"MAINTENANCE_PLANNING_PLANT": "4000",
+			"NOTIFICATION": "",
+			"NOTIFICATION_DESCRIPTION": "",
+			"PRIORITY_TYPE": "EV",
+			"PRIORITY": "2",
+			"LOCATION": "",
+			"ROOM": "",
+			"PERSON": "",
+			"PERSON_RESPONSIBLE": "",
+			"CONTACT_PERSON_NAME": "",
+			"CONTACT_PERSON_PHONE": "",
+			"NOTES": "Abluftschlauch reparieren\nAbluftschlauch reparieren",
+			"FUNCTION_TYPE": "",
+			"FUNCTION": "",
+			"BUSINESS_AREA": "",
+			"ENABLE_ORDER_CHANGE": "X",
+			"OPERATION_CONTROL_KEY": "",
+			"OBJECT_NUMBER": "OR000000827963",
+			"OBJECT_CATEGORY": "",
+			"STATUS_PROFILE": "EVO1_H",
+			"SYSTEM_STATUS_CODE": "REL,MANC,NMAT",
+			"USER_STATUS_CODE": "",
+			"SYSTEM_STATUS": "REL,MANC,NMAT",
+			"USER_STATUS": "",
+			"SYSTEM_STATUS_DESC": " REL(Released), MANC(Mat.availability not checked), NMAT(No material components)",
+			"USER_STATUS_DESC": "",
+			"PHASE": "2",
+			"UI_STATUS_COLOR": "",
+			"UI_STATUS_ICON": "sap-icon://process",
+			"ALLOW_RELEASE": false,
+			"ALLOW_TECHNICALCOMPLETE": true,
+			"ALLOW_COMMISSIONING_OPEN": false,
+			"ALLOW_COMMISSIONING_CLOSE": false,
+			"CUSTOM_VIEW_TAB": "",
+			"CANCEL_CONFIRMATION": "",
+			"ALLOW_COMPONENT_CONFIRM_RETURN": true,
+			"PRIORITY_DESCRIPTION": "High",
+			"ACTIVITY": "",
+			"EXPECTED_MILEAGE": "",
+			"IS_EXPECTED_MILEAGE_FILLED": false,
+			"EXPECTED_MILEAGE_UNIT": "",
+			"EXPECTED_MILEAGE_MPOINT": "",
+			"IS_OPERATION_DETAIL": false,
+			"IS_STANDING_ORDER": "",
+			"IS_POOL_ORDER": "",
+			"SORT_FIELD": "",
+			"ASSET": "",
+			"CONTROLLING_AREA": "",
+			"COST_CENTER": "",
+			"COST_CENTER_DESC": "",
+			"WBS_ELEMENT": "",
+			"CREATED_BY": "RAMESHP",
+			"CREATED_AT": "\/Date(1618185600000)\/",
+			"CHANGED_BY": "",
+			"CHANGED_AT": null,
+			"NAME": "",
+			"STREET": "",
+			"HOUSE_NUMBER": "",
+			"ZIP_CODE": "",
+			"COUNTRY": "",
+			"COUNTRY_NAME": "",
+			"REGION": "",
+			"REGION_NAME": "",
+			"PLANT_DESC": "evora IT Solutions Walldorf",
+			"MAINT_PLANT_DESC": "",
+			"MAINT_PLAN_PLANT_DESC": "evora IT Solutions Walldorf",
+			"TOTAL_COSTS_PLAN": "0.00",
+			"TOTAL_COSTS_ACT": "0.00",
+			"TOTAL_COSTS_EST": "0.00",
+			"CURRENCY": "",
+			"POOL_WORKCENTER": "",
+			"DISPATCH_DATE": null,
+			"DISPATCH_STATUS": "",
+			"DISPATCH_STATUS_DESCRIPTION": "",
+			"AG_PARTNER": "3452",
+			"AG_PARTNER_NAME": "Karin Keller",
+			"VU_PARTNER": "",
+			"VU_PARTNER_NAME": "",
+			"AP_PARTNER": "",
+			"AP_PARTNER_NAME": "",
+			"AB_PARTNER": "",
+			"AB_PARTNER_NAME": "",
+			"LF_PARTNER": "",
+			"LF_PARTNER_NAME": "",
+			"MB_PARTNER": "",
+			"MB_PARTNER_NAME": "",
+			"ST_PARTNER": "",
+			"ST_PARTNER_NAME": "",
+			"WE_PARTNER": "3452",
+			"WE_PARTNER_NAME": "Karin Keller",
+			"VW_PARTNER": "",
+			"VW_PARTNER_NAME": "",
+			"OrderToProjectFlowLane": {
+				"__deferred": {
+					"uri": "https://eq1.evorait.net:50103/sap/opu/odata/EVORA/EO_MAIN_SRV/WOHeaderSet('000000827963')/OrderToProjectFlowLane"
+				}
+			},
+			"OrderToOperation": {
+				"__deferred": {
+					"uri": "https://eq1.evorait.net:50103/sap/opu/odata/EVORA/EO_MAIN_SRV/WOHeaderSet('000000827963')/OrderToOperation"
+				}
+			},
+			"OrderToAttachment": {
+				"__deferred": {
+					"uri": "https://eq1.evorait.net:50103/sap/opu/odata/EVORA/EO_MAIN_SRV/WOHeaderSet('000000827963')/OrderToAttachment"
+				}
+			},
+			"OrderToComponent": {
+				"__deferred": {
+					"uri": "https://eq1.evorait.net:50103/sap/opu/odata/EVORA/EO_MAIN_SRV/WOHeaderSet('000000827963')/OrderToComponent"
+				}
+			},
+			"OrderToTimeConfirmation": {
+				"__deferred": {
+					"uri": "https://eq1.evorait.net:50103/sap/opu/odata/EVORA/EO_MAIN_SRV/WOHeaderSet('000000827963')/OrderToTimeConfirmation"
+				}
+			},
+			"OrderToCosts": {
+				"__deferred": {
+					"uri": "https://eq1.evorait.net:50103/sap/opu/odata/EVORA/EO_MAIN_SRV/WOHeaderSet('000000827963')/OrderToCosts"
+				}
+			},
+			"OrderToProjectFlowNode": {
+				"__deferred": {
+					"uri": "https://eq1.evorait.net:50103/sap/opu/odata/EVORA/EO_MAIN_SRV/WOHeaderSet('000000827963')/OrderToProjectFlowNode"
+				}
+			},
+			"OrderToInspectionLot": {
+				"__deferred": {
+					"uri": "https://eq1.evorait.net:50103/sap/opu/odata/EVORA/EO_MAIN_SRV/WOHeaderSet('000000827963')/OrderToInspectionLot"
+				}
+			}
 		}]
 	}
 }
