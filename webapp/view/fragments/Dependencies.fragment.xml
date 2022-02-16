@@ -4,7 +4,7 @@
 		<toolbar>
 			<ContainerToolbar></ContainerToolbar>
 		</toolbar>
-		<GanttChartWithTable id="gantt" shapeSelectionMode="Single">
+		<GanttChartWithTable shapeSelectionMode="Single">
 			<axisTimeStrategy>
 				<axistime:ProportionZoomStrategy>
 					<axistime:totalHorizon>
@@ -16,7 +16,7 @@
 				</axistime:ProportionZoomStrategy>
 			</axisTimeStrategy>
 			<table>
-				<table:Table id="idTableDependencies" selectionMode="Single" visibleRowCountMode="Auto" selectionBehavior="RowSelector"
+				<!--<table:Table id="idTableDependencies" selectionMode="Single" visibleRowCountMode="Auto" selectionBehavior="RowSelector"
 					enableColumnReordering="true" rows="{ path: '/root'}">
 					<table:columns>
 						<table:Column label="Col 1" template="text"/>
@@ -32,6 +32,28 @@
 							</shapes2>
 						</GanttRowSettings>
 					</table:rowSettingsTemplate>
+				</table:Table>-->
+				<table:Table selectionMode="Single" rows="{/WOHeaderSet}"  visibleRowCountMode="Auto" selectionBehavior="RowOnly">
+					<table:columns>
+						<table:Column sortProperty="ObjectKey">
+							<m:Text text="Sort Id"/>
+							<table:template>
+								<m:Text text="{ObjectKey}" wrapping="false"/>
+							</table:template>
+						</table:Column>
+						<table:Column sortProperty="ORDER_NUMBER">
+							<m:Text text="Order Number"/>
+							<table:template>
+								<m:Text text="{ORDER_NUMBER}" wrapping="false"/>
+							</table:template>
+						</table:Column>
+						<table:Column sortProperty="">
+							<m:Text text="Operation Number"/>
+							<table:template>
+								<m:Text text="" wrapping="false"/>
+							</table:template>
+						</table:Column>
+					</table:columns>
 				</table:Table>
 			</table>
 		</GanttChartWithTable>

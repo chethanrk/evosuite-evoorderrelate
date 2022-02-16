@@ -42,7 +42,7 @@ sap.ui.define([
 				}
 			};
 			var oModel = new JSONModel(data);
-			this.getView().byId("idTableDependencies").setModel(oModel);
+			//this.getView().byId("idTableDependencies").setModel(oModel);
 
 		},
 		fnTimeConverter: function (sTimestamp) {
