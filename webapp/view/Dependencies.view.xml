@@ -1,0 +1,45 @@
+<mvc:View height="100%" xmlns="sap.gantt.simple" xmlns:axistime="sap.gantt.axistime" xmlns:config="sap.gantt.config"
+	xmlns:mvc="sap.ui.core.mvc" xmlns:shapes="sap.gantt.simple.shapes" xmlns:table="sap.ui.table" xmlns:m="sap.m" xmlns:core="sap.ui.core"
+	controllerName="com.evorait.evosuite.evomanagedepend.controller.Dependencies" xmlns:html="http://www.w3.org/1999/xhtml">
+	<GanttChartContainer>
+		<toolbar>
+			<ContainerToolbar></ContainerToolbar>
+		</toolbar>
+		<GanttChartWithTable shapeSelectionMode="Single">
+			<axisTimeStrategy>
+				<axistime:ProportionZoomStrategy>
+					<axistime:totalHorizon>
+						<config:TimeHorizon startTime="20181029000000" endTime="20181129000000"/>
+					</axistime:totalHorizon>
+					<axistime:visibleHorizon>
+						<config:TimeHorizon startTime="20181029000000" endTime="20181129000000"/>
+					</axistime:visibleHorizon>
+				</axistime:ProportionZoomStrategy>
+			</axisTimeStrategy>
+			<table>
+				<table:Table selectionMode="Single" rows="{/WOHeaderSet}" visibleRowCountMode="Auto" selectionBehavior="RowOnly">
+					<table:columns>
+						<table:Column sortProperty="ObjectKey">
+							<m:Text text="Sort Id"/>
+							<table:template>
+								<m:Text text="{ObjectKey}" wrapping="false"/>
+							</table:template>
+						</table:Column>
+						<table:Column sortProperty="ORDER_NUMBER">
+							<m:Text text="Order Number"/>
+							<table:template>
+								<m:Text text="{ORDER_NUMBER}" wrapping="false"/>
+							</table:template>
+						</table:Column>
+						<table:Column sortProperty="">
+							<m:Text text="Operation Number"/>
+							<table:template>
+								<m:Text text="" wrapping="false"/>
+							</table:template>
+						</table:Column>
+					</table:columns>
+				</table:Table>
+			</table>
+		</GanttChartWithTable>
+	</GanttChartContainer>
+</mvc:View>

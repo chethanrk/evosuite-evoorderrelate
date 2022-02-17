@@ -53,6 +53,21 @@ sap.ui.define([
 		 */
 		getResourceBundle: function () {
 			return this.getOwnerComponent().getModel("i18n").getResourceBundle();
+		},
+
+		/**
+		 * Clear all message present in the MessageManager
+		 */
+		clearAllMessages: function () {
+			// does not remove the manually set ValueStateText we set in onValueStatePress():
+			sap.ui.getCore().getMessageManager().removeAllMessages();
+		},
+
+		/**
+		 * On click, open Message Popover
+		 */
+		openMessageManager: function (oView, oEvent) {
+			this.getOwnerComponent().MessageManager.open(oView, oEvent);
 		}
 
 	});

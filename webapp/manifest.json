@@ -94,23 +94,45 @@
 			"config": {
 				"routerClass": "sap.m.routing.Router",
 				"viewType": "XML",
-				"async": true,
 				"viewPath": "com.evorait.evosuite.evomanagedepend.view",
 				"controlAggregation": "pages",
-				"controlId": "app",
-				"clearControlAggregation": false
+				"controlId": "appPanel",
+				"clearControlAggregation": false,
+				"bypassed": {
+					"target": [
+						"splitNavigation"
+					]
+				},
+				"async": true
 			},
 			"routes": [{
 				"name": "ManageDependencies",
 				"pattern": "",
 				"target": [
-					"ManageDependencies"
+					"Dependencies",
+					"OrderTable"
 				]
 			}],
 			"targets": {
-				"ManageDependencies": {
+				"splitNavigation": {
 					"viewType": "XML",
-					"viewName": "ManageDependencies"
+					"viewName": "SplitView",
+					"viewLevel": 1,
+					"controlId": "appPanel"
+				},
+				"Dependencies": {
+					"viewType": "XML",
+					"viewName": "Dependencies",
+					"viewLevel": 2,
+					"controlId": "topPanel",
+					"parent": "splitNavigation"
+				},
+				"OrderTable": {
+					"viewType": "XML",
+					"viewName": "OrderTable",
+					"viewLevel": 2,
+					"controlId": "bottomPanel",
+					"parent": "splitNavigation"
 				}
 			}
 		}
