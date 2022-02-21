@@ -1,0 +1,41 @@
+<mvc:View height="100%" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:gantt="sap.gantt.simple"
+	xmlns:axistime="sap.gantt.axistime" xmlns:config="sap.gantt.config" xmlns:shapes="sap.gantt.simple.shapes" xmlns:table="sap.ui.table"
+	controllerName="com.evorait.evosuite.evomanagedepend.controller.GanttTable" xmlns:html="http://www.w3.org/1999/xhtml"
+	xmlns:template="http://schemas.sap.com/sapui5/extension/sap.ui.core.template/1">
+	<template:alias name=".AH" value="sap.ui.model.odata.AnnotationHelper">
+		<template:alias name=".evoAH" value="com.evorait.evosuite.evomanagedepend.model.AnnotationHelper">
+			<template:with path="templateProperties>/" var="tempProps">
+				<gantt:GanttChartContainer>
+					<gantt:GanttChartWithTable id="gantt" shapeSelectionMode="Single">
+						<gantt:axisTimeStrategy>
+							<axistime:ProportionZoomStrategy>
+								<axistime:totalHorizon>
+									<config:TimeHorizon startTime="20181029000000" endTime="20181129000000"/>
+								</axistime:totalHorizon>
+								<axistime:visibleHorizon>
+									<config:TimeHorizon startTime="20181029000000" endTime="20181129000000"/>
+								</axistime:visibleHorizon>
+							</axistime:ProportionZoomStrategy>
+						</gantt:axisTimeStrategy>
+						<gantt:table>
+							<table:Table selectionMode="Single" rows="{/WOHeaderSet}" visibleRowCountMode="Auto" selectionBehavior="RowOnly">
+								<template:with path="tempProps>/GanttConfigs/" var="tabItem">
+									<table:columns>
+										<template:repeat list="{path:'tabItem>lineItems/'}" var="lineItem">
+											<table:Column>
+												<Text text="{= '{/' + ${tabItem>entitySet} + '/' + ${lineItem>Value/Path} + '/##com.sap.vocabularies.Common.v1.Label/String}' }"/>
+												<table:template>
+													<Text text="{= '{' + ${path : 'lineItem>Value/Path'} + '}' }"/>
+												</table:template>
+											</table:Column>
+										</template:repeat>
+									</table:columns>
+								</template:with>
+							</table:Table>
+						</gantt:table>
+					</gantt:GanttChartWithTable>
+				</gantt:GanttChartContainer>
+			</template:with>
+		</template:alias>
+	</template:alias>
+</mvc:View>

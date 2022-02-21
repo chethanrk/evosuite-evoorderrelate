@@ -15,6 +15,8 @@ sap.ui.define([
 		metadata: {
 			manifest: "json"
 		},
+		
+		oTemplatePropsProm: null,
 
 		/**
 		 * The component is initialized by UI5 automatically during the startup of the app and calls the init method once.
@@ -41,6 +43,8 @@ sap.ui.define([
 				densityClass: this.getContentDensityClass(),
 			};
 			this.setModel(models.createHelperModel(viewModelObj), "viewModel");
+			
+			this._getTemplateProps();
 
 			this.setModel(oMessageManager.getMessageModel(), "message");
 
@@ -86,6 +90,21 @@ sap.ui.define([
 		 */
 		registerViewToMessageManager: function (oView) {
 			oMessageManager.registerObject(oView, true);
+		},
+		
+		/**
+		 * get Template properties as model inside a global Promise
+		 */
+		_getTemplateProps: function () {
+			this.oTemplatePropsProm = new Promise(function (resolve) {
+				var realPath = sap.ui.require.toUrl("com/evorait/evosuite/evomanagedepend/model/TemplateProperties.json");
+				var oTempJsonModel = new JSONModel();
+				oTempJsonModel.loadData(realPath);
+				oTempJsonModel.attachRequestCompleted(function () {
+					this.setModel(oTempJsonModel, "templateProperties");
+					resolve(oTempJsonModel.getData());
+				}.bind(this));
+			}.bind(this));
 		},
 	});
 });

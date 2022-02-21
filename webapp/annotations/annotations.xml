@@ -35,10 +35,7 @@
 							<PropertyValue Property="Value" Path="ORDER_TYPE_DESCRIPTION"/>
 							<PropertyValue Property="Position" Int="4"/>
 						</Record>
-						<Record Type="com.sap.vocabularies.UI.v1.DataField">
-							<PropertyValue Property="Value" Path="WORKCENTRE"/>
-							<PropertyValue Property="Position" Int="5"/>
-						</Record>
+						
 					</Collection>
 				</Annotation>
 			</Annotations>

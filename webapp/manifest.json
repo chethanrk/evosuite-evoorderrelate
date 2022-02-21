@@ -86,9 +86,11 @@
 			}
 		},
 		"resources": {
-			"css": [{
-				"uri": "css/style.css"
-			}]
+			"css": [
+				{
+					"uri": "css/style.css"
+				}
+			]
 		},
 		"routing": {
 			"config": {
@@ -105,14 +107,16 @@
 				},
 				"async": true
 			},
-			"routes": [{
-				"name": "ManageDependencies",
-				"pattern": "",
-				"target": [
-					"Dependencies",
-					"OrderTable"
-				]
-			}],
+			"routes": [
+				{
+					"name": "ManageDependencies",
+					"pattern": "",
+					"target": [
+						"Dependencies",
+						"OrderTable"
+					]
+				}
+			],
 			"targets": {
 				"splitNavigation": {
 					"viewType": "XML",
@@ -133,6 +137,10 @@
 					"viewLevel": 2,
 					"controlId": "bottomPanel",
 					"parent": "splitNavigation"
+				},
+				"GanttTable": {
+					"viewType": "XML",
+					"viewName": "GanttTable"
 				}
 			}
 		}
