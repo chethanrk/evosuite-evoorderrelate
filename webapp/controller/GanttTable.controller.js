@@ -82,6 +82,7 @@ sap.ui.define([
 		onPresTop: function (oEvent) {
 			if (!this._oGanttTableContext) {
 				this.showMessageToast("Select atleast one line item");
+				return;
 			}
 			this.showMessageToast("Validation from backend");
 		},
@@ -91,6 +92,7 @@ sap.ui.define([
 		onPresUp: function (oEvent) {
 			if (!this._oGanttTableContext) {
 				this.showMessageToast("Select atleast one line item");
+				return;
 			}
 			this.showMessageToast("Validation from backend");
 		},
@@ -101,6 +103,7 @@ sap.ui.define([
 		onPresDown: function (oEvent) {
 			if (!this._oGanttTableContext) {
 				this.showMessageToast("Select atleast one line item");
+				return;
 			}
 			this.showMessageToast("Validation from backend");
 		},
@@ -111,6 +114,7 @@ sap.ui.define([
 		onPresBottom: function (oEvent) {
 			if (!this._oGanttTableContext) {
 				this.showMessageToast("Select atleast one line item");
+				return;
 			}
 			this.showMessageToast("Validation from backend");
 		},

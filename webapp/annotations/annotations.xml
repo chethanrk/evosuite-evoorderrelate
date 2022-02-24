@@ -34,6 +34,17 @@
 						</Record>
 					</Collection>
 				</Annotation>
+				<Annotation Term="com.sap.vocabularies.UI.v1.SelectionFields">
+					<Collection>
+						<PropertyPath>ORDER_NUMBER</PropertyPath>
+						<PropertyPath>ORDER_TYPE</PropertyPath>
+						<PropertyPath>ORDER_TYPE_DESCRIPTION</PropertyPath>
+						<PropertyPath>ORDER_DESCRIPTION</PropertyPath>
+						<PropertyPath>PLANT</PropertyPath>
+						<PropertyPath>WORKCENTRE</PropertyPath>
+						<PropertyPath>WORKCENTRE_DESCRIPTION</PropertyPath>
+					</Collection>
+				</Annotation>
 			</Annotations>
 			<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="com.evorait.evoorder.Gantt">
 				<Annotation Term="com.sap.vocabularies.UI.v1.LineItem">
@@ -63,17 +74,6 @@
 							<PropertyValue Property="Value" Path="SCHEDULE_TYPE"/>
 							<PropertyValue Property="Position" Int="6"/>
 						</Record>
-					</Collection>
-				</Annotation>
-				<Annotation Term="com.sap.vocabularies.UI.v1.SelectionFields">
-					<Collection>
-						<PropertyPath>ORDER_NUMBER</PropertyPath>
-						<PropertyPath>ORDER_TYPE</PropertyPath>
-						<PropertyPath>ORDER_TYPE_DESCRIPTION</PropertyPath>
-						<PropertyPath>ORDER_DESCRIPTION</PropertyPath>
-						<PropertyPath>PLANT</PropertyPath>
-						<PropertyPath>WORKCENTRE</PropertyPath>\
-						<PropertyPath>WORKCENTRE_DESCRIPTION</PropertyPath>
 					</Collection>
 				</Annotation>
 			</Annotations>
