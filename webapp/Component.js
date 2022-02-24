@@ -92,8 +92,33 @@ sap.ui.define([
 		registerViewToMessageManager: function (oView) {
 			oMessageManager.registerObject(oView, true);
 		},
-
+		
 		/**
+		 * Get url GET parameter by key name
+		 * @param {string} sKey - key of the parameter
+		 */
+		getLinkParameterByName: function (sKey) {
+			var oComponentData = this.getComponentData();
+			//Fiori Launchpad startup parameters
+			if (oComponentData) {
+				var oStartupParams = oComponentData.startupParameters;
+				if (oStartupParams[sKey] && (oStartupParams[sKey].length > 0)) {
+					return oStartupParams[sKey][0];
+				} else if (!sKey) {
+					return oStartupParams;
+				}
+			} else {
+				var queryString = window.location.search,
+					urlParams = new URLSearchParams(queryString);
+				if (urlParams.has(sKey)) {
+					return urlParams.get(sKey);
+				} else if (!sKey) {
+					return urlParams;
+				}
+			}
+			return false;
+		},
+        /**
 		 * get Template properties as model inside a global Promise
 		 */
 		_getTemplateProps: function () {
