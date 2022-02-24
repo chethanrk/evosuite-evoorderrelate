@@ -38,6 +38,11 @@ sap.ui.define([
 			}
 		},
 		
+		oOrderTable: null,
+		oOrderFilterDialog: null,
+		pOrderFilterDialogLoaded: null,
+		aPageDefaultFilters: [],
+		
 		/* =========================================================== */
 		/* lifecycle methods                                           */
 		/* =========================================================== */
@@ -50,16 +55,14 @@ sap.ui.define([
 		 */
 		onInit: function () {
 			this.oOrderTable = this.getView().byId("idTableOrderTable");
-			this.orderFilterDialog = null;
-			this.aPageDefaultFilters = [];
 			// initialise Order SmartFilterBar to make the Order table be able to subscribe to the SmartFilterBar's events
-			this.orderFilterDialogLoaded = Fragment.load({
+			this.pOrderFilterDialogLoaded = Fragment.load({
 				name: "com.evorait.evosuite.evomanagedepend.view.fragments.OrderFilterDialog",
 				controller: this,
 				type: "XML"
 			}).then(function (oFragment) {
-				this.orderFilterDialog = oFragment;
-				this.orderFilterDialog.addStyleClass(this.getOwnerComponent().getContentDensityClass());
+				this.oOrderFilterDialog = oFragment;
+				this.oOrderFilterDialog.addStyleClass(this.getOwnerComponent().getContentDensityClass());
 				this.getView().addDependent(oFragment);
 			}.bind(this));
 		},
@@ -109,8 +112,8 @@ sap.ui.define([
 		 * @param {sap.ui.base.Event} oEvent - the press event
 		 */
 		onOrderFilterOpen: function (oEvent) {
-			this.orderFilterDialogLoaded.then(function(res) {
-				this.orderFilterDialog.open();
+			this.pOrderFilterDialogLoaded.then(function(res) {
+				this.oOrderFilterDialog.open();
 			}.bind(this));
 		},
 		
@@ -120,7 +123,7 @@ sap.ui.define([
 		 * @param {sap.ui.base.Event} oEvent - the press event
 		 */
 		onOrderFilterClose: function() {
-			this.orderFilterDialog.close();
+			this.oOrderFilterDialog.close();
 		},
 		
 		/**
