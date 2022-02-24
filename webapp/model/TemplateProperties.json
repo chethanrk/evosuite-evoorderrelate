@@ -1,6 +1,6 @@
 {
 	"GanttConfigs": {
 		"tab": "Gantt",
-		"entitySet": "WOHeaderSet"
+		"entitySet": "GanttSet"
 	}
 }

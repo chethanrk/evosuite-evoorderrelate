@@ -16,6 +16,11 @@ sap.ui.define([
 			oModel.setDefaultBindingMode("OneWay");
 			return oModel;
 		},
+		createGanttModel: function () {
+			var oModel = new JSONModel();
+			oModel.setDefaultBindingMode("TwoWay");
+			return oModel;
+		},
 
 		createMessageManagerModel: function () {
 			var oModel = new JSONModel({

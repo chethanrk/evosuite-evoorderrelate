@@ -68,7 +68,68 @@ sap.ui.define([
 		 */
 		openMessageManager: function (oView, oEvent) {
 			this.getOwnerComponent().MessageManager.open(oView, oEvent);
-		}
+		},
+
+		/**
+		 * show a message toast for 5 seconds
+		 * @param msg
+		 */
+		showMessageToast: function (msg) {
+			sap.m.MessageToast.show(msg, {
+				duration: 5000, // default
+				my: "center center", // default
+				at: "center center", // default
+				of: window, // default
+				offset: "0 0", // default
+				collision: "fit fit", // default
+				onClose: null, // default
+				autoClose: true, // default
+				animationTimingFunction: "ease", // default
+				animationDuration: 1000, // default
+				closeOnBrowserNavigation: true // default
+			});
+		},
+
+		/**
+		 * show confirm dialog where user needs confirm some action
+		 * @param sTitle
+		 * @param sMsg
+		 * @param successCallback
+		 * @param cancelCallback
+		 */
+		showConfirmDialog: function (sTitle, sMsg, successCallback, cancelCallback, sState) {
+			var dialog = new sap.m.Dialog({
+				title: sTitle,
+				type: "Message",
+				state: sState || "None",
+				content: new sap.m.Text({
+					text: sMsg
+				}),
+				beginButton: new sap.m.Button({
+					text: this.getResourceBundle().getText("btn.confirm"),
+					press: function () {
+						dialog.close();
+						if (successCallback) {
+							successCallback();
+						}
+					}.bind(this)
+				}),
+				endButton: new sap.m.Button({
+					text: this.getResourceBundle().getText("btn.no"),
+					press: function () {
+						if (cancelCallback) {
+							cancelCallback();
+						}
+						dialog.close();
+					}.bind(this)
+				}),
+				afterClose: function () {
+					dialog.destroy();
+				}
+			});
+			dialog.addStyleClass(this.getModel("viewModel").getProperty("/densityClass"));
+			dialog.open();
+		},
 
 	});
 

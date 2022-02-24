@@ -1,9 +1,12 @@
 sap.ui.define([
-	"sap/ui/core/mvc/Controller"
-], function (Controller) {
+	"com/evorait/evosuite/evomanagedepend/controller/BaseController",
+	"sap/gantt/misc/Format"
+], function (BaseController, Format) {
 	"use strict";
 
-	return Controller.extend("com.evorait.evosuite.evomanagedepend.controller.GanttTable", {
+	return BaseController.extend("com.evorait.evosuite.evomanagedepend.controller.GanttTable", {
+
+		_oGanttTableContext: null,
 
 		/**
 		 * Called when a controller is instantiated and its View controls (if available) are already created.
@@ -12,6 +15,10 @@ sap.ui.define([
 		 */
 		onInit: function () {
 
+		},
+
+		fnTimeConverter: function (sTimestamp) {
+			return Format.abapTimestampToDate(sTimestamp);
 		},
 
 		/**
@@ -39,6 +46,114 @@ sap.ui.define([
 		//	onExit: function() {
 		//
 		//	}
+
+		/**
+		 * When row selection has changed in gantt table
+		 */
+		onGanttRowSelectionChange: function (oEvent) {
+			var iRowIndex = oEvent.getParameter("rowIndex"),
+				oRowContext = oEvent.getParameter("rowContext");
+
+			if (iRowIndex !== 0) {
+				this._oGanttTableContext = oRowContext;
+			} else {
+				this._oGanttTableContext = null;
+				oEvent.getSource().clearSelection();
+			}
+		},
+
+		/**
+		 * Delete dependency operation in the gantttable
+		 */
+		onPressDeleteDependency: function (oEvent) {
+			var sTitle = this.getResourceBundle().getText("tit.confirmDeleteSelected"),
+				sMsg = this.getResourceBundle().getText("msg.confirmOperationDelete");
+
+			var successFn = function () {
+				sap.m.MessageToast.show("Delete Operation");
+			};
+			this.showConfirmDialog(sTitle, sMsg, successFn.bind(this));
+
+		},
+
+		/**
+		 * Manual sort event to move selected row to top
+		 */
+		onPresTop: function (oEvent) {
+			if (!this._oGanttTableContext) {
+				this.showMessageToast("Select atleast one line item");
+			}
+			this.showMessageToast("Validation from backend");
+		},
+		/**
+		 * Manual sort event to move selected row to one step up
+		 */
+		onPresUp: function (oEvent) {
+			if (!this._oGanttTableContext) {
+				this.showMessageToast("Select atleast one line item");
+			}
+			this.showMessageToast("Validation from backend");
+		},
+
+		/**
+		 * Manual sort event to move selected row to one step down
+		 */
+		onPresDown: function (oEvent) {
+			if (!this._oGanttTableContext) {
+				this.showMessageToast("Select atleast one line item");
+			}
+			this.showMessageToast("Validation from backend");
+		},
+
+		/**
+		 * Manual sort event to move selected row to bottom
+		 */
+		onPresBottom: function (oEvent) {
+			if (!this._oGanttTableContext) {
+				this.showMessageToast("Select atleast one line item");
+			}
+			this.showMessageToast("Validation from backend");
+		},
+
+		/**
+		 * Event to handle drag from the gantt table
+		 */
+		onGanttTableDragStart: function (oEvent) {
+			var oDraggedRow = oEvent.getParameter("target"),
+				oDragSession = oEvent.getParameter("dragSession"),
+				oDragBindingContext = oDraggedRow.getBindingContext("ganttModel");
+
+			if (oDragBindingContext.getProperty("TYPE") === 'Start') {
+				oEvent.preventDefault();
+				return;
+			}
+
+			// keep the dragged row context for the drop action
+			oDragSession.setComplexData("draggedRowContext", oDragBindingContext);
+		},
+
+		/**
+		 * Event to handle drop on the gantt table
+		 */
+		onDropGanttTable: function (oEvent) {
+			var oDroppedControl = oEvent.getParameter("droppedControl"),
+				oDroppedBindingContext = oDroppedControl.getBindingContext("ganttModel");
+
+			this.showMessageToast("Validation from backend");
+		},
+
+		/**
+		 * Validate the drop items 
+		 */
+		onDragEnter: function (oEvent) {
+			var oDraggedControl = oEvent.getParameter("target"),
+				oDroppedBindingContext = oDraggedControl.getBindingContext("ganttModel");
+
+			if (oDroppedBindingContext.getProperty("TYPE") === 'Start') {
+				oEvent.preventDefault();
+				return;
+			}
+		}
 
 	});
 

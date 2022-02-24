@@ -1,0 +1,90 @@
+{
+	"d": {
+		"results": [{
+			"__metadata": {
+				"id": "https://eq1.evorait.net:50103/sap/opu/odata/EVORA/EO_MAIN_SRV/WOHeaderSet('001')",
+				"uri": "https://eq1.evorait.net:50103/sap/opu/odata/EVORA/EO_MAIN_SRV/WOHeaderSet('001')",
+				"type": "com.evorait.evoorder.WOHeader"
+			},
+			"SORTID": "001",
+			"ORDER_NUMBER": "827963",
+			"OPERATION_NUMBER": "0010",
+			"TYPE": "Start",
+			"ASSIGNMENT": "OPEN",
+			"SCHEDULE_TYPE": "Successer",
+			"START_DATE": "/Date(1463011200000)/",
+			"END_DATE": "/Date(1502668800000)/"
+
+		}, {
+			"__metadata": {
+				"id": "https://eq1.evorait.net:50103/sap/opu/odata/EVORA/EO_MAIN_SRV/WOHeaderSet('002')",
+				"uri": "https://eq1.evorait.net:50103/sap/opu/odata/EVORA/EO_MAIN_SRV/WOHeaderSet('002')",
+				"type": "com.evorait.evoorder.WOHeader"
+			},
+			"SORTID": "002",
+			"ORDER_NUMBER": "827964",
+			"OPERATION_NUMBER": "0020",
+			"TYPE": "FF",
+			"ASSIGNMENT": "OPEN",
+			"SCHEDULE_TYPE": "Successor",
+			"START_DATE": "/Date(1463011200000)/",
+			"END_DATE": "/Date(1473011200000)/"
+		}, {
+			"__metadata": {
+				"id": "https://eq1.evorait.net:50103/sap/opu/odata/EVORA/EO_MAIN_SRV/WOHeaderSet('003')",
+				"uri": "https://eq1.evorait.net:50103/sap/opu/odata/EVORA/EO_MAIN_SRV/WOHeaderSet('003')",
+				"type": "com.evorait.evoorder.WOHeader"
+			},
+			"SORTID": "003",
+			"ORDER_NUMBER": "827965",
+			"OPERATION_NUMBER": "0030",
+			"TYPE": "FS",
+			"ASSIGNMENT": "OPEN",
+			"SCHEDULE_TYPE": "Successor",
+			"START_DATE": "/Date(1463011200000)/",
+			"END_DATE": "/Date(1471000200000)/"
+		}, {
+			"__metadata": {
+				"id": "https://eq1.evorait.net:50103/sap/opu/odata/EVORA/EO_MAIN_SRV/WOHeaderSet('004')",
+				"uri": "https://eq1.evorait.net:50103/sap/opu/odata/EVORA/EO_MAIN_SRV/WOHeaderSet('004')",
+				"type": "com.evorait.evoorder.WOHeader"
+			},
+			"SORTID": "004",
+			"ORDER_NUMBER": "827965",
+			"OPERATION_NUMBER": "0030",
+			"TYPE": "FS",
+			"ASSIGNMENT": "OPEN",
+			"SCHEDULE_TYPE": "Successor",
+			"START_DATE": "/Date(1463011200000)/",
+			"END_DATE": "/Date(1460011000000)/"
+		}, {
+			"__metadata": {
+				"id": "https://eq1.evorait.net:50103/sap/opu/odata/EVORA/EO_MAIN_SRV/WOHeaderSet('005')",
+				"uri": "https://eq1.evorait.net:50103/sap/opu/odata/EVORA/EO_MAIN_SRV/WOHeaderSet('005')",
+				"type": "com.evorait.evoorder.WOHeader"
+			},
+			"SORTID": "005",
+			"ORDER_NUMBER": "827965",
+			"OPERATION_NUMBER": "0010",
+			"TYPE": "SS",
+			"ASSIGNMENT": "OPEN",
+			"SCHEDULE_TYPE": "Successor",
+			"START_DATE": "/Date(1463011200000)/",
+			"END_DATE": "/Date(1461668800000)/"
+		}, {
+			"__metadata": {
+				"id": "https://eq1.evorait.net:50103/sap/opu/odata/EVORA/EO_MAIN_SRV/WOHeaderSet('006')",
+				"uri": "https://eq1.evorait.net:50103/sap/opu/odata/EVORA/EO_MAIN_SRV/WOHeaderSet('006')",
+				"type": "com.evorait.evoorder.WOHeader"
+			},
+			"SORTID": "006",
+			"ORDER_NUMBER": "827966",
+			"OPERATION_NUMBER": "0020",
+			"TYPE": "SS",
+			"ASSIGNMENT": "OPEN",
+			"SCHEDULE_TYPE": "Successor",
+			"START_DATE": "/Date(1463011200000)/",
+			"END_DATE": "/Date(1461008800000)/"
+		}]
+	}
+}

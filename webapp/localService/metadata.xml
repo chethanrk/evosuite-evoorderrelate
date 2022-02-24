@@ -25,8 +25,34 @@
 				<Property Name="WORKCENTRE_DESCRIPTION" Type="Edm.String" MaxLength="40" sap:label="Short Description" sap:creatable="false"
 					sap:updatable="false" sap:is-extension-field="true"/>
 			</EntityType>
+			<EntityType Name="Gantt" sap:content-version="1">
+				<Key>
+					<PropertyRef Name="SORTID"/>
+				</Key>
+				<Property Name="SORTID" Type="Edm.String" Nullable="false" MaxLength="4" sap:label="Sort Id" sap:creatable="false" sap:updatable="false"/>
+				<Property Name="ORDER_NUMBER" Type="Edm.String" MaxLength="10" sap:label="Order" sap:creatable="false" sap:updatable="false"
+					sap:is-extension-field="true"/>
+				<Property Name="OPERATION_NUMBER" Type="Edm.String" MaxLength="10" sap:label="Operation" sap:updatable="false" sap:is-extension-field="true"/>
+				<Property Name="TYPE" Type="Edm.String" MaxLength="5" sap:label="Type" sap:updatable="false" sap:is-extension-field="true"/>
+				<Property Name="ASSIGNMENT" Type="Edm.String" MaxLength="5" sap:label="Assignment" sap:updatable="false" sap:is-extension-field="true"/>
+				<Property Name="SCHEDULE_TYPE" Type="Edm.String" MaxLength="10" sap:label="Schedule" sap:updatable="false" sap:is-extension-field="true"/>
+				<Property Name  ="START_DATE" Type="Edm.DateTime" Precision="7"
+					sap:label   ="Start Date" sap:creatable="false" sap:updatable="false"
+					sap:sortable="false" sap:filterable="false" />
+				<Property Name  ="END_DATE" Type="Edm.DateTime" Precision="7"
+					sap:label   ="End Date" sap:creatable="false" sap:updatable="false"
+					sap:sortable="false" sap:filterable="false" />
+			</EntityType>
+			<EntityType Name="Type" sap:content-version="1">
+				<Key>
+					<PropertyRef Name="TYPE"/>
+				</Key>
+				<Property Name="TYPE" Type="Edm.String" MaxLength="5" sap:label="Postion" sap:updatable="false" sap:is-extension-field="true"/>
+			</EntityType>
 			<EntityContainer Name="com_evorait_evoorder_Entities" m:IsDefaultEntityContainer="true" sap:supported-formats="atom json xlsx">
 				<EntitySet Name="WOHeaderSet" EntityType="com.evorait.evoorder.WOHeader" sap:content-version="1"/>
+				<EntitySet Name="GanttSet" EntityType="com.evorait.evoorder.Gantt" sap:content-version="1"/>
+				<EntitySet Name="TypeSet" EntityType="com.evorait.evoorder.Type" sap:content-version="1"/>
 			</EntityContainer>
 		</Schema>
 	</edmx:DataServices>

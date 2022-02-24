@@ -13,7 +13,12 @@ sap.ui.define([
 		 */
 		onInit: function () {
 			this.oViewModel = this.getModel("viewModel");
+
+			//get annotation line items
 			this._getLineItems();
+
+			//get gantt data
+			this._getGanttdata();
 
 			var oRouter = this.getRouter();
 
@@ -35,32 +40,6 @@ sap.ui.define([
 			}
 		},
 
-		/**
-		 * Similar to onAfterRendering, but this hook is invoked before the controller's View is re-rendered
-		 * (NOT before the first rendering! onInit() is used for that one!).
-		 * @memberOf com.evorait.evosuite.evomanagedepend.view.Dependencies
-		 */
-		//	onBeforeRendering: function() {
-		//
-		//	},
-
-		/**
-		 * Called when the View has been rendered (so its HTML is part of the document). Post-rendering manipulations of the HTML could be done here.
-		 * This hook is the same one that SAPUI5 controls get after being rendered.
-		 * @memberOf com.evorait.evosuite.evomanagedepend.view.Dependencies
-		 */
-		//	onAfterRendering: function() {
-		//
-		//	},
-
-		/**
-		 * Called when the Controller is destroyed. Use this one to free resources and finalize activities.
-		 * @memberOf com.evorait.evosuite.evomanagedepend.view.Dependencies
-		 */
-		//	onExit: function() {
-		//
-		//	}
-
 		/* =========================================================== */
 		/* internal methods                                              */
 		/* =========================================================== */
@@ -74,25 +53,29 @@ sap.ui.define([
 			this.oViewModel.setProperty("/busy", true);
 			this.getModel().metadataLoaded().then(function () {
 				var sPath = this.getEntityPath(sEntitySet, mParams);
-				// this.getView().unbindElement();
-				// this.getView().bindElement(sPath);
+
 				//get template and create views
 				this.insertTemplateFragment(sPath, sViewName, "DependencyPageWrapper", this._afterBindSuccess.bind(this));
 			}.bind(this));
 		},
 
+		/**
+		 * Handle ater bind success
+		 * @private
+		 */
 		_afterBindSuccess: function () {
 			this.oViewModel.setProperty("/busy", false);
 		},
 
 		/**
 		 * get line item from the entityset 
+		 * @private
 		 */
 		_getLineItems: function () {
 			this.getOwnerComponent().oTemplatePropsProm.then(function () {
 				var oTempModel = this.getModel("templateProperties"),
-					mTabs = oTempModel.getProperty("/GanttConfigs");
-				var oModel = this.getModel();
+					mTabs = oTempModel.getProperty("/GanttConfigs"),
+					oModel = this.getModel();
 
 				//collect all tab IDs
 				oModel.getMetaModel().loaded().then(function () {
@@ -108,8 +91,21 @@ sap.ui.define([
 
 				}.bind(this));
 			}.bind(this));
-		}
+		},
 
+		/**
+		 * get gantt table data
+		 * @private
+		 */
+		_getGanttdata: function () {
+			var oTempModel = this.getModel("templateProperties"),
+				mTabs = oTempModel.getProperty("/GanttConfigs"),
+				sEntitySet = mTabs.entitySet;
+
+			this.getOwnerComponent().readData("/" + sEntitySet, [], {}).then(function (oResult) {
+				this.getModel("ganttModel").setData(oResult);
+			}.bind(this));
+		}
 	});
 
 });

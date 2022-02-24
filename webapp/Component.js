@@ -15,7 +15,7 @@ sap.ui.define([
 		metadata: {
 			manifest: "json"
 		},
-		
+
 		oTemplatePropsProm: null,
 
 		/**
@@ -43,7 +43,8 @@ sap.ui.define([
 				densityClass: this.getContentDensityClass(),
 			};
 			this.setModel(models.createHelperModel(viewModelObj), "viewModel");
-			
+			this.setModel(models.createGanttModel(), "ganttModel");
+
 			this._getTemplateProps();
 
 			this.setModel(oMessageManager.getMessageModel(), "message");
@@ -91,7 +92,7 @@ sap.ui.define([
 		registerViewToMessageManager: function (oView) {
 			oMessageManager.registerObject(oView, true);
 		},
-		
+
 		/**
 		 * get Template properties as model inside a global Promise
 		 */
@@ -106,5 +107,25 @@ sap.ui.define([
 				}.bind(this));
 			}.bind(this));
 		},
+
+		/**
+		 * Read from oData model service url with filters
+		 * returns promise
+		 */
+		readData: function (sUri, aFilters, mUrlParams) {
+			return new Promise(function (resolve, reject) {
+				this.getModel().read(sUri, {
+					filters: aFilters,
+					urlParameters: mUrlParams || {},
+					success: function (oData) {
+						resolve(oData);
+					},
+					error: function (oError) {
+						//Handle Error
+						reject(oError);
+					}
+				});
+			}.bind(this));
+		}
 	});
 });
