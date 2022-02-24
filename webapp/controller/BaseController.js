@@ -7,11 +7,58 @@ sap.ui.define([
 	"sap/m/Text",
 	"sap/m/MessageToast",
 	"sap/m/MessageBox",
-	"sap/m/FormattedText"
-], function (Controller, History, Dialog, Button, Text, MessageToast, MessageBox, FormattedText) {
+	"sap/ui/core/mvc/OverrideExecution"
+], function (Controller, History, Dialog, Button, Text, MessageToast, MessageBox, OverrideExecution) {
 	"use strict";
 
 	return Controller.extend("com.evorait.evosuite.evomanagedepend.controller.BaseController", {
+
+		metadata: {
+			// extension can declare the public methods
+			// in general methods that start with "_" are private
+			methods: {
+				getRouter: {
+					public: true,
+					final: true
+				},
+
+				getModel: {
+					public: true,
+					final: true
+				},
+
+				setModel: {
+					public: true,
+					final: true
+				},
+
+				getResourceBundle: {
+					public: true,
+					final: true
+				},
+
+				clearAllMessages: {
+					public: true,
+					final: true
+				},
+
+				openMessageManager: {
+					public: true,
+					final: true
+				},
+
+				showMessageToast: {
+					public: true,
+					final: true
+				},
+
+				showConfirmDialog: {
+					public: true,
+					final: true
+				}
+			}
+		},
+
 		/**
 		 * Convenience method for accessing the router in every controller of the application.
 		 * @public
@@ -129,7 +176,7 @@ sap.ui.define([
 			});
 			dialog.addStyleClass(this.getModel("viewModel").getProperty("/densityClass"));
 			dialog.open();
-		},
+		}
 
 	});
 

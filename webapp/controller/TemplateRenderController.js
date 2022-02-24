@@ -3,11 +3,53 @@ sap.ui.define([
 	"sap/ui/core/mvc/Controller",
 	"sap/ui/core/mvc/View",
 	"sap/ui/core/mvc/ViewType",
-	"com/evorait/evosuite/evomanagedepend/model/AnnotationHelper"
-], function (BaseController, Controller, CoreView, ViewType, AnnotationHelper) {
+	"com/evorait/evosuite/evomanagedepend/model/AnnotationHelper",
+	"sap/ui/core/mvc/OverrideExecution"
+], function (BaseController, Controller, CoreView, ViewType, AnnotationHelper, OverrideExecution) {
 	"use strict";
 
 	return BaseController.extend("com.evorait.evosuite.evomanagedepend.controller.TemplateRenderController", {
+
+		metadata: {
+			// extension can declare the public methods
+			// in general methods that start with "_" are private
+			methods: {
+				setOwnerComponent: {
+					public: true,
+					final: true
+				},
+
+				getTemplateModel: {
+					public: true,
+					final: true
+				},
+
+				setTemplateProperties: {
+					public: true,
+					final: true
+				},
+
+				getEntityPath: {
+					public: true,
+					final: true
+				},
+
+				insertTemplateFragment: {
+					public: true,
+					final: true
+				},
+
+				createView: {
+					public: true,
+					final: true
+				},
+
+				bindView: {
+					public: true,
+					final: true
+				}
+			}
+		},
 
 		mTemplates: {},
 

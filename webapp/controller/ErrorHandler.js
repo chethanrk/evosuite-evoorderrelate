@@ -1,10 +1,22 @@
 sap.ui.define([
 	"sap/ui/base/Object",
-	"sap/m/MessageBox"
-], function (UI5Object, MessageBox) {
+	"sap/m/MessageBox",
+	"sap/ui/core/mvc/OverrideExecution"
+], function (UI5Object, MessageBox, OverrideExecution) {
 	"use strict";
 
 	return UI5Object.extend("com.evorait.evosuite.evomanagedepend.controller.ErrorHandler", {
+
+		metadata: {
+			// extension can declare the public methods
+			// in general methods that start with "_" are private
+			methods: {
+				constructor: {
+					public: true,
+					final: true
+				}
+			}
+		},
 
 		/**
 		 * Handles application errors by automatically attaching to the model events and displaying errors when needed.

@@ -1,9 +1,17 @@
 sap.ui.define([
-	"com/evorait/evosuite/evomanagedepend/controller/TemplateRenderController"
-], function (TemplateRenderController) {
+	"com/evorait/evosuite/evomanagedepend/controller/TemplateRenderController",
+	"sap/ui/core/mvc/OverrideExecution"
+], function (TemplateRenderController, OverrideExecution) {
 	"use strict";
 
 	return TemplateRenderController.extend("com.evorait.evosuite.evomanagedepend.controller.Dependencies", {
+
+		metadata: {
+			// extension can declare the public methods
+			// in general methods that start with "_" are private
+			methods: {
+			}
+		},
 
 		oViewModel: null,
 		/**

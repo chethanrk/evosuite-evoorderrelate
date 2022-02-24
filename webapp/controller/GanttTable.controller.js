@@ -1,10 +1,69 @@
 sap.ui.define([
 	"com/evorait/evosuite/evomanagedepend/controller/BaseController",
-	"sap/gantt/misc/Format"
-], function (BaseController, Format) {
+	"sap/gantt/misc/Format",
+	"sap/ui/core/mvc/OverrideExecution"
+], function (BaseController, Format, OverrideExecution) {
 	"use strict";
 
 	return BaseController.extend("com.evorait.evosuite.evomanagedepend.controller.GanttTable", {
+
+		metadata: {
+			// extension can declare the public methods
+			// in general methods that start with "_" are private
+			methods: {
+				fnTimeConverter: {
+					public: true,
+					final: false,
+					overrideExecution: OverrideExecution.Instead
+				},
+
+				onGanttRowSelectionChange: {
+					public: true,
+					final: false,
+					overrideExecution: OverrideExecution.After
+				},
+
+				onPressDeleteDependency: {
+					public: true,
+					final: true
+				},
+
+				onPresTop: {
+					public: true,
+					final: true
+				},
+
+				onPresUp: {
+					public: true,
+					final: true
+				},
+
+				onPresDown: {
+					public: true,
+					final: true
+				},
+
+				onPresBottom: {
+					public: true,
+					final: true
+				},
+
+				onGanttTableDragStart: {
+					public: true,
+					final: true
+				},
+
+				onDropGanttTable: {
+					public: true,
+					final: true
+				},
+
+				onDragEnter: {
+					public: true,
+					final: true
+				}
+			}
+		},
 
 		_oGanttTableContext: null,
 

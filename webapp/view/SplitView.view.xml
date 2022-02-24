@@ -4,7 +4,7 @@
 			<layout:SplitPane >
 				<NavContainer id="topPanel">
 					<layoutData>
-						<layout:SplitterLayoutData size="55%"/>
+						<layout:SplitterLayoutData size="60%"/>
 					</layoutData>
 				</NavContainer>
 			</layout:SplitPane>
