@@ -1,15 +1,59 @@
 <mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:f="sap.f" xmlns:smartTable="sap.ui.comp.smarttable"
-	xmlns:app="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"
-	controllerName="com.evorait.evosuite.evomanagedepend.controller.OrderTable" xmlns:html="http://www.w3.org/1999/xhtml">
-	<f:DynamicPage headerExpanded="false" preserveHeaderStateOnScroll="false" showFooter="false" class="sapUiNoContentPadding">
+	xmlns:app="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1" xmlns:smartfilterbar="sap.ui.comp.smartfilterbar"
+	xmlns:dnd="sap.ui.core.dnd" controllerName="com.evorait.evosuite.evomanagedepend.controller.OrderTable"
+	xmlns:html="http://www.w3.org/1999/xhtml">
+	<f:DynamicPage id="idOrderTablePage" headerExpanded="false" preserveHeaderStateOnScroll="false" showFooter="false" class="sapUiNoContentPadding">
+		<f:title>
+			<f:DynamicPageTitle visible="false" id="idOrderTablePageTitle">
+				<f:heading>
+					<core:ExtensionPoint name="PageExtP|OrderTable|WOHeaderSet|Title|Heading"/>
+				</f:heading>
+				<f:actions>
+					<core:ExtensionPoint name="PageExtP|OrderTable|WOHeaderSet|Title|Actions"/>
+				</f:actions>
+			</f:DynamicPageTitle>
+		</f:title>
+		<f:header>
+			<f:DynamicPageHeader>
+				<f:content>
+					<core:ExtensionPoint name="PageExtP|OrderTable|WOHeaderSet|Header"/>
+				</f:content>
+			</f:DynamicPageHeader>
+		</f:header>
 		<f:content>
 			<smartTable:SmartTable id="idTableOrderTable" height="100%" entitySet="WOHeaderSet" tableType="ResponsiveTable" useExportToExcel="false"
-				useVariantManagement="true" useTablePersonalisation="true" showRowCount="true" enableAutoBinding="true" demandPopin="true"
-				requestAtLeastFields="">
+				useVariantManagement="true" useTablePersonalisation="true" persistencyKey="com.evorait.evosuite.evomanagedepend.OrderTable"
+				showRowCount="true" enableAutoBinding="true" demandPopin="true" beforeRebindTable="onBeforeRebindTable"
+				afterVariantInitialise="onInitializedSmartVariant" requestAtLeastFields="" smartFilterId="idOrderFilterBar">
 				<smartTable:layoutData>
 					<FlexItemData growFactor="1"/>
 				</smartTable:layoutData>
+				<smartTable:customToolbar>
+					<OverflowToolbar>
+						<core:ExtensionPoint name="TableExtP|OrderTable|WOHeaderSet|CustomToolbar|Left"/>
+						<ToolbarSpacer/>
+						<core:ExtensionPoint name="TableExtP|OrderTable|WOHeaderSet|CustomToolbar|Right"/>
+						<Button text="Filter" press="onOrderFilterOpen"/>
+					</OverflowToolbar>
+				</smartTable:customToolbar>
+				<Table id="idOrderTableInnerTable" mode="MultiSelect">
+					<columns>
+						<core:ExtensionPoint name="TableExtP|OrderTable|WOHeaderSet|CustomColumn"/>
+					</columns>
+					<ColumnListItem>
+						<cells>
+							<core:ExtensionPoint name="TableExtP|OrderTable|WOHeaderSet|CustomCell"/>
+						</cells>
+					</ColumnListItem>
+				</Table>
 			</smartTable:SmartTable>
 		</f:content>
+		<f:footer>
+			<OverflowToolbar visible="false" id="idPageOrderTableFooterToolbar">
+				<core:ExtensionPoint name="PageExtP|OrderTable|WOHeaderSet|Footer|Left"/>
+				<ToolbarSpacer/>
+				<core:ExtensionPoint name="PageExtP|OrderTable|WOHeaderSet|Footer|Right"/>
+			</OverflowToolbar>
+		</f:footer>
 	</f:DynamicPage>
 </mvc:View>

@@ -41,6 +41,17 @@
 						</Record>
 					</Collection>
 				</Annotation>
+				<Annotation Term="com.sap.vocabularies.UI.v1.SelectionFields">
+					<Collection>
+						<PropertyPath>ORDER_NUMBER</PropertyPath>
+						<PropertyPath>ORDER_TYPE</PropertyPath>
+						<PropertyPath>ORDER_TYPE_DESCRIPTION</PropertyPath>
+						<PropertyPath>ORDER_DESCRIPTION</PropertyPath>
+						<PropertyPath>PLANT</PropertyPath>
+						<PropertyPath>WORKCENTRE</PropertyPath>\
+						<PropertyPath>WORKCENTRE_DESCRIPTION</PropertyPath>
+					</Collection>
+				</Annotation>
 			</Annotations>
 		</Schema>
 	</edmx:DataServices>
