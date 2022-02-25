@@ -5,84 +5,100 @@
 	<template:alias name=".AH" value="sap.ui.model.odata.AnnotationHelper">
 		<template:alias name=".evoAH" value="com.evorait.evosuite.evomanagedepend.model.AnnotationHelper">
 			<template:with path="templateProperties>/" var="tempProps">
-				<gantt:GanttChartContainer>
-					<gantt:toolbar>
-						<gantt:ContainerToolbar showDisplayTypeButton="true">
-							<Button icon="sap-icon://collapse-group" press="onPresTop"/>
-							<Button icon="sap-icon://navigation-up-arrow" press="onPresUp"/>
-							<Button icon="sap-icon://navigation-down-arrow" press="onPresDown"/>
-							<Button icon="sap-icon://expand-group" press="onPresBottom"/>
-						</gantt:ContainerToolbar>
-					</gantt:toolbar>
-					<gantt:GanttChartWithTable id="gantt" shapeSelectionMode="Single" selectionPanelSize="40%">
-						<gantt:axisTimeStrategy>
-							<axistime:ProportionZoomStrategy>
-								<axistime:totalHorizon>
-									<config:TimeHorizon startTime="20160501000000" endTime="20170901000000"/>
-								</axistime:totalHorizon>
-								<axistime:visibleHorizon>
-									<config:TimeHorizon startTime="20160501000000" endTime="20170601000000"/>
-								</axistime:visibleHorizon>
-							</axistime:ProportionZoomStrategy>
-						</gantt:axisTimeStrategy>
-						<gantt:table>
-							<table:Table selectionMode="Single" rows="{ganttModel>/results}" visibleRowCountMode="Auto" selectionBehavior="RowOnly" fixedRowCount="1"
-								rowActionCount="1" rowSelectionChange="onGanttRowSelectionChange">
-								<template:with path="tempProps>/GanttConfigs/" var="tabItem">
-									<table:columns>
-										<template:repeat list="{path:'tabItem>lineItems/'}" var="lineItem">
-											<template:if test="{= ${path : 'lineItem>Value/Path'} === 'TYPE' }">
-												<template:then>
-													<table:Column width="20%">
-														<Text text="{= '{/' + ${tabItem>entitySet} + '/' + ${lineItem>Value/Path} + '/##com.sap.vocabularies.Common.v1.Label/String}' }"/>
-														<table:template>
-															<FlexBox fitContainer="true">
-																<Select width="20%" items="{path:'/TypeSet', templateShareable: true}"
-																	selectedKey="{= '{ganttModel>' + ${path : 'lineItem>Value/Path'} + '}' }" enabled="{= ${ganttModel>TYPE} !== 'Start'}">
-																	<items>
-																		<core:Item key="{TYPE}" text="{TYPE}"/>
-																	</items>
-																</Select>
-															</FlexBox>
-														</table:template>
-													</table:Column>
-												</template:then>
-												<template:else>
-													<table:Column>
-														<Text text="{= '{/' + ${tabItem>entitySet} + '/' + ${lineItem>Value/Path} + '/##com.sap.vocabularies.Common.v1.Label/String}' }"/>
-														<table:template>
-															<Text text="{= '{ganttModel>' + ${path : 'lineItem>Value/Path'} + '}' }"/>
-														</table:template>
-													</table:Column>
-												</template:else>
-											</template:if>
-										</template:repeat>
-									</table:columns>
-									<table:rowSettingsTemplate>
-										<gantt:GanttRowSettings rowId="{ganttModel>OPERATION_NUMBER}">
-											<gantt:shapes1>
-												<gantt:BaseRectangle time="{path:'ganttModel>START_DATE',formatter: '.fnTimeConverter'}"
-													endTime="{path:'ganttModel>END_DATE',formatter: '.fnTimeConverter'}" fill="#0092D1" hoverable="true" connectable="true"
-													verticalTextAlignment="Center"/>
-											</gantt:shapes1>
-										</gantt:GanttRowSettings>
-									</table:rowSettingsTemplate>
-									<table:dragDropConfig>
-										<dnd:DragDropInfo sourceAggregation="rows" targetAggregation="rows" dropPosition="Between" dragStart="onGanttTableDragStart"
-											drop="onDropGanttTable" dragEnter="onDragEnter"/>
-									</table:dragDropConfig>
-									<table:rowActionTemplate>
-										<table:RowAction>
-											<table:items>
-												<table:RowActionItem type="Custom" icon="sap-icon://delete" visible="{= ${ganttModel>TYPE} !== 'Start'}" press="onPressDeleteDependency"/>
-											</table:items>
-										</table:RowAction>
-									</table:rowActionTemplate>
-								</template:with>
-							</table:Table>
-						</gantt:table>
-					</gantt:GanttChartWithTable>
-				</gantt:GanttChartContainer>
+				<Page id="idGanttViewPage" showFooter="false" class="sapUiNoContentPadding" showSubHeader="false" enableScrolling="false">
+					<customHeader>
+						<OverflowToolbar id="idCustomHeaderToolbar">
+							<Button id="idBtnTop" type="Accept" tooltip="{i18n>btn.top}" icon="sap-icon://collapse-group" press="onPresTop"/>
+							<Button id="idBtnUp" type="Accept" tooltip="{i18n>btn.up}" icon="sap-icon://navigation-up-arrow" press="onPresUp"/>
+							<Button id="idBtnDown" type="Accept" tooltip="{i18n>btn.down}" icon="sap-icon://navigation-down-arrow" press="onPresDown"/>
+							<Button id="idBtnBottom" type="Accept" tooltip="{i18n>btn.bottom}" icon="sap-icon://expand-group" press="onPresBottom"/>
+							<ToolbarSpacer id="idToolbarSpacerFirst"/>
+							<Label id="idLabelNetworksDropdown" text="{i18n>lbl.networks}"/>
+							<Select id="idNetworksDropdown"/>
+							<ToolbarSpacer id="idToolbarSpacerSecond"/>
+							<Button id="idBtnCretaeNewNetwork" text="{i18n>btn.createNewNetwork}" tooltip="{i18n>btn.createNewNetwork}" press="onPresCreateNewNetwork"/>
+							<Button id="idBtnSave" type="Emphasized" tooltip="{i18n>btn.save}" text="{i18n>btn.save}" press="onPresSave"/>
+							<Button id="idBtnCancel" type="Accept" tooltip="{i18n>btn.cancel}" text="{i18n>btn.cancel}" press="onPresCancel"/>
+							<Button id="idBtnDeleteNetwork" icon="sap-icon://delete" tooltip="{i18n>btn.delete}" press="onPresDelete"/>
+						</OverflowToolbar>
+					</customHeader>
+					<content>
+						<gantt:GanttChartContainer>
+							<gantt:toolbar>
+								<gantt:ContainerToolbar showDisplayTypeButton="true"></gantt:ContainerToolbar>
+							</gantt:toolbar>
+							<gantt:GanttChartWithTable id="gantt" shapeSelectionMode="Single" selectionPanelSize="40%">
+								<gantt:axisTimeStrategy>
+									<axistime:ProportionZoomStrategy>
+										<axistime:totalHorizon>
+											<config:TimeHorizon startTime="20160501000000" endTime="20170901000000"/>
+										</axistime:totalHorizon>
+										<axistime:visibleHorizon>
+											<config:TimeHorizon startTime="20160501000000" endTime="20170601000000"/>
+										</axistime:visibleHorizon>
+									</axistime:ProportionZoomStrategy>
+								</gantt:axisTimeStrategy>
+								<gantt:table>
+									<table:Table id="idTableGanttTable" selectionMode="Single" rows="{ganttModel>/results}" visibleRowCountMode="Auto"
+										selectionBehavior="RowOnly" fixedRowCount="1" rowActionCount="1" rowSelectionChange="onGanttRowSelectionChange">
+										<template:with path="tempProps>/GanttConfigs/" var="tabItem">
+											<table:columns>
+												<template:repeat list="{path:'tabItem>lineItems/'}" var="lineItem">
+													<template:if test="{= ${path : 'lineItem>Value/Path'} === 'TYPE' }">
+														<template:then>
+															<table:Column width="20%">
+																<Text text="{= '{/' + ${tabItem>entitySet} + '/' + ${lineItem>Value/Path} + '/##com.sap.vocabularies.Common.v1.Label/String}' }"/>
+																<table:template>
+																	<FlexBox fitContainer="true">
+																		<Select width="20%" items="{path:'/TypeSet', templateShareable: true}"
+																			selectedKey="{= '{ganttModel>' + ${path : 'lineItem>Value/Path'} + '}' }" enabled="{= ${ganttModel>TYPE} !== 'Start'}">
+																			<items>
+																				<core:Item key="{TYPE}" text="{TYPE}"/>
+																			</items>
+																		</Select>
+																	</FlexBox>
+																</table:template>
+															</table:Column>
+														</template:then>
+														<template:else>
+															<table:Column>
+																<Text text="{= '{/' + ${tabItem>entitySet} + '/' + ${lineItem>Value/Path} + '/##com.sap.vocabularies.Common.v1.Label/String}' }"/>
+																<table:template>
+																	<Text text="{= '{ganttModel>' + ${path : 'lineItem>Value/Path'} + '}' }"/>
+																</table:template>
+															</table:Column>
+														</template:else>
+													</template:if>
+												</template:repeat>
+											</table:columns>
+											<table:rowSettingsTemplate>
+												<gantt:GanttRowSettings rowId="{ganttModel>OPERATION_NUMBER}">
+													<gantt:shapes1>
+														<gantt:BaseRectangle time="{path:'ganttModel>START_DATE',formatter: '.fnTimeConverter'}"
+															endTime="{path:'ganttModel>END_DATE',formatter: '.fnTimeConverter'}" fill="#0092D1" hoverable="true" connectable="true"
+															verticalTextAlignment="Center"/>
+													</gantt:shapes1>
+												</gantt:GanttRowSettings>
+											</table:rowSettingsTemplate>
+											<table:dragDropConfig>
+												<dnd:DragDropInfo sourceAggregation="rows" targetAggregation="rows" dropPosition="Between" dragStart="onGanttTableDragStart"
+													drop="onDropGanttTable" dragEnter="onDragEnter"/>
+											</table:dragDropConfig>
+											<table:rowActionTemplate>
+												<table:RowAction>
+													<table:items>
+														<table:RowActionItem type="Custom" icon="sap-icon://delete" tooltip="{i18n>btn.delete}" visible="{= ${ganttModel>TYPE} !== 'Start'}"
+															press="onPressDeleteDependency"/>
+													</table:items>
+												</table:RowAction>
+											</table:rowActionTemplate>
+										</template:with>
+									</table:Table>
+								</gantt:table>
+							</gantt:GanttChartWithTable>
+						</gantt:GanttChartContainer>
+					</content>
+				</Page>
 			</template:with>
 		</template:alias>
 	</template:alias>

@@ -23,7 +23,7 @@
 		<f:content>
 			<smartTable:SmartTable id="idTableOrderTable" height="100%" entitySet="WOHeaderSet" tableType="ResponsiveTable" useExportToExcel="false"
 				useVariantManagement="true" useTablePersonalisation="true" persistencyKey="com.evorait.evosuite.evomanagedepend.OrderTable"
-				showRowCount="true" enableAutoBinding="true" demandPopin="true" beforeRebindTable="onBeforeRebindTable"
+				 header="{i18n>tit.orderOperation}" showRowCount="true" enableAutoBinding="true" demandPopin="true" beforeRebindTable="onBeforeRebindTable"
 				afterVariantInitialise="onInitializedSmartVariant" requestAtLeastFields="" smartFilterId="idOrderFilterBar">
 				<smartTable:layoutData>
 					<FlexItemData growFactor="1"/>
