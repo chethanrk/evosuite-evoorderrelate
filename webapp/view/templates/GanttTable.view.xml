@@ -8,18 +8,17 @@
 				<Page id="idGanttViewPage" showFooter="false" class="sapUiNoContentPadding" showSubHeader="false" enableScrolling="false">
 					<customHeader>
 						<OverflowToolbar id="idCustomHeaderToolbar">
-							<Button id="idBtnTop" type="Accept" tooltip="{i18n>btn.top}" icon="sap-icon://collapse-group" press="onPresTop"/>
-							<Button id="idBtnUp" type="Accept" tooltip="{i18n>btn.up}" icon="sap-icon://navigation-up-arrow" press="onPresUp"/>
-							<Button id="idBtnDown" type="Accept" tooltip="{i18n>btn.down}" icon="sap-icon://navigation-down-arrow" press="onPresDown"/>
-							<Button id="idBtnBottom" type="Accept" tooltip="{i18n>btn.bottom}" icon="sap-icon://expand-group" press="onPresBottom"/>
-							<ToolbarSpacer id="idToolbarSpacerFirst"/>
+							<Button id="idBtnTop" tooltip="{i18n>btn.top}" icon="sap-icon://collapse-group" press="onPressTop"/>
+							<Button id="idBtnUp" tooltip="{i18n>btn.up}" icon="sap-icon://navigation-up-arrow" press="onPressUp"/>
+							<Button id="idBtnDown" tooltip="{i18n>btn.down}" icon="sap-icon://navigation-down-arrow" press="onPressDown"/>
+							<Button id="idBtnBottom" tooltip="{i18n>btn.bottom}" icon="sap-icon://expand-group" press="onPressBottom"/>
 							<Label id="idLabelNetworksDropdown" text="{i18n>lbl.networks}"/>
 							<Select id="idNetworksDropdown"/>
-							<ToolbarSpacer id="idToolbarSpacerSecond"/>
 							<Button id="idBtnCretaeNewNetwork" text="{i18n>btn.createNewNetwork}" tooltip="{i18n>btn.createNewNetwork}" press="onPresCreateNewNetwork"/>
-							<Button id="idBtnSave" type="Emphasized" tooltip="{i18n>btn.save}" text="{i18n>btn.save}" press="onPresSave"/>
-							<Button id="idBtnCancel" type="Accept" tooltip="{i18n>btn.cancel}" text="{i18n>btn.cancel}" press="onPresCancel"/>
-							<Button id="idBtnDeleteNetwork" icon="sap-icon://delete" tooltip="{i18n>btn.delete}" press="onPresDelete"/>
+							<ToolbarSpacer id="idGanttTableToolbarSpacer"/>
+							<Button id="idBtnSave" type="Emphasized" tooltip="{i18n>btn.save}" text="{i18n>btn.save}" press="onPressNetworkSave"/>
+							<Button id="idBtnCancel" type="Accept" tooltip="{i18n>btn.cancel}" text="{i18n>btn.cancel}" press="onPressNetwokCancel"/>
+							<Button id="idBtnDeleteNetwork" icon="sap-icon://delete" tooltip="{i18n>btn.delete}" press="onPressNetworkDelete"/>
 						</OverflowToolbar>
 					</customHeader>
 					<content>

@@ -9,11 +9,11 @@ sap.ui.define([
 		metadata: {
 			// extension can declare the public methods
 			// in general methods that start with "_" are private
-			methods: {
-			}
+			methods: {}
 		},
 
 		oViewModel: null,
+
 		/**
 		 * Called when a controller is instantiated and its View controls (if available) are already created.
 		 * Can be used to modify the View before it is displayed, to bind event handlers and do other one-time initialization.
@@ -24,9 +24,6 @@ sap.ui.define([
 
 			//get annotation line items
 			this._getLineItems();
-
-			//get gantt data
-			this._getGanttdata();
 
 			var oRouter = this.getRouter();
 
@@ -98,20 +95,6 @@ sap.ui.define([
 					}
 
 				}.bind(this));
-			}.bind(this));
-		},
-
-		/**
-		 * get gantt table data
-		 * @private
-		 */
-		_getGanttdata: function () {
-			var oTempModel = this.getModel("templateProperties"),
-				mTabs = oTempModel.getProperty("/GanttConfigs"),
-				sEntitySet = mTabs.entitySet;
-
-			this.getOwnerComponent().readData("/" + sEntitySet, [], {}).then(function (oResult) {
-				this.getModel("ganttModel").setData(oResult);
 			}.bind(this));
 		}
 	});

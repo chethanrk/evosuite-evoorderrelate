@@ -1,8 +1,9 @@
 sap.ui.define([
 	"com/evorait/evosuite/evomanagedepend/controller/BaseController",
 	"sap/gantt/misc/Format",
-	"sap/ui/core/mvc/OverrideExecution"
-], function (BaseController, Format, OverrideExecution) {
+	"sap/ui/core/mvc/OverrideExecution",
+	"sap/base/util/deepClone"
+], function (BaseController, Format, OverrideExecution, deepClone) {
 	"use strict";
 
 	return BaseController.extend("com.evorait.evosuite.evomanagedepend.controller.GanttTable", {
@@ -61,11 +62,23 @@ sap.ui.define([
 				onDragEnter: {
 					public: true,
 					final: true
+				},
+
+				onPressNetworkDelete: {
+					public: true,
+					final: true
+				},
+
+				onPressNetwokCancel: {
+					public: true,
+					final: true
 				}
 			}
 		},
 
-		_oGanttTableContext: null,
+		_selectedRowIndex: null,
+		oViewModel: null,
+		oBackupData: {},
 
 		/**
 		 * Called when a controller is instantiated and its View controls (if available) are already created.
@@ -73,7 +86,9 @@ sap.ui.define([
 		 * @memberOf com.evorait.evosuite.evomanagedepend.view.GanttTable
 		 */
 		onInit: function () {
-
+			this.oViewModel = this.getModel("viewModel");
+			//get gantt data
+			this._getGanttdata();
 		},
 
 		fnTimeConverter: function (sTimestamp) {
@@ -81,42 +96,12 @@ sap.ui.define([
 		},
 
 		/**
-		 * Similar to onAfterRendering, but this hook is invoked before the controller's View is re-rendered
-		 * (NOT before the first rendering! onInit() is used for that one!).
-		 * @memberOf com.evorait.evosuite.evomanagedepend.view.GanttTable
-		 */
-		//	onBeforeRendering: function() {
-		//
-		//	},
-
-		/**
-		 * Called when the View has been rendered (so its HTML is part of the document). Post-rendering manipulations of the HTML could be done here.
-		 * This hook is the same one that SAPUI5 controls get after being rendered.
-		 * @memberOf com.evorait.evosuite.evomanagedepend.view.GanttTable
-		 */
-		//	onAfterRendering: function() {
-		//
-		//	},
-
-		/**
-		 * Called when the Controller is destroyed. Use this one to free resources and finalize activities.
-		 * @memberOf com.evorait.evosuite.evomanagedepend.view.GanttTable
-		 */
-		//	onExit: function() {
-		//
-		//	}
-
-		/**
 		 * When row selection has changed in gantt table
 		 */
 		onGanttRowSelectionChange: function (oEvent) {
-			var iRowIndex = oEvent.getParameter("rowIndex"),
-				oRowContext = oEvent.getParameter("rowContext");
+			this._selectedRowIndex = oEvent.getParameter("rowIndex");
 
-			if (iRowIndex !== 0) {
-				this._oGanttTableContext = oRowContext;
-			} else {
-				this._oGanttTableContext = null;
+			if (this._selectedRowIndex === 0) {
 				oEvent.getSource().clearSelection();
 			}
 		},
@@ -125,57 +110,80 @@ sap.ui.define([
 		 * Delete dependency operation in the gantttable
 		 */
 		onPressDeleteDependency: function (oEvent) {
-			var sTitle = this.getResourceBundle().getText("tit.confirmDeleteSelected"),
-				sMsg = this.getResourceBundle().getText("msg.confirmOperationDelete");
+			var oSelectedRow = oEvent.getParameter("row"),
+				oContext = oSelectedRow.getBindingContext("ganttModel"),
+				iSelectedRow = parseInt(oContext.getPath().slice(-1), 10);
 
-			var successFn = function () {
-				sap.m.MessageToast.show("Delete Operation");
-			};
-			this.showConfirmDialog(sTitle, sMsg, successFn.bind(this));
-
+			this._tablSortAndDelete(iSelectedRow);
 		},
 
 		/**
 		 * Manual sort event to move selected row to top
 		 */
-		onPresTop: function (oEvent) {
-			if (!this._oGanttTableContext) {
+		onPressTop: function (oEvent) {
+			if (!this._selectedRowIndex && this._selectedRowIndex === 0) {
 				this.showMessageToast("Select atleast one line item");
 				return;
 			}
-			this.showMessageToast("Validation from backend");
+
+			if (this._selectedRowIndex < 2) {
+				return;
+			}
+
+			this._tablSortAndDelete(this._selectedRowIndex, 1);
 		},
 		/**
 		 * Manual sort event to move selected row to one step up
 		 */
-		onPresUp: function (oEvent) {
-			if (!this._oGanttTableContext) {
+		onPressUp: function (oEvent) {
+			if (!this._selectedRowIndex && this._selectedRowIndex === 0) {
 				this.showMessageToast("Select atleast one line item");
 				return;
 			}
-			this.showMessageToast("Validation from backend");
+
+			if (this._selectedRowIndex < 2) {
+				return;
+			}
+			this._tablSortAndDelete(this._selectedRowIndex, (this._selectedRowIndex - 1));
 		},
 
 		/**
 		 * Manual sort event to move selected row to one step down
 		 */
-		onPresDown: function (oEvent) {
-			if (!this._oGanttTableContext) {
+		onPressDown: function (oEvent) {
+			if (!this._selectedRowIndex && this._selectedRowIndex === 0) {
 				this.showMessageToast("Select atleast one line item");
 				return;
 			}
-			this.showMessageToast("Validation from backend");
+
+			var iGanttRowCount = parseInt(this.oViewModel.getProperty("/GanttRowCount"), 10);
+
+			if (this._selectedRowIndex > (iGanttRowCount - 2)) {
+				return;
+			}
+
+			this._tablSortAndDelete(this._selectedRowIndex, (this._selectedRowIndex + 1));
 		},
 
 		/**
 		 * Manual sort event to move selected row to bottom
 		 */
-		onPresBottom: function (oEvent) {
-			if (!this._oGanttTableContext) {
+		onPressBottom: function (oEvent) {
+			if (!this._selectedRowIndex && this._selectedRowIndex === 0) {
 				this.showMessageToast("Select atleast one line item");
 				return;
 			}
-			this.showMessageToast("Validation from backend");
+
+			var iGanttRowCount = parseInt(this.oViewModel.getProperty("/GanttRowCount"), 10);
+
+			if (this._selectedRowIndex > (iGanttRowCount - 2)) {
+				return;
+			}
+
+			if (iGanttRowCount) {
+				var iDropPath = iGanttRowCount - 1;
+				this._tablSortAndDelete(this._selectedRowIndex, iDropPath);
+			}
 		},
 
 		/**
@@ -200,22 +208,98 @@ sap.ui.define([
 		 */
 		onDropGanttTable: function (oEvent) {
 			var oDroppedControl = oEvent.getParameter("droppedControl"),
-				oDroppedBindingContext = oDroppedControl.getBindingContext("ganttModel");
+				oDroppedBindingContext = oDroppedControl.getBindingContext("ganttModel"),
+				iDropPath = parseInt(oDroppedBindingContext.getPath().slice(-1), 10);
 
-			this.showMessageToast("Validation from backend");
+			var oDraggedControl = oEvent.getParameter("draggedControl"),
+				oDraggedBindingContext = oDraggedControl.getBindingContext("ganttModel"),
+				iDragPath = parseInt(oDraggedBindingContext.getPath().slice(-1), 10);
+
+			this._tablSortAndDelete(iDragPath, iDropPath);
+
 		},
 
 		/**
 		 * Validate the drop items 
 		 */
 		onDragEnter: function (oEvent) {
-			var oDraggedControl = oEvent.getParameter("target"),
-				oDroppedBindingContext = oDraggedControl.getBindingContext("ganttModel");
+			var oDroppedControl = oEvent.getParameter("target"),
+				oDroppedBindingContext = oDroppedControl.getBindingContext("ganttModel");
 
 			if (oDroppedBindingContext.getProperty("TYPE") === 'Start') {
 				oEvent.preventDefault();
 				return;
 			}
+		},
+
+		/**
+		 * Delete selected network
+		 */
+		onPressNetworkDelete: function (oEvent) {
+			var sTitle = this.getResourceBundle().getText("tit.confirmDeleteSelected"),
+				sMsg = this.getResourceBundle().getText("msg.confirmNetworkDelete");
+
+			var successFn = function () {
+				sap.m.MessageToast.show("Delete Network");
+			};
+			this.showConfirmDialog(sTitle, sMsg, successFn.bind(this));
+		},
+
+		/**
+		 * Cancel operation changes for the selected network
+		 */
+		onPressNetwokCancel: function (oEvent) {
+			var sTitle = this.getResourceBundle().getText("tit.confirmCancelSelected"),
+				sMsg = this.getResourceBundle().getText("msg.confirmNetworkCancel");
+
+			var successFn = function () {
+				var oResetData = {};
+				oResetData = deepClone(this.oBackupData);
+				this.getModel("ganttModel").setData(oResetData);
+				this.getModel("ganttModel").refresh();
+			};
+			this.showConfirmDialog(sTitle, sMsg, successFn.bind(this));
+		},
+
+		/**
+		 * get gantt table data
+		 * @private
+		 */
+		_getGanttdata: function () {
+			var oTempModel = this.getModel("templateProperties"),
+				mTabs = oTempModel.getProperty("/GanttConfigs"),
+				sEntitySet = mTabs.entitySet;
+
+			this.getOwnerComponent().readData("/" + sEntitySet, [], {}).then(function (oResult) {
+				this.oBackupData = deepClone(oResult);
+				this.getModel("ganttModel").setData(oResult);
+				if (oResult.results) {
+					this.getModel("viewModel").setProperty("/GanttRowCount", oResult.results.length);
+				}
+			}.bind(this));
+		},
+
+		/**
+		 * Handle to sort and delete functionality
+		 * @param iDraggedPath index of where it placed before change
+		 * @param iDroppedPath index of where to place after change
+		 */
+		_tablSortAndDelete: function (iDraggedPath, iDroppedPath) {
+			var sTitle = "Confirm",
+				sMsg = "Do you really want to continue after validation";
+
+			var successFn = function () {
+				var oModel = this.getModel("ganttModel"),
+					oData = oModel.getData(),
+					DraggedData = oData.results.splice(iDraggedPath, 1);
+
+				if (iDroppedPath) {
+					oData.results.splice(iDroppedPath, 0, DraggedData[0]);
+				}
+				this.oViewModel.setProperty("/GanttRowCount", oData.results.length);
+				oModel.refresh();
+			};
+			this.showConfirmDialog(sTitle, sMsg, successFn.bind(this));
 		}
 
 	});
