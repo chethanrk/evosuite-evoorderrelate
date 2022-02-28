@@ -46,6 +46,15 @@ sap.ui.define([
 				pattern: "kk:mm"
 			});
 			return oDateFormat.format(new Date(sValue.ms + TZOffsetMs));
+		},
+		
+		/**
+		 * @param sortNo
+		 * @param max
+		 * @returns {*}
+		 */
+		formatOperationNumber: function (sortNo, max) {
+			return sortNo.length < max ? this.formatOperationNumber("0" + sortNo, max) : sortNo;
 		}
 	};
 

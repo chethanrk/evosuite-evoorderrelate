@@ -41,6 +41,7 @@ sap.ui.define([
 				busy: false,
 				delay: 100,
 				densityClass: this.getContentDensityClass(),
+				pendingChanges: false
 			};
 			this.setModel(models.createHelperModel(viewModelObj), "viewModel");
 			this.setModel(models.createGanttModel(), "ganttModel");

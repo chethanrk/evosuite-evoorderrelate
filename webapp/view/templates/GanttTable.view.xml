@@ -13,11 +13,15 @@
 							<Button id="idBtnDown" tooltip="{i18n>btn.down}" icon="sap-icon://navigation-down-arrow" press="onPressDown"/>
 							<Button id="idBtnBottom" tooltip="{i18n>btn.bottom}" icon="sap-icon://expand-group" press="onPressBottom"/>
 							<Label id="idLabelNetworksDropdown" text="{i18n>lbl.networks}"/>
-							<Select id="idNetworksDropdown"/>
+							<Select id="idNetworksDropdown" items="{path:'/NetworkSet', events:{dataReceived: '.networkDataReceived'}}" change="onChangeNetwork">
+								<core:Item key="{NETWORK_ID}" text="{NETWORK_ID}"/>
+							</Select>
 							<Button id="idBtnCretaeNewNetwork" text="{i18n>btn.createNewNetwork}" tooltip="{i18n>btn.createNewNetwork}" press="onPresCreateNewNetwork"/>
 							<ToolbarSpacer id="idGanttTableToolbarSpacer"/>
-							<Button id="idBtnSave" type="Emphasized" tooltip="{i18n>btn.save}" text="{i18n>btn.save}" press="onPressNetworkSave"/>
-							<Button id="idBtnCancel" type="Accept" tooltip="{i18n>btn.cancel}" text="{i18n>btn.cancel}" press="onPressNetwokCancel"/>
+							<Button id="idBtnSave" type="Emphasized" tooltip="{i18n>btn.save}" text="{i18n>btn.save}" press="onPressNetworkSave"
+								enabled="{viewModel>/pendingChanges}"/>
+							<Button id="idBtnCancel" type="Accept" tooltip="{i18n>btn.cancel}" text="{i18n>btn.cancel}" press="onPressNetwokCancel"
+								enabled="{viewModel>/pendingChanges}"/>
 							<Button id="idBtnDeleteNetwork" icon="sap-icon://delete" tooltip="{i18n>btn.delete}" press="onPressNetworkDelete"/>
 						</OverflowToolbar>
 					</customHeader>
@@ -52,7 +56,7 @@
 																		<Select width="20%" items="{path:'/TypeSet', templateShareable: true}"
 																			selectedKey="{= '{ganttModel>' + ${path : 'lineItem>Value/Path'} + '}' }" enabled="{= ${ganttModel>TYPE} !== 'Start'}">
 																			<items>
-																				<core:Item key="{TYPE}" text="{TYPE}"/>
+																				<core:Item key="{TYPE}" text="{TYPE}" enabled="{= ${TYPE} !== 'Start'}"/>
 																			</items>
 																		</Select>
 																	</FlexBox>
