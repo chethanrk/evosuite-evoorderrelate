@@ -17,7 +17,7 @@
 		</content>
 		<buttons>
 			<core:ExtensionPoint name="DialogExtP|OrderTableFilter|WOHeaderSet|Buttons"/>
-			<Button text="{i18n>btn.close}" press="onOrderFilterClose"></Button>
+			<Button text="{i18n>btn.close}" tooltip="{i18n>btn.close}" press="onOrderFilterClose"></Button>
 		</buttons>
 	</Dialog>
 </core:FragmentDefinition>

@@ -16,6 +16,8 @@ sap.ui.define([
 			manifest: "json"
 		},
 
+		oTemplatePropsProm: null,
+
 		/**
 		 * The component is initialized by UI5 automatically during the startup of the app and calls the init method once.
 		 * @public
@@ -39,8 +41,12 @@ sap.ui.define([
 				busy: false,
 				delay: 100,
 				densityClass: this.getContentDensityClass(),
+				pendingChanges: false
 			};
 			this.setModel(models.createHelperModel(viewModelObj), "viewModel");
+			this.setModel(models.createGanttModel(), "ganttModel");
+
+			this._getTemplateProps();
 
 			this.setModel(oMessageManager.getMessageModel(), "message");
 
@@ -113,5 +119,39 @@ sap.ui.define([
 			}
 			return false;
 		},
+        /**
+		 * get Template properties as model inside a global Promise
+		 */
+		_getTemplateProps: function () {
+			this.oTemplatePropsProm = new Promise(function (resolve) {
+				var realPath = sap.ui.require.toUrl("com/evorait/evosuite/evomanagedepend/model/TemplateProperties.json");
+				var oTempJsonModel = new JSONModel();
+				oTempJsonModel.loadData(realPath);
+				oTempJsonModel.attachRequestCompleted(function () {
+					this.setModel(oTempJsonModel, "templateProperties");
+					resolve(oTempJsonModel.getData());
+				}.bind(this));
+			}.bind(this));
+		},
+
+		/**
+		 * Read from oData model service url with filters
+		 * returns promise
+		 */
+		readData: function (sUri, aFilters, mUrlParams) {
+			return new Promise(function (resolve, reject) {
+				this.getModel().read(sUri, {
+					filters: aFilters,
+					urlParameters: mUrlParams || {},
+					success: function (oData) {
+						resolve(oData);
+					},
+					error: function (oError) {
+						//Handle Error
+						reject(oError);
+					}
+				});
+			}.bind(this));
+		}
 	});
 });

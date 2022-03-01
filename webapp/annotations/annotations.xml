@@ -11,9 +11,6 @@
 	<edmx:Reference Uri="/sap/opu/odata/EVORA/EO_MAIN_SRV/$metadata">
 		<edmx:Include Alias="Metadata" Namespace="com.evorait.evoorder"/>
 	</edmx:Reference>
-	<edmx:Reference Uri="https://wiki.scn.sap.com/wiki/download/attachments/448470974/Common.xml?api=v2">
-		<edmx:Include Alias="Common" Namespace="com.sap.vocabularies.Common.v1"/>
-	</edmx:Reference>
 	<edmx:DataServices>
 		<Schema xmlns="http://docs.oasis-open.org/odata/ns/edm" Namespace="com.evorait.evoorder">
 			<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="com.evorait.evoorder.WOHeader">
@@ -35,10 +32,6 @@
 							<PropertyValue Property="Value" Path="ORDER_TYPE_DESCRIPTION"/>
 							<PropertyValue Property="Position" Int="4"/>
 						</Record>
-						<Record Type="com.sap.vocabularies.UI.v1.DataField">
-							<PropertyValue Property="Value" Path="WORKCENTRE"/>
-							<PropertyValue Property="Position" Int="5"/>
-						</Record>
 					</Collection>
 				</Annotation>
 				<Annotation Term="com.sap.vocabularies.UI.v1.SelectionFields">
@@ -48,8 +41,39 @@
 						<PropertyPath>ORDER_TYPE_DESCRIPTION</PropertyPath>
 						<PropertyPath>ORDER_DESCRIPTION</PropertyPath>
 						<PropertyPath>PLANT</PropertyPath>
-						<PropertyPath>WORKCENTRE</PropertyPath>\
+						<PropertyPath>WORKCENTRE</PropertyPath>
 						<PropertyPath>WORKCENTRE_DESCRIPTION</PropertyPath>
+					</Collection>
+				</Annotation>
+			</Annotations>
+			<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="com.evorait.evoorder.Gantt">
+				<Annotation Term="com.sap.vocabularies.UI.v1.LineItem">
+					<Collection>
+						<Record Type="com.sap.vocabularies.UI.v1.DataField">
+							<PropertyValue Property="Value" Path="SORTID"/>
+							<PropertyValue Property="Position" Int="1"/>
+						</Record>
+						<Record Type="com.sap.vocabularies.UI.v1.DataField">
+							<PropertyValue Property="Value" Path="OPERATION_NUMBER"/>
+							<PropertyValue Property="Position" Int="2"/>
+						</Record>
+						<Record Type="com.sap.vocabularies.UI.v1.DataField">
+							<PropertyValue Property="Value" Path="ORDER_NUMBER"/>
+							<PropertyValue Property="Position" Int="3"/>
+						</Record>
+						<Record Type="com.sap.vocabularies.UI.v1.DataField">
+							<PropertyValue Property="Value" Path="TYPE"/>
+							<PropertyValue Property="Position" Int="4"/>
+							<Annotation Term="Core.LongDescription" String="DropDown"/>
+						</Record>
+						<Record Type="com.sap.vocabularies.UI.v1.DataField">
+							<PropertyValue Property="Value" Path="ASSIGNMENT"/>
+							<PropertyValue Property="Position" Int="5"/>
+						</Record>
+						<Record Type="com.sap.vocabularies.UI.v1.DataField">
+							<PropertyValue Property="Value" Path="SCHEDULE_TYPE"/>
+							<PropertyValue Property="Position" Int="6"/>
+						</Record>
 					</Collection>
 				</Annotation>
 			</Annotations>

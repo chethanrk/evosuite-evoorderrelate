@@ -1,11 +1,39 @@
 sap.ui.define([
 	"com/evorait/evosuite/evomanagedepend/controller/BaseController",
-	"sap/ui/core/Fragment"
-], function (BaseController, Fragment) {
+	"sap/ui/core/Fragment",
+	"sap/ui/core/mvc/OverrideExecution"
+], function (BaseController, Fragment, OverrideExecution) {
 	"use strict";
 
 	return BaseController.extend("com.evorait.evosuite.evomanagedepend.controller.App", {
-		
+
+		metadata: {
+			// extension can declare the public methods
+			// in general methods that start with "_" are private
+			methods: {
+				onIconPress: {
+					public: true,
+					final: false,
+					overrideExecution: OverrideExecution.Instead
+				},
+				open: {
+					public: true,
+					final: false,
+					overrideExecution: OverrideExecution.After
+				},
+				onCloseDialog: {
+					public: true,
+					final: false,
+					overrideExecution: OverrideExecution.After
+				},
+				onMessageManagerPress: {
+					public: true,
+					final: false,
+					overrideExecution: OverrideExecution.After
+				}
+			}
+		},
+
 		onInit: function () {
 			//Bind the message model to the view and register it
 			this.getOwnerComponent().registerViewToMessageManager(this.getView());
