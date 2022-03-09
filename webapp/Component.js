@@ -41,7 +41,9 @@ sap.ui.define([
 				busy: false,
 				delay: 100,
 				densityClass: this.getContentDensityClass(),
-				pendingChanges: false
+				pendingChanges: false,
+				startTime: "00000000000000",
+				endTime: "00000000000000"
 			};
 			this.setModel(models.createHelperModel(viewModelObj), "viewModel");
 			this.setModel(models.createGanttModel(), "ganttModel");
@@ -93,7 +95,7 @@ sap.ui.define([
 		registerViewToMessageManager: function (oView) {
 			oMessageManager.registerObject(oView, true);
 		},
-		
+
 		/**
 		 * Get url GET parameter by key name
 		 * @param {string} sKey - key of the parameter
@@ -119,7 +121,7 @@ sap.ui.define([
 			}
 			return false;
 		},
-        /**
+		/**
 		 * get Template properties as model inside a global Promise
 		 */
 		_getTemplateProps: function () {

@@ -7,8 +7,9 @@ sap.ui.define([
 	"sap/m/Text",
 	"sap/m/MessageToast",
 	"sap/m/MessageBox",
-	"sap/ui/core/mvc/OverrideExecution"
-], function (Controller, History, Dialog, Button, Text, MessageToast, MessageBox, OverrideExecution) {
+	"sap/ui/core/mvc/OverrideExecution",
+	"com/evorait/evosuite/evomanagedepend/model/formatter"
+], function (Controller, History, Dialog, Button, Text, MessageToast, MessageBox, OverrideExecution, formatter) {
 	"use strict";
 
 	return Controller.extend("com.evorait.evosuite.evomanagedepend.controller.BaseController", {
@@ -17,6 +18,12 @@ sap.ui.define([
 			// extension can declare the public methods
 			// in general methods that start with "_" are private
 			methods: {
+
+				formatter: {
+					public: true,
+					final: true
+				},
+
 				getRouter: {
 					public: true,
 					final: true
@@ -58,6 +65,8 @@ sap.ui.define([
 				}
 			}
 		},
+
+		formatter: formatter,
 
 		/**
 		 * Convenience method for accessing the router in every controller of the application.
