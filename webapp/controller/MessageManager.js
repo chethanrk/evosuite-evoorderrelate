@@ -4,7 +4,7 @@ sap.ui.define([
 	"sap/ui/core/mvc/OverrideExecution"
 ], function (Controller, Fragment, OverrideExecution) {
 	"use strict";
-	return Controller.extend("com.evorait.evosuite.evomanagedepend.controller.MessageManager", {
+	return Controller.extend("com.evorait.evosuite.evoorderrelate.controller.MessageManager", {
 
 		metadata: {
 			// extension can declare the public methods
@@ -41,7 +41,7 @@ sap.ui.define([
 			this._oCurrentView = oView;
 			if (!this._showMessageManager) {
 				Fragment.load({
-					name: "com.evorait.evosuite.evomanagedepend.view.fragments.MessageManager",
+					name: "com.evorait.evosuite.evoorderrelate.view.fragments.MessageManager",
 					controller: this,
 					type: "XML"
 				}).then(function (oFragment) {

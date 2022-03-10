@@ -8,11 +8,11 @@ sap.ui.define([
 	"sap/m/MessageToast",
 	"sap/m/MessageBox",
 	"sap/ui/core/mvc/OverrideExecution",
-	"com/evorait/evosuite/evomanagedepend/model/formatter"
+	"com/evorait/evosuite/evoorderrelate/model/formatter"
 ], function (Controller, History, Dialog, Button, Text, MessageToast, MessageBox, OverrideExecution, formatter) {
 	"use strict";
 
-	return Controller.extend("com.evorait.evosuite.evomanagedepend.controller.BaseController", {
+	return Controller.extend("com.evorait.evosuite.evoorderrelate.controller.BaseController", {
 
 		metadata: {
 			// extension can declare the public methods

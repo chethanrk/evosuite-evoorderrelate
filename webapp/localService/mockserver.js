@@ -7,7 +7,7 @@ sap.ui.define([
 	"use strict";
 
 	var oMockServer,
-		_sAppPath = "com/evorait/evosuite/evomanagedepend/",
+		_sAppPath = "com/evorait/evosuite/evoorderrelate/",
 		_sJsonFilesPath = _sAppPath + "localService/mockdata";
 
 	var oMockServerInterface = {

@@ -1,11 +1,11 @@
 sap.ui.define([
-	"com/evorait/evosuite/evomanagedepend/controller/BaseController",
+	"com/evorait/evosuite/evoorderrelate/controller/BaseController",
 	"sap/ui/core/Fragment",
 	"sap/ui/core/mvc/OverrideExecution"
 ], function (BaseController, Fragment, OverrideExecution) {
 	"use strict";
 
-	return BaseController.extend("com.evorait.evosuite.evomanagedepend.controller.App", {
+	return BaseController.extend("com.evorait.evosuite.evoorderrelate.controller.App", {
 
 		metadata: {
 			// extension can declare the public methods
@@ -49,7 +49,7 @@ sap.ui.define([
 			// create popover
 			if (!this._infoDialog) {
 				Fragment.load({
-					name: "com.evorait.evosuite.evomanagedepend.view.fragments.InformationPopover",
+					name: "com.evorait.evosuite.evoorderrelate.view.fragments.InformationPopover",
 					controller: this
 				}).then(function (oDialog) {
 					this._infoDialog = oDialog;

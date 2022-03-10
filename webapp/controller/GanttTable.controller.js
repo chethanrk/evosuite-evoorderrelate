@@ -1,14 +1,14 @@
 sap.ui.define([
-	"com/evorait/evosuite/evomanagedepend/controller/BaseController",
+	"com/evorait/evosuite/evoorderrelate/controller/BaseController",
 	"sap/ui/core/mvc/OverrideExecution",
 	"sap/base/util/deepClone",
 	"sap/ui/model/Filter",
 	"sap/ui/model/FilterOperator",
-	"com/evorait/evosuite/evomanagedepend/model/formatter"
+	"com/evorait/evosuite/evoorderrelate/model/formatter"
 ], function (BaseController, OverrideExecution, deepClone, Filter, FilterOperator, formatter) {
 	"use strict";
 
-	return BaseController.extend("com.evorait.evosuite.evomanagedepend.controller.GanttTable", {
+	return BaseController.extend("com.evorait.evosuite.evoorderrelate.controller.GanttTable", {
 
 		metadata: {
 			// extension can declare the public methods
@@ -80,7 +80,7 @@ sap.ui.define([
 		/**
 		 * Called when a controller is instantiated and its View controls (if available) are already created.
 		 * Can be used to modify the View before it is displayed, to bind event handlers and do other one-time initialization.
-		 * @memberOf com.evorait.evosuite.evomanagedepend.view.GanttTable
+		 * @memberOf com.evorait.evosuite.evoorderrelate.view.GanttTable
 		 */
 		onInit: function () {
 			this.oViewModel = this.getModel("viewModel");

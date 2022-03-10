@@ -1,16 +1,16 @@
 sap.ui.define([
 	"sap/ui/core/UIComponent",
 	"sap/ui/Device",
-	"com/evorait/evosuite/evomanagedepend/model/models",
-	"com/evorait/evosuite/evomanagedepend/controller/ErrorHandler",
-	"com/evorait/evosuite/evomanagedepend/controller/MessageManager",
+	"com/evorait/evosuite/evoorderrelate/model/models",
+	"com/evorait/evosuite/evoorderrelate/controller/ErrorHandler",
+	"com/evorait/evosuite/evoorderrelate/controller/MessageManager",
 	"sap/ui/model/json/JSONModel"
 ], function (UIComponent, Device, models, ErrorHandler, MessageManager, JSONModel) {
 	"use strict";
 
 	var oMessageManager = sap.ui.getCore().getMessageManager();
 
-	return UIComponent.extend("com.evorait.evosuite.evomanagedepend.Component", {
+	return UIComponent.extend("com.evorait.evosuite.evoorderrelate.Component", {
 
 		metadata: {
 			manifest: "json"
@@ -126,7 +126,7 @@ sap.ui.define([
 		 */
 		_getTemplateProps: function () {
 			this.oTemplatePropsProm = new Promise(function (resolve) {
-				var realPath = sap.ui.require.toUrl("com/evorait/evosuite/evomanagedepend/model/TemplateProperties.json");
+				var realPath = sap.ui.require.toUrl("com/evorait/evosuite/evoorderrelate/model/TemplateProperties.json");
 				var oTempJsonModel = new JSONModel();
 				oTempJsonModel.loadData(realPath);
 				oTempJsonModel.attachRequestCompleted(function () {

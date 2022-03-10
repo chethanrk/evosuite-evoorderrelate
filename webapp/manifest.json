@@ -1,7 +1,7 @@
 {
 	"_version": "1.12.0",
 	"sap.app": {
-		"id": "com.evorait.evosuite.evomanagedepend",
+		"id": "com.evorait.evosuite.evoorderrelate",
 		"type": "application",
 		"i18n": "i18n/i18n.properties",
 		"applicationVersion": {
@@ -53,7 +53,7 @@
 	"sap.ui5": {
 		"flexEnabled": true,
 		"rootView": {
-			"viewName": "com.evorait.evosuite.evomanagedepend.view.App",
+			"viewName": "com.evorait.evosuite.evoorderrelate.view.App",
 			"type": "XML",
 			"async": true,
 			"id": "App"
@@ -74,7 +74,7 @@
 			"i18n": {
 				"type": "sap.ui.model.resource.ResourceModel",
 				"settings": {
-					"bundleName": "com.evorait.evosuite.evomanagedepend.i18n.i18n"
+					"bundleName": "com.evorait.evosuite.evoorderrelate.i18n.i18n"
 				}
 			},
 			"": {
@@ -100,7 +100,7 @@
 			"config": {
 				"routerClass": "sap.m.routing.Router",
 				"viewType": "XML",
-				"viewPath": "com.evorait.evosuite.evomanagedepend.view",
+				"viewPath": "com.evorait.evosuite.evoorderrelate.view",
 				"controlAggregation": "pages",
 				"controlId": "appPanel",
 				"clearControlAggregation": false,
