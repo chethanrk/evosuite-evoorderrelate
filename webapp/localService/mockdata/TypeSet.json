@@ -2,39 +2,36 @@
 	"d": {
 		"results": [{
 			"__metadata": {
-				"id": "https://eq1.evorait.net:50103/sap/opu/odata/EVORA/EO_MAIN_SRV/TypeSet('Start')",
-				"uri": "https://eq1.evorait.net:50103/sap/opu/odata/EVORA/EO_MAIN_SRV/TypeSet('Start')",
+				"id": "https://eq1.evorait.net:50103/sap/opu/odata/EVORA/EO_MAIN_SRV/TypeSet('FS')",
+				"uri": "https://eq1.evorait.net:50103/sap/opu/odata/EVORA/EO_MAIN_SRV/TypeSet('FS')",
 				"type": "com.evorait.evoorder.Type"
 			},
-			"TYPE": "Start"
+			"TYPE": "FS",
+			"TYPE_DESCRIPTION": "FinishToStart"
 		}, {
 			"__metadata": {
 				"id": "https://eq1.evorait.net:50103/sap/opu/odata/EVORA/EO_MAIN_SRV/TypeSet('FS')",
 				"uri": "https://eq1.evorait.net:50103/sap/opu/odata/EVORA/EO_MAIN_SRV/TypeSet('FS')",
 				"type": "com.evorait.evoorder.Type"
 			},
-			"TYPE": "FS"
+			"TYPE": "SS",
+			"TYPE_DESCRIPTION": "StartToStart"
 		}, {
 			"__metadata": {
 				"id": "https://eq1.evorait.net:50103/sap/opu/odata/EVORA/EO_MAIN_SRV/TypeSet('FS')",
 				"uri": "https://eq1.evorait.net:50103/sap/opu/odata/EVORA/EO_MAIN_SRV/TypeSet('FS')",
 				"type": "com.evorait.evoorder.Type"
 			},
-			"TYPE": "SS"
+			"TYPE": "SF",
+			"TYPE_DESCRIPTION": "StartToFinish"
 		}, {
 			"__metadata": {
 				"id": "https://eq1.evorait.net:50103/sap/opu/odata/EVORA/EO_MAIN_SRV/TypeSet('FS')",
 				"uri": "https://eq1.evorait.net:50103/sap/opu/odata/EVORA/EO_MAIN_SRV/TypeSet('FS')",
 				"type": "com.evorait.evoorder.Type"
 			},
-			"TYPE": "SF"
-		}, {
-			"__metadata": {
-				"id": "https://eq1.evorait.net:50103/sap/opu/odata/EVORA/EO_MAIN_SRV/TypeSet('FS')",
-				"uri": "https://eq1.evorait.net:50103/sap/opu/odata/EVORA/EO_MAIN_SRV/TypeSet('FS')",
-				"type": "com.evorait.evoorder.Type"
-			},
-			"TYPE": "FF"
+			"TYPE": "FF",
+			"TYPE_DESCRIPTION": "FinishToFinish"
 		}]
 	}
 }

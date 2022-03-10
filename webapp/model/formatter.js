@@ -1,6 +1,7 @@
 sap.ui.define([
-	"sap/ui/core/format/DateFormat"
-], function (DateFormat) {
+	"sap/ui/core/format/DateFormat",
+	"sap/gantt/misc/Format"
+], function (DateFormat, Format) {
 	"use strict";
 
 	return {
@@ -47,7 +48,7 @@ sap.ui.define([
 			});
 			return oDateFormat.format(new Date(sValue.ms + TZOffsetMs));
 		},
-		
+
 		/**
 		 * @param sortNo
 		 * @param max
@@ -55,6 +56,15 @@ sap.ui.define([
 		 */
 		formatOperationNumber: function (sortNo, max) {
 			return sortNo.length < max ? this.formatOperationNumber("0" + sortNo, max) : sortNo;
+		},
+
+		/**
+		 * gives back a formatted date and time
+		 * @param sTimestamp
+		 * @returns {datetime}
+		 */
+		fnTimeConverter: function (sTimestamp) {
+			return Format.abapTimestampToDate(sTimestamp);
 		}
 	};
 

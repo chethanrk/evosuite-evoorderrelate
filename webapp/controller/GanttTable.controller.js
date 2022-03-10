@@ -1,27 +1,27 @@
 sap.ui.define([
-	"com/evorait/evosuite/evomanagedepend/controller/BaseController",
-	"sap/gantt/misc/Format",
+	"com/evorait/evosuite/evoorderrelate/controller/BaseController",
 	"sap/ui/core/mvc/OverrideExecution",
 	"sap/base/util/deepClone",
 	"sap/ui/model/Filter",
 	"sap/ui/model/FilterOperator",
-	"com/evorait/evosuite/evomanagedepend/model/formatter"
-], function (BaseController, Format, OverrideExecution, deepClone, Filter, FilterOperator, formatter) {
+	"com/evorait/evosuite/evoorderrelate/model/formatter"
+], function (BaseController, OverrideExecution, deepClone, Filter, FilterOperator, formatter) {
 	"use strict";
 
-	return BaseController.extend("com.evorait.evosuite.evomanagedepend.controller.GanttTable", {
+	return BaseController.extend("com.evorait.evosuite.evoorderrelate.controller.GanttTable", {
 
 		metadata: {
 			// extension can declare the public methods
 			// in general methods that start with "_" are private
 			methods: {
-				fnTimeConverter: {
-					public: true,
-					final: false,
-					overrideExecution: OverrideExecution.Instead
-				},
 
 				onGanttRowSelectionChange: {
+					public: true,
+					final: false,
+					overrideExecution: OverrideExecution.After
+				},
+
+				onChangeType: {
 					public: true,
 					final: false,
 					overrideExecution: OverrideExecution.After
@@ -86,23 +86,17 @@ sap.ui.define([
 		/**
 		 * Called when a controller is instantiated and its View controls (if available) are already created.
 		 * Can be used to modify the View before it is displayed, to bind event handlers and do other one-time initialization.
-		 * @memberOf com.evorait.evosuite.evomanagedepend.view.GanttTable
+		 * @memberOf com.evorait.evosuite.evoorderrelate.view.GanttTable
 		 */
 		onInit: function () {
 			this.oViewModel = this.getModel("viewModel");
 		},
 
 		/**
-		 * Called when the View has been rendered (so its HTML is part of the document). Post-rendering manipulations of the HTML could be done here.
-		 * This hook is the same one that SAPUI5 controls get after being rendered.
-		 * @memberOf com.evorait.evosuite.evomanagedepend.view.OrderTable
-		 */
-		//onAfterRendering: function () {
-		//
-		//		},
-
-		/**
 		 * Change network selection which fetch selected netwotk detail to gantt
+		 * Confirmation dialog will open if existing entry has some changes 
+		 * New data fetch  from backend for the selected network
+		 * @param {sap.ui.base.Event} oEvent - the change event
 		 */
 		onChangeNetwork: function (oEvent) {
 			var oSelectedItem = oEvent.getParameter("selectedItem"),
@@ -122,12 +116,37 @@ sap.ui.define([
 
 		},
 
-		fnTimeConverter: function (sTimestamp) {
-			return Format.abapTimestampToDate(sTimestamp);
+		/**
+		 * Change type selection which validate with backend
+		 * @param {sap.ui.base.Event} oEvent - the change event
+		 */
+		onChangeType: function (oEvent) {
+			var oSource = oEvent.getSource(),
+				oSourceModel = oSource.getBindingContext("ganttModel"),
+				oSelectedItem = oEvent.getParameter("selectedItem"),
+				oSelectedContext = oSelectedItem.getBindingContext(),
+				sType = oSelectedContext.getProperty("TYPE_DESCRIPTION"),
+				oRelashinShip = oSourceModel.getProperty("GanttToRelationship");
+
+			var sTitle = "Confirm",
+				sMsg = "Do you really want to continue after validation";
+
+			var successFn = function () {
+				oRelashinShip.results[0].type = sType;
+				this.oViewModel.setProperty("/pendingChanges", true);
+				this.getModel("ganttModel").refresh();
+			};
+
+			if (oRelashinShip && oRelashinShip.results && oRelashinShip.results.length) {
+				this.showConfirmDialog(sTitle, sMsg, successFn.bind(this));
+			}
 		},
 
 		/**
 		 * When row selection has changed in gantt table
+		 * Which help to hold selected row index in the global varibale _selectedRowIndex
+		 * Validate the row selection and clear the selection if selection of first item
+		 * @param {sap.ui.base.Event} oEvent - the change event
 		 */
 		onGanttRowSelectionChange: function (oEvent) {
 			this._selectedRowIndex = oEvent.getParameter("rowIndex");
@@ -139,6 +158,8 @@ sap.ui.define([
 
 		/**
 		 * Delete dependency operation in the gantttable
+		 * validated with backend
+		 * @param {sap.ui.base.Event} oEvent - the press event
 		 */
 		onPressDeleteDependency: function (oEvent) {
 			var oSelectedRow = oEvent.getParameter("row"),
@@ -150,6 +171,8 @@ sap.ui.define([
 
 		/**
 		 * Manual sort event to move selected row to top
+		 * validates the row selection
+		 * @param {sap.ui.base.Event} oEvent - the press event
 		 */
 		onPressTop: function (oEvent) {
 			if (!this._selectedRowIndex || this._selectedRowIndex === 0) {
@@ -165,6 +188,8 @@ sap.ui.define([
 		},
 		/**
 		 * Manual sort event to move selected row to one step up
+		 * validates the row selection
+		 * @param {sap.ui.base.Event} oEvent - the press event
 		 */
 		onPressUp: function (oEvent) {
 			if (!this._selectedRowIndex || this._selectedRowIndex === 0) {
@@ -180,6 +205,8 @@ sap.ui.define([
 
 		/**
 		 * Manual sort event to move selected row to one step down
+		 * validates the row selection
+		 * @param {sap.ui.base.Event} oEvent - the press event
 		 */
 		onPressDown: function (oEvent) {
 			if (!this._selectedRowIndex || this._selectedRowIndex === 0) {
@@ -198,6 +225,8 @@ sap.ui.define([
 
 		/**
 		 * Manual sort event to move selected row to bottom
+		 * validates the row selection
+		 * @param {sap.ui.base.Event} oEvent - the press event
 		 */
 		onPressBottom: function (oEvent) {
 			if (!this._selectedRowIndex || this._selectedRowIndex === 0) {
@@ -219,13 +248,15 @@ sap.ui.define([
 
 		/**
 		 * Event to handle drag from the gantt table
+		 * validates the row selection
+		 * @param {sap.ui.base.Event} oEvent - the drag event
 		 */
 		onGanttTableDragStart: function (oEvent) {
 			var oDraggedRow = oEvent.getParameter("target"),
 				oDragSession = oEvent.getParameter("dragSession"),
 				oDragBindingContext = oDraggedRow.getBindingContext("ganttModel");
 
-			if (oDragBindingContext.getProperty("TYPE") === 'Start') {
+			if (oDragBindingContext.getProperty("SORTID") === '001') {
 				oEvent.preventDefault();
 				return;
 			}
@@ -236,6 +267,7 @@ sap.ui.define([
 
 		/**
 		 * Event to handle drop on the gantt table
+		 * @param {sap.ui.base.Event} oEvent - the grop event
 		 */
 		onDropGanttTable: function (oEvent) {
 			var oDroppedControl = oEvent.getParameter("droppedControl"),
@@ -263,12 +295,14 @@ sap.ui.define([
 
 		/**
 		 * Validate the drop items 
+		 * validates the row selection
+		 * @param {sap.ui.base.Event} oEvent - the dragenter event
 		 */
 		onDragEnter: function (oEvent) {
 			var oDroppedControl = oEvent.getParameter("target"),
 				oDroppedBindingContext = oDroppedControl.getBindingContext("ganttModel");
 
-			if (oDroppedBindingContext.getProperty("TYPE") === 'Start') {
+			if (oDroppedBindingContext.getProperty("SORTID") === '001') {
 				oEvent.preventDefault();
 				return;
 			}
@@ -276,6 +310,8 @@ sap.ui.define([
 
 		/**
 		 * Delete selected network
+		 * Confirmation dialog will open 
+		 * @param {sap.ui.base.Event} oEvent - the press event
 		 */
 		onPressNetworkDelete: function (oEvent) {
 			var sTitle = this.getResourceBundle().getText("tit.confirmDeleteSelected"),
@@ -289,6 +325,8 @@ sap.ui.define([
 
 		/**
 		 * Cancel operation changes for the selected network
+		 * Confirmation dialog will open
+		 * @param {sap.ui.base.Event} oEvent - the press event
 		 */
 		onPressNetwokCancel: function (oEvent) {
 			var sTitle = this.getResourceBundle().getText("tit.confirmCancelSelected"),
@@ -306,9 +344,10 @@ sap.ui.define([
 
 		/**
 		 * Handle data recived for the network selection
+		 * * @param {sap.ui.base.Event} oEvent - the dataReceived event
 		 */
-		networkDataReceived: function (oData) {
-			if (oData.getSource().getPath() !== "/NetworkSet") {
+		networkDataReceived: function (oEvent) {
+			if (oEvent.getSource().getPath() !== "/NetworkSet") {
 				return;
 			}
 			var oNetworkSelect = this.getView().byId("idNetworksDropdown"),
@@ -336,10 +375,14 @@ sap.ui.define([
 				and: true
 			});
 
-			this.getOwnerComponent().readData("/" + sEntitySet, [oFilter], {}).then(function (oResult) {
+			this.getOwnerComponent().readData("/" + sEntitySet, [oFilter], {
+				$expand: "GanttToRelationship"
+			}).then(function (oResult) {
 				this.oBackupData = deepClone(oResult);
 				this.getModel("ganttModel").setData(oResult);
 				if (oResult.results) {
+					this.getModel("viewModel").setProperty("/startTime", oResult.results[0].START_DATE);
+					this.getModel("viewModel").setProperty("/endTime", oResult.results[0].END_DATE);
 					this.getModel("viewModel").setProperty("/GanttRowCount", oResult.results.length);
 					this.oViewModel.setProperty("/pendingChanges", false);
 					this._selectedRowIndex = null;
@@ -374,8 +417,8 @@ sap.ui.define([
 
 		/**
 		 * update sort id after each sort/delete functionality
-		 * @param [oData] gantt table data
 		 * Formatter used to format the sortid as 3 digit
+		 * @param [oData] gantt table data
 		 */
 		_updateSortSequence: function (oData) {
 			for (var i = 1; i < oData.length; i++) {

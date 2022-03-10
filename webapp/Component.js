@@ -1,16 +1,16 @@
 sap.ui.define([
 	"sap/ui/core/UIComponent",
 	"sap/ui/Device",
-	"com/evorait/evosuite/evomanagedepend/model/models",
-	"com/evorait/evosuite/evomanagedepend/controller/ErrorHandler",
-	"com/evorait/evosuite/evomanagedepend/controller/MessageManager",
+	"com/evorait/evosuite/evoorderrelate/model/models",
+	"com/evorait/evosuite/evoorderrelate/controller/ErrorHandler",
+	"com/evorait/evosuite/evoorderrelate/controller/MessageManager",
 	"sap/ui/model/json/JSONModel"
 ], function (UIComponent, Device, models, ErrorHandler, MessageManager, JSONModel) {
 	"use strict";
 
 	var oMessageManager = sap.ui.getCore().getMessageManager();
 
-	return UIComponent.extend("com.evorait.evosuite.evomanagedepend.Component", {
+	return UIComponent.extend("com.evorait.evosuite.evoorderrelate.Component", {
 
 		metadata: {
 			manifest: "json"
@@ -33,6 +33,10 @@ sap.ui.define([
 			// set the device model
 			this.setModel(models.createDeviceModel(), "device");
 
+			this.setModel(models.createUserModel(this), "user");
+			
+			this.setModel(models.createInformationModel(this), "InformationModel");
+
 			this.setModel(models.createMessageManagerModel(), "messageManager");
 
 			this.MessageManager = new MessageManager();
@@ -41,10 +45,14 @@ sap.ui.define([
 				busy: false,
 				delay: 100,
 				densityClass: this.getContentDensityClass(),
-				pendingChanges: false
+				pendingChanges: false,
+				startTime: "00000000000000",
+				endTime: "00000000000000"
 			};
 			this.setModel(models.createHelperModel(viewModelObj), "viewModel");
 			this.setModel(models.createGanttModel(), "ganttModel");
+
+			this._getSystemInformation();
 
 			this._getTemplateProps();
 
@@ -93,7 +101,7 @@ sap.ui.define([
 		registerViewToMessageManager: function (oView) {
 			oMessageManager.registerObject(oView, true);
 		},
-		
+
 		/**
 		 * Get url GET parameter by key name
 		 * @param {string} sKey - key of the parameter
@@ -119,17 +127,29 @@ sap.ui.define([
 			}
 			return false;
 		},
-        /**
+		/**
 		 * get Template properties as model inside a global Promise
 		 */
 		_getTemplateProps: function () {
 			this.oTemplatePropsProm = new Promise(function (resolve) {
-				var realPath = sap.ui.require.toUrl("com/evorait/evosuite/evomanagedepend/model/TemplateProperties.json");
+				var realPath = sap.ui.require.toUrl("com/evorait/evosuite/evoorderrelate/model/TemplateProperties.json");
 				var oTempJsonModel = new JSONModel();
 				oTempJsonModel.loadData(realPath);
 				oTempJsonModel.attachRequestCompleted(function () {
 					this.setModel(oTempJsonModel, "templateProperties");
 					resolve(oTempJsonModel.getData());
+				}.bind(this));
+			}.bind(this));
+		},
+
+		/**
+		 * Calls the GetSystemInformation 
+		 */
+		_getSystemInformation: function () {
+			this.oSystemInfoProm = new Promise(function (resolve) {
+				this.readData("/SystemInformationSet", []).then(function (oData) {
+					this.getModel("user").setData(oData.results[0]);
+					resolve(oData.results[0]);
 				}.bind(this));
 			}.bind(this));
 		},
