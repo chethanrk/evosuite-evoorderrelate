@@ -2,6 +2,14 @@
 	"d": {
 		"results": [{
 			"__metadata": {
+				"id": "https://eq1.evorait.net:50103/sap/opu/odata/EVORA/EO_MAIN_SRV/TypeSet('Start')",
+				"uri": "https://eq1.evorait.net:50103/sap/opu/odata/EVORA/EO_MAIN_SRV/TypeSet('Start')",
+				"type": "com.evorait.evoorder.Type"
+			},
+			"TYPE": "Start",
+			"TYPE_DESCRIPTION": "Start"
+		}, {
+			"__metadata": {
 				"id": "https://eq1.evorait.net:50103/sap/opu/odata/EVORA/EO_MAIN_SRV/TypeSet('FS')",
 				"uri": "https://eq1.evorait.net:50103/sap/opu/odata/EVORA/EO_MAIN_SRV/TypeSet('FS')",
 				"type": "com.evorait.evoorder.Type"

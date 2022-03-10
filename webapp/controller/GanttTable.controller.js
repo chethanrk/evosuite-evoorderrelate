@@ -21,12 +21,6 @@ sap.ui.define([
 					overrideExecution: OverrideExecution.After
 				},
 
-				onChangeType: {
-					public: true,
-					final: false,
-					overrideExecution: OverrideExecution.After
-				},
-
 				onPressDeleteDependency: {
 					public: true,
 					final: true

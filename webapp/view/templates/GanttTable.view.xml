@@ -65,7 +65,7 @@
 																		<Select width="20%" items="{path:'/TypeSet', templateShareable: true}" change="onChangeType"
 																			selectedKey="{= '{ganttModel>' + ${path : 'lineItem>Value/Path'} + '}' }">
 																			<items>
-																				<core:Item key="{TYPE}" text="{TYPE}" enabled="{= ${SORTID} !== '001'}"/>
+																				<core:Item key="{TYPE}" text="{TYPE}"/>
 																			</items>
 																		</Select>
 																	</FlexBox>
