@@ -21,6 +21,12 @@ sap.ui.define([
 					overrideExecution: OverrideExecution.After
 				},
 
+				onChangeType: {
+					public: true,
+					final: false,
+					overrideExecution: OverrideExecution.After
+				},
+
 				onPressDeleteDependency: {
 					public: true,
 					final: true
@@ -111,19 +117,9 @@ sap.ui.define([
 		},
 
 		/**
-		 * When row selection has changed in gantt table
-		 * Which help to hold selected row index in the global varibale _selectedRowIndex
-		 * Validate the row selection and clear the selection if selection of first item
+		 * Change type selection which validate with backend
 		 * @param {sap.ui.base.Event} oEvent - the change event
 		 */
-		onGanttRowSelectionChange: function (oEvent) {
-			this._selectedRowIndex = oEvent.getParameter("rowIndex");
-
-			if (this._selectedRowIndex === 0) {
-				oEvent.getSource().clearSelection();
-			}
-		},
-
 		onChangeType: function (oEvent) {
 			var oSource = oEvent.getSource(),
 				oSourceModel = oSource.getBindingContext("ganttModel"),
@@ -143,6 +139,20 @@ sap.ui.define([
 
 			if (oRelashinShip && oRelashinShip.results && oRelashinShip.results.length) {
 				this.showConfirmDialog(sTitle, sMsg, successFn.bind(this));
+			}
+		},
+
+		/**
+		 * When row selection has changed in gantt table
+		 * Which help to hold selected row index in the global varibale _selectedRowIndex
+		 * Validate the row selection and clear the selection if selection of first item
+		 * @param {sap.ui.base.Event} oEvent - the change event
+		 */
+		onGanttRowSelectionChange: function (oEvent) {
+			this._selectedRowIndex = oEvent.getParameter("rowIndex");
+
+			if (this._selectedRowIndex === 0) {
+				oEvent.getSource().clearSelection();
 			}
 		},
 
