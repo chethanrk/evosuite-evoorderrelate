@@ -72,12 +72,29 @@
 				</Key>
 				<Property Name="NETWORK_ID" Type="Edm.String" MaxLength="15" sap:label="Network Id" sap:updatable="false" sap:is-extension-field="true"/>
 			</EntityType>
+			<EntityType Name="SystemInformation" sap:content-version="1">
+				<Key>
+					<PropertyRef Name="Username"/>
+				</Key>
+				<Property Name="Username" Type="Edm.String" Nullable="false" MaxLength="12" sap:label="User Name"/>
+				<Property Name="PersNo" Type="Edm.String" Nullable="false" MaxLength="8" sap:label="Personnel No."/>
+				<Property Name="Firstname" Type="Edm.String" Nullable="false" MaxLength="40" sap:label="First name"/>
+				<Property Name="Lastname" Type="Edm.String" Nullable="false" MaxLength="40" sap:label="Last name"/>
+				<Property Name="Fullname" Type="Edm.String" Nullable="false" MaxLength="80" sap:label="Full Name"/>
+				<Property Name="ServerPath" Type="Edm.String" Nullable="false" sap:label="Server path"/>
+				<Property Name="CoreVersion" Type="Edm.String" Nullable="false" sap:label="Core version"/>
+				<Property Name="Client" Type="Edm.String" Nullable="false" MaxLength="3" sap:label="Client"/>
+				<Property Name="Systemid" Type="Edm.String" Nullable="false" MaxLength="8" sap:label="SAP System ID"/>
+				<Property Name="UserProfile" Type="Edm.String" Nullable="false" MaxLength="20" sap:label="User Profile"/>
+				<Property Name="EnableCreateNetwork" Type="Edm.String" Nullable="false" MaxLength="1" sap:label="Enable IAM"/>
+			</EntityType>
 			<EntityContainer Name="com_evorait_evoorder_Entities" m:IsDefaultEntityContainer="true" sap:supported-formats="atom json xlsx">
 				<EntitySet Name="WOHeaderSet" EntityType="com.evorait.evoorder.WOHeader" sap:content-version="1"/>
 				<EntitySet Name="GanttSet" EntityType="com.evorait.evoorder.Gantt" sap:content-version="1"/>
 				<EntitySet Name="TypeSet" EntityType="com.evorait.evoorder.Type" sap:content-version="1"/>
 				<EntitySet Name="NetworkSet" EntityType="com.evorait.evoorder.Network" sap:content-version="1"/>
 				<EntitySet Name="RelationshipSet" EntityType="com.evorait.evoorder.Relationship" sap:content-version="1"/>
+				<EntitySet Name="SystemInformationSet" EntityType="com.evorait.evoorder.SystemInformation" sap:content-version="1"/>
 				<Association Name="GanttToRelationship" sap:content-version="1">
 					<End Type="com.evorait.evoorder.Gantt" Multiplicity="1" Role="FromRole_GanttToRelationship"/>
 					<End Type="com.evorait.evoorder.Relationship" Multiplicity="*" Role="ToRole_GanttToRelationship"/>

@@ -33,6 +33,10 @@ sap.ui.define([
 			// set the device model
 			this.setModel(models.createDeviceModel(), "device");
 
+			this.setModel(models.createUserModel(this), "user");
+			
+			this.setModel(models.createInformationModel(this), "InformationModel");
+
 			this.setModel(models.createMessageManagerModel(), "messageManager");
 
 			this.MessageManager = new MessageManager();
@@ -47,6 +51,8 @@ sap.ui.define([
 			};
 			this.setModel(models.createHelperModel(viewModelObj), "viewModel");
 			this.setModel(models.createGanttModel(), "ganttModel");
+
+			this._getSystemInformation();
 
 			this._getTemplateProps();
 
@@ -132,6 +138,18 @@ sap.ui.define([
 				oTempJsonModel.attachRequestCompleted(function () {
 					this.setModel(oTempJsonModel, "templateProperties");
 					resolve(oTempJsonModel.getData());
+				}.bind(this));
+			}.bind(this));
+		},
+
+		/**
+		 * Calls the GetSystemInformation 
+		 */
+		_getSystemInformation: function () {
+			this.oSystemInfoProm = new Promise(function (resolve) {
+				this.readData("/SystemInformationSet", []).then(function (oData) {
+					this.getModel("user").setData(oData.results[0]);
+					resolve(oData.results[0]);
 				}.bind(this));
 			}.bind(this));
 		},
