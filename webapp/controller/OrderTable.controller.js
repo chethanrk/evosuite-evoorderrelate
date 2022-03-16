@@ -6,12 +6,12 @@ sap.ui.define([
 	"use strict";
 
 	return BaseController.extend("com.evorait.evosuite.evoorderrelate.controller.OrderTable", {
-		
+
 		metadata: {
 			// extension can declare the public methods
 			// in general methods that start with "_" are private
 			methods: {
-				addFilters:{
+				addFilters: {
 					public: true,
 					final: false,
 					overrideExecution: OverrideExecution.Instead
@@ -37,16 +37,15 @@ sap.ui.define([
 				}
 			}
 		},
-		
+
 		oOrderTable: null,
 		oOrderFilterDialog: null,
 		pOrderFilterDialogLoaded: null,
 		aPageDefaultFilters: [],
-		
+
 		/* =========================================================== */
 		/* lifecycle methods                                           */
 		/* =========================================================== */
-		
 
 		/**
 		 * Called when a controller is instantiated and its View controls (if available) are already created.
@@ -92,40 +91,40 @@ sap.ui.define([
 		//	onExit: function() {
 		//
 		//	}
-		
+
 		/**
 		 * allows extension to add filters. They will be combined via AND with all other filters
 		 * oControllerExtension must be the ControllerExtension instance which adds the filter
 		 * oFilter must be an instance of sap.ui.model.Filter
 		 */
-		addFilters: function() {
-			return [];	
+		addFilters: function () {
+			return [];
 		},
-		
+
 		/* =========================================================== */
 		/* event handlers                                              */
 		/* =========================================================== */
-		
+
 		/**
 		 * Handles press event on the 'Filter' button in the Order Table toolbar
 		 * Opens a Diaog containing FilterBar
 		 * @param {sap.ui.base.Event} oEvent - the press event
 		 */
 		onOrderFilterOpen: function (oEvent) {
-			this.pOrderFilterDialogLoaded.then(function(res) {
+			this.pOrderFilterDialogLoaded.then(function (res) {
 				this.oOrderFilterDialog.open();
 			}.bind(this));
 		},
-		
+
 		/**
 		 * Handles press event on the 'Close' button in the Order Filter Dialog
 		 * Closes the Diaog containing FilterBar
 		 * @param {sap.ui.base.Event} oEvent - the press event
 		 */
-		onOrderFilterClose: function() {
+		onOrderFilterClose: function () {
 			this.oOrderFilterDialog.close();
 		},
-		
+
 		/**
 		 * SmartTable before loading request
 		 * set default SortOrder from annotations
@@ -136,23 +135,23 @@ sap.ui.define([
 			this.aPageDefaultFilters = this.aPageDefaultFilters.concat(this.addFilters());
 			mBindingParams.filters = mBindingParams.filters.concat(this.aPageDefaultFilters);
 		},
-		
+
 		/**
 		 * Common handler for event when Variant management of SmartFilterBar or SmartTable was initialized
 		 * @param {sap.ui.base.Event} oEvent - the afterVariantInitialise event
 		 */
 		onInitializedSmartVariant: function (oEvent) {
 			//get default filter by GET url parameter and if property is allowed to filter
-			this._getDefaultTableFiltersFromUrlParams("WOHeaderSet").then(function (aFilters) {
+			this._getDefaultTableFiltersFromUrlParams("OrderOperationsSet").then(function (aFilters) {
 				this.aPageDefaultFilters = aFilters;
 				this.oOrderTable.rebindTable();
 			}.bind(this));
 		},
-		
+
 		/* =========================================================== */
 		/* internal methods                                            */
 		/* =========================================================== */
-		
+
 		/**
 		 * collect all GET Url parameters
 		 * and checks against entitySet if a porperty with parameter name exists
@@ -188,7 +187,7 @@ sap.ui.define([
 				}.bind(this));
 			}.bind(this));
 		},
-		
+
 		/**
 		 * Alternate function for Object.entries()
 		 * @{obj} selected object entry

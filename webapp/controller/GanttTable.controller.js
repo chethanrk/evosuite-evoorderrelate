@@ -82,6 +82,7 @@ sap.ui.define([
 		_selectedRowIndex: null,
 		oViewModel: null,
 		oBackupData: {},
+		oUpdatedBackupData: {},
 
 		/**
 		 * Called when a controller is instantiated and its View controls (if available) are already created.
@@ -90,6 +91,7 @@ sap.ui.define([
 		 */
 		onInit: function () {
 			this.oViewModel = this.getModel("viewModel");
+			this.oViewModel.setProperty("/gantBusy", true);
 		},
 
 		/**
@@ -125,14 +127,14 @@ sap.ui.define([
 				oSourceModel = oSource.getBindingContext("ganttModel"),
 				oSelectedItem = oEvent.getParameter("selectedItem"),
 				oSelectedContext = oSelectedItem.getBindingContext(),
-				sType = oSelectedContext.getProperty("TYPE_DESCRIPTION"),
-				oRelashinShip = oSourceModel.getProperty("GanttToRelationship");
+				sType = oSelectedContext.getProperty("AOBKY"),
+				oRelashinShip = oSourceModel.getProperty("NetworkToGanttRelation");
 
 			var sTitle = "Confirm",
 				sMsg = "Do you really want to continue after validation";
 
 			var successFn = function () {
-				oRelashinShip.results[0].type = sType;
+				oRelashinShip.results[0].REL_KEY = sType;
 				this.oViewModel.setProperty("/pendingChanges", true);
 				this.getModel("ganttModel").refresh();
 			};
@@ -256,7 +258,7 @@ sap.ui.define([
 				oDragSession = oEvent.getParameter("dragSession"),
 				oDragBindingContext = oDraggedRow.getBindingContext("ganttModel");
 
-			if (oDragBindingContext.getProperty("SORTID") === '001') {
+			if (oDragBindingContext.getProperty("SORT_ID") === '001') {
 				oEvent.preventDefault();
 				return;
 			}
@@ -302,7 +304,7 @@ sap.ui.define([
 			var oDroppedControl = oEvent.getParameter("target"),
 				oDroppedBindingContext = oDroppedControl.getBindingContext("ganttModel");
 
-			if (oDroppedBindingContext.getProperty("SORTID") === '001') {
+			if (oDroppedBindingContext.getProperty("SORT_ID") === '001') {
 				oEvent.preventDefault();
 				return;
 			}
@@ -347,13 +349,14 @@ sap.ui.define([
 		 * * @param {sap.ui.base.Event} oEvent - the dataReceived event
 		 */
 		networkDataReceived: function (oEvent) {
-			if (oEvent.getSource().getPath() !== "/NetworkSet") {
+			if (oEvent.getSource().getPath() !== "/SHNetworkSet") {
 				return;
 			}
 			var oNetworkSelect = this.getView().byId("idNetworksDropdown"),
 				oFirstItem = oNetworkSelect.getFirstItem(),
 				sKey = oFirstItem.getKey();
-
+			//sKey = "000000834050_0050_01";
+			oNetworkSelect.setSelectedKey(sKey);
 			this._getGanttdata(sKey);
 		},
 
@@ -365,10 +368,12 @@ sap.ui.define([
 		_getGanttdata: function (sNetworkId) {
 			var oTempModel = this.getModel("templateProperties"),
 				mTabs = oTempModel.getProperty("/GanttConfigs"),
-				sEntitySet = mTabs.entitySet;
+				sEntitySet = mTabs.entitySet,
+				aFilters = [];
 
-			var aFilters = [];
-			aFilters.push(new Filter("NETWORK_ID", FilterOperator.EQ, sNetworkId));
+			this.oViewModel.setProperty("/gantBusy", true);
+
+			aFilters.push(new Filter("NETWORK_KEY", FilterOperator.EQ, sNetworkId));
 
 			var oFilter = new Filter({
 				filters: aFilters,
@@ -376,17 +381,22 @@ sap.ui.define([
 			});
 
 			this.getOwnerComponent().readData("/" + sEntitySet, [oFilter], {
-				$expand: "GanttToRelationship"
+				$expand: "NetworkToGanttRelation"
 			}).then(function (oResult) {
 				this.oBackupData = deepClone(oResult);
 				this.getModel("ganttModel").setData(oResult);
-				if (oResult.results) {
-					this.getModel("viewModel").setProperty("/startTime", oResult.results[0].START_DATE);
-					this.getModel("viewModel").setProperty("/endTime", oResult.results[0].END_DATE);
-					this.getModel("viewModel").setProperty("/GanttRowCount", oResult.results.length);
+				this.getModel("viewModel").setProperty("/GanttRowCount", oResult.results.length);
+				if (oResult.results && oResult.results.length) {
 					this.oViewModel.setProperty("/pendingChanges", false);
 					this._selectedRowIndex = null;
 				}
+				this.oViewModel.setProperty("/gantBusy", false);
+			}.bind(this), function (error) {
+				this.oBackupData = null;
+				this.getModel("ganttModel").setData({
+					"results": []
+				});
+				this.oViewModel.setProperty("/gantBusy", false);
 			}.bind(this));
 		},
 
@@ -407,7 +417,7 @@ sap.ui.define([
 				if (iDroppedPath) {
 					oData.splice(iDroppedPath, 0, DraggedData[0]);
 				}
-				this._updateSortSequence(oData);
+				this._updateSortandRelationshipSequence(oData);
 				this.oViewModel.setProperty("/GanttRowCount", oData.length);
 				this.oViewModel.setProperty("/pendingChanges", true);
 				oModel.refresh();
@@ -416,14 +426,22 @@ sap.ui.define([
 		},
 
 		/**
-		 * update sort id after each sort/delete functionality
+		 * update sort id and relationship after each sort/delete functionality
 		 * Formatter used to format the sortid as 3 digit
 		 * @param [oData] gantt table data
 		 */
-		_updateSortSequence: function (oData) {
+		_updateSortandRelationshipSequence: function (oData) {
 			for (var i = 1; i < oData.length; i++) {
 				var sSortId = formatter.formatOperationNumber((i + 1).toString(), 3);
-				oData[i].SORTID = sSortId;
+				oData[i].SORT_ID = sSortId;
+
+				oData[i].NetworkToGanttRelation.results[0] = {};
+
+				oData[i].NetworkToGanttRelation.results[0].ObjectKey = oData[i].ObjectKey;
+				oData[i].NetworkToGanttRelation.results[0].HeaderObjectKe = oData[i].ObjectKey;
+				oData[i].NetworkToGanttRelation.results[0].PRE_OBJECT_KEY = oData[i].ObjectKey;
+
+				oData[i].NetworkToGanttRelation.results[0].SUC_OBJECT_KEY = oData[i - 1].ObjectKey;
 			}
 		}
 	});

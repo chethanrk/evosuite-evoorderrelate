@@ -1,6 +1,6 @@
 {
 	"GanttConfigs": {
-		"tab": "Gantt",
-		"entitySet": "GanttSet"
+		"tab": "WONetwork",
+		"entitySet": "WONetworkSet"
 	}
 }

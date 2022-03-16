@@ -13,8 +13,8 @@
 							<Button id="idBtnDown" tooltip="{i18n>btn.down}" icon="sap-icon://navigation-down-arrow" press="onPressDown"/>
 							<Button id="idBtnBottom" tooltip="{i18n>btn.bottom}" icon="sap-icon://expand-group" press="onPressBottom"/>
 							<Label id="idLabelNetworksDropdown" text="{i18n>lbl.networks}"/>
-							<Select id="idNetworksDropdown" items="{path:'/NetworkSet', events:{dataReceived: '.networkDataReceived'}}" change="onChangeNetwork">
-								<core:Item key="{NETWORK_ID}" text="{NETWORK_ID}"/>
+							<Select id="idNetworksDropdown" items="{path:'/SHNetworkSet', events:{dataReceived: '.networkDataReceived'}}" change="onChangeNetwork">
+								<core:Item key="{NETWORK_KEY}" text="{NETWORK_KEY}"/>
 							</Select>
 							<Button id="idBtnCretaeNewNetwork" text="{i18n>btn.createNewNetwork}" tooltip="{i18n>btn.createNewNetwork}" press="onPresCreateNewNetwork"/>
 							<core:ExtensionPoint name="PageExtP|GanttTable|GanttSet|CustomHeader|Left"/>
@@ -28,7 +28,7 @@
 						</OverflowToolbar>
 					</customHeader>
 					<content>
-						<gantt:GanttChartContainer>
+						<gantt:GanttChartContainer busy="{viewModel>/gantBusy}" busyIndicatorDelay="{viewModel>/delay}">
 							<gantt:toolbar>
 								<gantt:ContainerToolbar showDisplayTypeButton="true">
 									<gantt:content>
@@ -37,37 +37,27 @@
 								</gantt:ContainerToolbar>
 							</gantt:toolbar>
 							<gantt:GanttChartWithTable id="gantt" shapeSelectionMode="Single" selectionPanelSize="40%">
-								<gantt:axisTimeStrategy>
-									<axistime:ProportionZoomStrategy>
-										<axistime:totalHorizon>
-											<config:TimeHorizon startTime="{path:'viewModel>/startTime',formatter: '.formatter.fnTimeConverter'}"
-												endTime="{path:'viewModel>/endTime',formatter: '.formatter.fnTimeConverter'}"/>
-										</axistime:totalHorizon>
-										<axistime:visibleHorizon>
-											<config:TimeHorizon startTime="{path:'viewModel>/startTime',formatter: '.formatter.fnTimeConverter'}"
-												endTime="{path:'viewModel>/endTime',formatter: '.formatter.fnTimeConverter'}"/>
-										</axistime:visibleHorizon>
-									</axistime:ProportionZoomStrategy>
-								</gantt:axisTimeStrategy>
 								<gantt:table>
 									<table:Table id="idTableGanttTable" selectionMode="Single" rows="{path:'ganttModel>/results'}" visibleRowCountMode="Auto"
 										selectionBehavior="RowOnly" fixedRowCount="1" rowActionCount="1" rowSelectionChange="onGanttRowSelectionChange">
 										<template:with path="tempProps>/GanttConfigs/" var="tabItem">
 											<table:columns>
+												<core:ExtensionPoint name="TableExtP|GanttTable|{:= ${tabItem>entitySet} }|CustomColumn"/>
 												<template:repeat list="{path:'tabItem>lineItems/'}" var="lineItem">
-													<template:if test="{= ${path : 'lineItem>Value/Path'} === 'TYPE' }">
+													<template:if test="{= ${path : 'lineItem>Value/Path'} === 'RELATION_TYPE' }">
 														<template:then>
-															<core:ExtensionPoint name="TableExtP|GanttTable|{:= ${tabItem>entitySet} }|CustomColumn"/>
 															<table:Column width="20%">
 																<Text text="{= '{/' + ${tabItem>entitySet} + '/' + ${lineItem>Value/Path} + '/##com.sap.vocabularies.Common.v1.Label/String}' }"/>
 																<table:template>
 																	<FlexBox fitContainer="true">
-																		<Select width="20%" items="{path:'/TypeSet', templateShareable: true}" change="onChangeType"
+																		<Select forceSelection="false" width="20%" items="{path:'/SHRelTypeSet', templateShareable: true}"
+																			visible="{= ${ganttModel>SORT_ID} !== '001'}" change="onChangeType"
 																			selectedKey="{= '{ganttModel>' + ${path : 'lineItem>Value/Path'} + '}' }">
 																			<items>
-																				<core:Item key="{TYPE}" text="{TYPE}"/>
+																				<core:Item key="{AOBKT}" text="{AOBKT}"/>
 																			</items>
 																		</Select>
+																		<Text text="{= '{ganttModel>' + ${path : 'lineItem>Value/Path'} + '}' }" visible="{= ${ganttModel>SORT_ID} === '001'}"/>
 																	</FlexBox>
 																</table:template>
 															</table:Column>
@@ -85,15 +75,16 @@
 											</table:columns>
 											<table:rowSettingsTemplate>
 												<gantt:GanttRowSettings rowId="{ganttModel>ObjectKey}"
-													relationships="{path:'ganttModel>GanttToRelationship/results', templateShareable: 'true'}">
+													relationships="{path:'ganttModel>NetworkToGanttRelation/results', templateShareable: 'true'}">
 													<gantt:shapes1>
-														<gantt:BaseRectangle shapeId="{ganttModel>ObjectKey}" time="{path:'ganttModel>START_DATE',formatter: '.formatter.fnTimeConverter'}"
-															endTime="{path:'ganttModel>END_DATE',formatter: '.formatter.fnTimeConverter'}" fill="#0092D1" hoverable="true" connectable="true"
-															verticalTextAlignment="Center"/>
+														<gantt:BaseRectangle shapeId="{ganttModel>ObjectKey}"
+															time="{parts:['ganttModel>EARLIEST_START_DATE','ganttModel>EARLIEST_START_TIME'],formatter:'.formatter.mergeDateTime'}"
+															endTime="{parts:['ganttModel>EARLIEST_END_DATE','ganttModel>EARLIEST_END_TIME'],formatter:'.formatter.mergeDateTime'}" fill="#0092D1"
+															hoverable="true" connectable="true" verticalTextAlignment="Center"/>
 													</gantt:shapes1>
 													<gantt:relationships>
-														<gantt:Relationship shapeId="{ganttModel>ObjectKey}" predecessor="{ganttModel>predecessor}" successor="{ganttModel>successor}"
-															type="{ganttModel>type}"/>
+														<gantt:Relationship shapeId="{ganttModel>ObjectKey}" predecessor="{ganttModel>PRE_OBJECT_KEY}" successor="{ganttModel>SUC_OBJECT_KEY}"
+															type="{path:'ganttModel>REL_KEY',formatter:'.formatter.getRelationType'}"/>
 													</gantt:relationships>
 												</gantt:GanttRowSettings>
 											</table:rowSettingsTemplate>
@@ -104,7 +95,8 @@
 											<table:rowActionTemplate>
 												<table:RowAction>
 													<table:items>
-														<table:RowActionItem type="Custom" icon="sap-icon://delete" tooltip="{i18n>btn.delete}" visible="{= ${ganttModel>SORTID} !== '001'}"
+														<table:RowActionItem type="Custom" icon="sap-icon://delete" tooltip="{i18n>btn.delete}"
+															visible="{parts:['ganttModel>SORT_ID','ganttModel>ALLOW_DELETE'],formatter:'.formatter.deleteNetworkOperation'}"
 															press="onPressDeleteDependency"/>
 													</table:items>
 												</table:RowAction>

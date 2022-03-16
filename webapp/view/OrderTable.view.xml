@@ -2,47 +2,49 @@
 	xmlns:app="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1" xmlns:smartfilterbar="sap.ui.comp.smartfilterbar"
 	xmlns:dnd="sap.ui.core.dnd" controllerName="com.evorait.evosuite.evoorderrelate.controller.OrderTable"
 	xmlns:html="http://www.w3.org/1999/xhtml">
-	<f:DynamicPage id="idOrderTablePage" headerExpanded="false" preserveHeaderStateOnScroll="false" showFooter="false" class="sapUiNoContentPadding">
+	<f:DynamicPage id="idOrderTablePage" fitContent="true" headerPinned="true" headerExpanded="true" preserveHeaderStateOnScroll="true"
+		showFooter="false" class="sapUiNoContentPadding">
 		<f:title>
 			<f:DynamicPageTitle visible="false" id="idOrderTablePageTitle">
 				<f:heading>
-					<core:ExtensionPoint name="PageExtP|OrderTable|WOHeaderSet|Title|Heading"/>
+					<core:ExtensionPoint name="PageExtP|OrderTable|OrderOperationsSet|Title|Heading"/>
 				</f:heading>
 				<f:actions>
-					<core:ExtensionPoint name="PageExtP|OrderTable|WOHeaderSet|Title|Actions"/>
+					<core:ExtensionPoint name="PageExtP|OrderTable|OrderOperationsSet|Title|Actions"/>
 				</f:actions>
 			</f:DynamicPageTitle>
 		</f:title>
 		<f:header>
 			<f:DynamicPageHeader>
 				<f:content>
-					<core:ExtensionPoint name="PageExtP|OrderTable|WOHeaderSet|Header"/>
+					<core:ExtensionPoint name="PageExtP|OrderTable|OrderOperationsSet|Header"/>
 				</f:content>
 			</f:DynamicPageHeader>
 		</f:header>
 		<f:content>
-			<smartTable:SmartTable id="idTableOrderTable" height="100%" entitySet="WOHeaderSet" tableType="ResponsiveTable" useExportToExcel="false"
-				useVariantManagement="true" useTablePersonalisation="true" persistencyKey="com.evorait.evosuite.evoorderrelate.OrderTable"
-				 header="{i18n>tit.orderOperation}" showRowCount="true" enableAutoBinding="true" demandPopin="true" beforeRebindTable="onBeforeRebindTable"
-				afterVariantInitialise="onInitializedSmartVariant" requestAtLeastFields="" smartFilterId="idOrderFilterBar">
+			<smartTable:SmartTable id="idTableOrderTable" height="100%" entitySet="OrderOperationsSet" tableType="ResponsiveTable"
+				useExportToExcel="false" useVariantManagement="true" useTablePersonalisation="true"
+				persistencyKey="com.evorait.evosuite.evoorderrelate.OrderTable" header="{i18n>tit.orderOperation}" showRowCount="true"
+				enableAutoBinding="true" demandPopin="true" beforeRebindTable="onBeforeRebindTable"
+				requestAtLeastFields="BASIC_START_DATE,BASIC_FINISH_DATE" smartFilterId="idOrderFilterBar" fitContainer="true">
 				<smartTable:layoutData>
 					<FlexItemData growFactor="1"/>
 				</smartTable:layoutData>
 				<smartTable:customToolbar>
 					<OverflowToolbar>
-						<core:ExtensionPoint name="TableExtP|OrderTable|WOHeaderSet|CustomToolbar|Left"/>
+						<core:ExtensionPoint name="TableExtP|OrderTable|OrderOperationsSet|CustomToolbar|Left"/>
 						<ToolbarSpacer/>
-						<core:ExtensionPoint name="TableExtP|OrderTable|WOHeaderSet|CustomToolbar|Right"/>
+						<core:ExtensionPoint name="TableExtP|OrderTable|OrderOperationsSet|CustomToolbar|Right"/>
 						<Button text="Filter" press="onOrderFilterOpen"/>
 					</OverflowToolbar>
 				</smartTable:customToolbar>
-				<Table id="idOrderTableInnerTable" mode="MultiSelect">
+				<Table id="idOrderTableInnerTable" mode="MultiSelect" growing="true">
 					<columns>
-						<core:ExtensionPoint name="TableExtP|OrderTable|WOHeaderSet|CustomColumn"/>
+						<core:ExtensionPoint name="TableExtP|OrderTable|OrderOperationsSet|CustomColumn"/>
 					</columns>
 					<ColumnListItem>
 						<cells>
-							<core:ExtensionPoint name="TableExtP|OrderTable|WOHeaderSet|CustomCell"/>
+							<core:ExtensionPoint name="TableExtP|OrderTable|OrderOperationsSet|CustomCell"/>
 						</cells>
 					</ColumnListItem>
 				</Table>
@@ -50,9 +52,9 @@
 		</f:content>
 		<f:footer>
 			<OverflowToolbar visible="false" id="idPageOrderTableFooterToolbar">
-				<core:ExtensionPoint name="PageExtP|OrderTable|WOHeaderSet|Footer|Left"/>
+				<core:ExtensionPoint name="PageExtP|OrderTable|OrderOperationsSet|Footer|Left"/>
 				<ToolbarSpacer/>
-				<core:ExtensionPoint name="PageExtP|OrderTable|WOHeaderSet|Footer|Right"/>
+				<core:ExtensionPoint name="PageExtP|OrderTable|OrderOperationsSet|Footer|Right"/>
 			</OverflowToolbar>
 		</f:footer>
 	</f:DynamicPage>
