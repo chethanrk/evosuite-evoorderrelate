@@ -32,6 +32,8 @@
 							<gantt:toolbar>
 								<gantt:ContainerToolbar showDisplayTypeButton="true">
 									<gantt:content>
+										<Button id="idBtnAddNewOperations" text="Add Operations" tooltip="Add Operations" press="onPresAddNewOperations"/>
+										<!--	<Title text="{i18n>tit.orderOperation}({viewModel>/GanttRowCount})" level="H2"/>-->
 										<core:ExtensionPoint name="GanttExtP|GanttTable|GanttSet|GanttToolbar|After"/>
 									</gantt:content>
 								</gantt:ContainerToolbar>
@@ -89,6 +91,7 @@
 												</gantt:GanttRowSettings>
 											</table:rowSettingsTemplate>
 											<table:dragDropConfig>
+												<dnd:DropInfo groupName="OrderOperation" targetAggregation="rows" dropPosition="Between" drop="onDropGanttTableFromOperation"/>
 												<dnd:DragDropInfo sourceAggregation="rows" targetAggregation="rows" dropPosition="Between" dragStart="onGanttTableDragStart"
 													drop="onDropGanttTable" dragEnter="onDragEnter"/>
 											</table:dragDropConfig>

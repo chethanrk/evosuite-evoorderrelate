@@ -26,7 +26,7 @@
 				useExportToExcel="false" useVariantManagement="true" useTablePersonalisation="true"
 				persistencyKey="com.evorait.evosuite.evoorderrelate.OrderTable" header="{i18n>tit.orderOperation}" showRowCount="true"
 				enableAutoBinding="true" demandPopin="true" beforeRebindTable="onBeforeRebindTable"
-				requestAtLeastFields="BASIC_START_DATE,BASIC_FINISH_DATE" smartFilterId="idOrderFilterBar" fitContainer="true">
+				requestAtLeastFields="EARLIEST_START_DATE,EARLIEST_START_TIME,EARLIEST_END_DATE,EARLIEST_END_TIME" smartFilterId="idOrderFilterBar" fitContainer="true">
 				<smartTable:layoutData>
 					<FlexItemData growFactor="1"/>
 				</smartTable:layoutData>
@@ -47,6 +47,9 @@
 							<core:ExtensionPoint name="TableExtP|OrderTable|OrderOperationsSet|CustomCell"/>
 						</cells>
 					</ColumnListItem>
+					<dragDropConfig>
+						<dnd:DragInfo sourceAggregation="items" groupName="OrderOperation" dragStart="onDragStart" dragEnd="onDragEnd"/>
+					</dragDropConfig>
 				</Table>
 			</smartTable:SmartTable>
 		</f:content>
