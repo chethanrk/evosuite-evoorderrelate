@@ -16,7 +16,8 @@
 							<Select id="idNetworksDropdown" items="{path:'/NetworkSet', events:{dataReceived: '.networkDataReceived'}}" change="onChangeNetwork">
 								<core:Item key="{NETWORK_ID}" text="{NETWORK_ID}"/>
 							</Select>
-							<Button id="idBtnCretaeNewNetwork" text="{i18n>btn.createNewNetwork}" tooltip="{i18n>btn.createNewNetwork}" press="onPresCreateNewNetwork"/>
+							<Button id="idBtnCreateNewNetwork" text="{i18n>btn.createNewNetwork}" tooltip="{i18n>btn.createNewNetwork}" press="onPressCreateNewNetwork"
+								visible="{= ${user>/ENABLE_CREATE_NEW_NETWORK} === 'X'}"/>
 							<ToolbarSpacer id="idGanttTableToolbarSpacer"/>
 							<Button id="idBtnSave" type="Emphasized" tooltip="{i18n>btn.save}" text="{i18n>btn.save}" press="onPressNetworkSave"
 								enabled="{viewModel>/pendingChanges}"/>

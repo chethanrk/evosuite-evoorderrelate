@@ -1,12 +1,13 @@
 sap.ui.define([
 	"com/evorait/evosuite/evomanagedepend/controller/BaseController",
 	"sap/gantt/misc/Format",
+	"sap/ui/core/Fragment",
 	"sap/ui/core/mvc/OverrideExecution",
 	"sap/base/util/deepClone",
 	"sap/ui/model/Filter",
 	"sap/ui/model/FilterOperator",
 	"com/evorait/evosuite/evomanagedepend/model/formatter"
-], function (BaseController, Format, OverrideExecution, deepClone, Filter, FilterOperator, formatter) {
+], function (BaseController, Format, Fragment, OverrideExecution, deepClone, Filter, FilterOperator, formatter) {
 	"use strict";
 
 	return BaseController.extend("com.evorait.evosuite.evomanagedepend.controller.GanttTable", {
@@ -316,6 +317,16 @@ sap.ui.define([
 				sKey = oFirstItem.getKey();
 
 			this._getGanttdata(sKey);
+		},
+
+		/**
+		 * Handle `press` event on 'Create Network' button
+		 * Open Dialog for a new Network creation
+		 * @param {sap.ui.base.Event} oEvent - The `press` event
+		 */
+		onPressCreateNewNetwork: function (oEvent) {
+			var oView = this.getView();
+			this.getOwnerComponent().NewNetworkDialog.open(oView);
 		},
 
 		/**

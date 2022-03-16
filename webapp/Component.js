@@ -4,8 +4,9 @@ sap.ui.define([
 	"com/evorait/evosuite/evomanagedepend/model/models",
 	"com/evorait/evosuite/evomanagedepend/controller/ErrorHandler",
 	"com/evorait/evosuite/evomanagedepend/controller/MessageManager",
+	"com/evorait/evosuite/evomanagedepend/controller/NewNetworkDialog",
 	"sap/ui/model/json/JSONModel"
-], function (UIComponent, Device, models, ErrorHandler, MessageManager, JSONModel) {
+], function (UIComponent, Device, models, ErrorHandler, MessageManager, NewNetworkDialog, JSONModel) {
 	"use strict";
 
 	var oMessageManager = sap.ui.getCore().getMessageManager();
@@ -37,7 +38,10 @@ sap.ui.define([
 
 			this.MessageManager = new MessageManager();
 
+			this.NewNetworkDialog = new NewNetworkDialog();
+
 			var viewModelObj = {
+				formHandling: {},
 				busy: false,
 				delay: 100,
 				densityClass: this.getContentDensityClass(),
@@ -93,7 +97,7 @@ sap.ui.define([
 		registerViewToMessageManager: function (oView) {
 			oMessageManager.registerObject(oView, true);
 		},
-		
+
 		/**
 		 * Get url GET parameter by key name
 		 * @param {string} sKey - key of the parameter
@@ -119,7 +123,7 @@ sap.ui.define([
 			}
 			return false;
 		},
-        /**
+		/**
 		 * get Template properties as model inside a global Promise
 		 */
 		_getTemplateProps: function () {
@@ -148,6 +152,20 @@ sap.ui.define([
 					},
 					error: function (oError) {
 						//Handle Error
+						reject(oError);
+					}
+				});
+			}.bind(this));
+		},
+
+		callFunctionImport: function (sFunctionName, mUrlParams) {
+			return new Promise(function (resolve, reject) {
+				this.getModel().callFunction(sFunctionName, {
+					urlParameters: mUrlParams || {},
+					success: function (oData) {
+						resolve(oData);
+					},
+					error: function (oError) {
 						reject(oError);
 					}
 				});
