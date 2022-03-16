@@ -34,7 +34,7 @@ sap.ui.define([
 			this.setModel(models.createDeviceModel(), "device");
 
 			this.setModel(models.createUserModel(this), "user");
-			
+
 			this.setModel(models.createInformationModel(this), "InformationModel");
 
 			this.setModel(models.createMessageManagerModel(), "messageManager");
@@ -43,11 +43,12 @@ sap.ui.define([
 
 			var viewModelObj = {
 				busy: false,
+				gantBusy: false,
 				delay: 100,
 				densityClass: this.getContentDensityClass(),
 				pendingChanges: false,
-				startTime: "00000000000000",
-				endTime: "00000000000000"
+				startTime: new Date(),
+				endTime: new Date()
 			};
 			this.setModel(models.createHelperModel(viewModelObj), "viewModel");
 			this.setModel(models.createGanttModel(), "ganttModel");

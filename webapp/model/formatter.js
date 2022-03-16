@@ -59,6 +59,61 @@ sap.ui.define([
 		},
 
 		/**
+		 * Delete button visibility based on network operation property
+		 * also validate to disable delte button for the first network operation
+		 * @param sSortId - SortId of first network operation
+		 * @param bAllowDelete - ALLOW_DELETE of selected newtwork operation
+		 */
+		deleteNetworkOperation: function (sSortId, bAllowDelete) {
+			if (sSortId !== '001' || bAllowDelete) {
+				return true;
+			}
+			return false;
+		},
+
+		/**
+		 * merge given date and time to datetime and format
+		 * @param date
+		 * @param time
+		 */
+		mergeDateTime: function (date, time) {
+			var oDatebject = null,
+				offsetMs = new Date(0).getTimezoneOffset() * 60 * 1000,
+				dateFormat = sap.ui.core.format.DateFormat.getDateInstance({
+					pattern: "yyyy-MM-dd"
+				}),
+				timeFormat = sap.ui.core.format.DateFormat.getTimeInstance({
+					pattern: "HH:mm:ss"
+				});
+
+			if (date && time) {
+				var dateStr = dateFormat.format(new Date(date.getTime() + offsetMs));
+				var timeStr = timeFormat.format(new Date(time.ms + offsetMs));
+				oDatebject = new Date(dateStr + "T" + timeStr);
+			}
+
+			return oDatebject;
+		},
+
+		/**
+		 * return relationship type based on relationship key
+		 */
+		getRelationType: function (sRelationShipId) {
+			if (sRelationShipId) {
+				if (sRelationShipId === "1") {
+					return "FinishToStart";
+				} else if (sRelationShipId === "2") {
+					return "StartToStart";
+				} else if (sRelationShipId === "3") {
+					return "FinishToFinish";
+				} else if (sRelationShipId === "4") {
+					return "StartToFinish";
+				}
+			}
+			return "StartToFinish";
+		},
+
+		/**
 		 * gives back a formatted date and time
 		 * @param sTimestamp
 		 * @returns {datetime}
