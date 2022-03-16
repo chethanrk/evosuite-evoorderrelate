@@ -5,7 +5,7 @@ sap.ui.define([
 ], function (UI5Object, MessageBox, OverrideExecution) {
 	"use strict";
 
-	return UI5Object.extend("com.evorait.evosuite.evomanagedepend.controller.ErrorHandler", {
+	return UI5Object.extend("com.evorait.evosuite.evoorderrelate.controller.ErrorHandler", {
 
 		metadata: {
 			// extension can declare the public methods
@@ -23,7 +23,7 @@ sap.ui.define([
 		 * @class
 		 * @param {sap.ui.core.UIComponent} oComponent reference to the app's component
 		 * @public
-		 * @alias com.evorait.evosuite.evomanagedepend.controller.ErrorHandler
+		 * @alias com.evorait.evosuite.evoorderrelate.controller.ErrorHandler
 		 */
 		constructor: function (oComponent) {
 			this._oResourceBundle = oComponent.getModel("i18n").getResourceBundle();

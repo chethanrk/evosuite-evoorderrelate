@@ -1,14 +1,14 @@
 sap.ui.define([
-	"com/evorait/evosuite/evomanagedepend/controller/BaseController",
+	"com/evorait/evosuite/evoorderrelate/controller/BaseController",
 	"sap/ui/core/mvc/Controller",
 	"sap/ui/core/mvc/View",
 	"sap/ui/core/mvc/ViewType",
-	"com/evorait/evosuite/evomanagedepend/model/AnnotationHelper",
+	"com/evorait/evosuite/evoorderrelate/model/AnnotationHelper",
 	"sap/ui/core/mvc/OverrideExecution"
 ], function (BaseController, Controller, CoreView, ViewType, AnnotationHelper, OverrideExecution) {
 	"use strict";
 
-	return BaseController.extend("com.evorait.evosuite.evomanagedepend.controller.TemplateRenderController", {
+	return BaseController.extend("com.evorait.evosuite.evoorderrelate.controller.TemplateRenderController", {
 
 		metadata: {
 			// extension can declare the public methods
@@ -180,7 +180,7 @@ sap.ui.define([
 
 						if (sControllerName) {
 							Controller.create({
-								name: "com.evorait.evosuite.evomanagedepend.controller." + sControllerName
+								name: "com.evorait.evosuite.evoorderrelate.controller." + sControllerName
 							}).then(function (controller) {
 								this.createView(oModel, oMetaModel, sPath, sViewName, controller).then(setTemplateAndBind);
 							}.bind(this));
@@ -257,7 +257,7 @@ sap.ui.define([
 				eventBus = sap.ui.getCore().getEventBus();
 
 			if (!sPath) {
-				eventBus.publish("TemplateRendererEvoManageDependency", "changedBinding", {
+				eventBus.publish("TemplateRendererEvoOrderRelate", "changedBinding", {
 					viewNameId: sViewName
 				});
 				if (callbackFn) {
@@ -271,7 +271,7 @@ sap.ui.define([
 				path: sPath,
 				events: {
 					change: function () {
-						eventBus.publish("TemplateRendererEvoManageDependency", "changedBinding", {
+						eventBus.publish("TemplateRendererEvoOrderRelate", "changedBinding", {
 							viewNameId: sViewName
 						});
 						if (callbackFn) {

@@ -1,10 +1,10 @@
 sap.ui.define([
-	"com/evorait/evosuite/evomanagedepend/controller/TemplateRenderController",
+	"com/evorait/evosuite/evoorderrelate/controller/TemplateRenderController",
 	"sap/ui/core/mvc/OverrideExecution"
 ], function (TemplateRenderController, OverrideExecution) {
 	"use strict";
 
-	return TemplateRenderController.extend("com.evorait.evosuite.evomanagedepend.controller.Dependencies", {
+	return TemplateRenderController.extend("com.evorait.evosuite.evoorderrelate.controller.Dependencies", {
 
 		metadata: {
 			// extension can declare the public methods
@@ -17,7 +17,7 @@ sap.ui.define([
 		/**
 		 * Called when a controller is instantiated and its View controls (if available) are already created.
 		 * Can be used to modify the View before it is displayed, to bind event handlers and do other one-time initialization.
-		 * @memberOf com.evorait.evosuite.evomanagedepend.view.Dependencies
+		 * @memberOf com.evorait.evosuite.evoorderrelate.view.Dependencies
 		 */
 		onInit: function () {
 			this.oViewModel = this.getModel("viewModel");
@@ -37,8 +37,8 @@ sap.ui.define([
 					this.getOwnerComponent().oTemplatePropsProm.then(function () {
 						//route for page gantt view
 						if (sRouteName === "ManageDependencies") {
-							sViewName = "com.evorait.evosuite.evomanagedepend.view.templates.GanttTable#Table";
-							this._onRouteMatched(oEvent, sViewName, "WOHeaderSet");
+							sViewName = "com.evorait.evosuite.evoorderrelate.view.templates.GanttTable#Table";
+							this._onRouteMatched(oEvent, sViewName, "WONetworkSet");
 						}
 					}.bind(this));
 				}.bind(this));
