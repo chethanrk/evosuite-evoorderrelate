@@ -4,18 +4,18 @@
 			<smartFilterBar:SmartFilterBar id="idOrderFilterBar" entitySet="OrderOperationsSet" useDateRangeType="true"
 				persistencyKey="com.evorait.evosuite.evoorderrelate.OrderFilterBar">
 				<smartFilterBar:layoutData>
-					<core:ExtensionPoint name="FilterExtP|OrderTableFilter|WOHeaderSet|LayoutData"/>
+					<core:ExtensionPoint name="FilterExtP|OrderTableFilter|OrderOperationsSet|LayoutData"/>
 				</smartFilterBar:layoutData>
 				<smartFilterBar:controlConfiguration>
-					<core:ExtensionPoint name="FilterExtP|OrderTableFilter|WOHeaderSet|ControlConfiguration"/>
+					<core:ExtensionPoint name="FilterExtP|OrderTableFilter|OrderOperationsSet|ControlConfiguration"/>
 				</smartFilterBar:controlConfiguration>
 				<smartFilterBar:groupConfiguration>
-					<core:ExtensionPoint name="FilterExtP|OrderTableFilter|WOHeaderSet|GroupConfiguration"/>
+					<core:ExtensionPoint name="FilterExtP|OrderTableFilter|OrderOperationsSet|GroupConfiguration"/>
 				</smartFilterBar:groupConfiguration>
 			</smartFilterBar:SmartFilterBar>
 		</content>
 		<buttons>
-			<core:ExtensionPoint name="DialogExtP|OrderTableFilter|WOHeaderSet|Buttons"/>
+			<core:ExtensionPoint name="DialogExtP|OrderTableFilter|OrderOperationsSet|Buttons"/>
 			<Button text="{i18n>btn.close}" tooltip="{i18n>btn.close}" press="onOrderFilterClose"></Button>
 		</buttons>
 	</Dialog>
