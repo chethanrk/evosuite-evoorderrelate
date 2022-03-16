@@ -87,6 +87,20 @@ sap.ui.define([
 					}
 
 					// custom mock behaviour may be added here
+					aRequests.push({
+						method: "GET",
+						path: new RegExp("CheckIfNetworkExists(.*)"),
+						response: function (oXhr) {
+							var nOrderNumberIndex = parseInt(oXhr.url.search(/(?<=ORDER_NUMBER=')(.*?)(?=')/));
+							var nOperationNumberIndex = parseInt(oXhr.url.search(/(?<=OPERATION_NUMBER=')(.*?)(?=')/));
+							var sOrderNumber = oXhr.url.substring(nOrderNumberIndex, nOrderNumberIndex + 6);
+							var sOperationNumber = oXhr.url.substring(nOperationNumberIndex, nOperationNumberIndex + 4);
+
+							// it's possible to implement search through mockdata for the existing network
+
+							return true;
+						}
+					})
 
 					// set requests and start the server
 					oMockServer.setRequests(aRequests);
