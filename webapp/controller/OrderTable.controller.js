@@ -67,15 +67,15 @@ sap.ui.define([
 				this.getView().addDependent(oFragment);
 			}.bind(this));
 
-			var eventBus = sap.ui.getCore().getEventBus();
+			/*var eventBus = sap.ui.getCore().getEventBus();
 			//Binnding has changed in TemplateRenderController.js
-			eventBus.subscribe("TemplateRendererOrderOperation", "changedBinding", this._changedBinding, this);
+			eventBus.subscribe("TemplateRendererOrderOperation", "changedBinding", this._changedBinding, this);*/
 		},
 
 		/**
-		 * Event bus method to collect selected order operation detail
+		 * Method to handle table selection and collect selected context
 		 */
-		_changedBinding: function () {
+		onPresAddNewOperations: function (oEvent) {
 			var aContext = this.oOrderOperationTable.getSelectedContexts();
 
 			//get selected rows when checkboxes in table selected
@@ -87,7 +87,7 @@ sap.ui.define([
 			}
 			this.oOrderOperationTable.removeSelections();
 			if (!aContext || (aContext && aContext.length === 0)) {
-				sap.m.MessageToast.show("Please select items from the order operation");
+				sap.m.MessageToast.show("Select atleast one line item");
 			}
 		},
 
@@ -96,8 +96,8 @@ sap.ui.define([
 		 * @memberOf com.evorait.evosuite.evoorderrelate.view.OrderTable
 		 */
 		onExit: function () {
-			var eventBus = sap.ui.getCore().getEventBus();
-			eventBus.unsubscribe("TemplateRendererOrderOperation", "changedBinding", this._changedBinding, this);
+			/*var eventBus = sap.ui.getCore().getEventBus();
+			eventBus.unsubscribe("TemplateRendererOrderOperation", "changedBinding", this._changedBinding, this);*/
 		},
 
 		/**

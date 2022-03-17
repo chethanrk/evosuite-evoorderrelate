@@ -114,13 +114,19 @@ sap.ui.define([
 		},
 
 		/**
-		 * gives back a formatted date and time
-		 * @param sTimestamp
-		 * @returns {datetime}
+		 * Handle relationship dropdown control visibility
+		 * 
 		 */
-		fnTimeConverter: function (sTimestamp) {
-			return Format.abapTimestampToDate(sTimestamp);
+		handleRelationshipDropDownVisibility: function (sSortId, iGanttCount) {
+			if (sSortId && iGanttCount) {
+				if (parseInt(sSortId, 10) === iGanttCount) {
+					return false;
+				}
+				return true;
+			}
+			return false;
 		}
+
 	};
 
 });

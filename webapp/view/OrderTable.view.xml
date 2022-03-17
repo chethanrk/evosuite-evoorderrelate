@@ -26,7 +26,8 @@
 				useExportToExcel="false" useVariantManagement="true" useTablePersonalisation="true"
 				persistencyKey="com.evorait.evosuite.evoorderrelate.OrderTable" header="{i18n>tit.orderOperation}" showRowCount="true"
 				enableAutoBinding="true" demandPopin="true" beforeRebindTable="onBeforeRebindTable"
-				requestAtLeastFields="EARLIEST_START_DATE,EARLIEST_START_TIME,EARLIEST_END_DATE,EARLIEST_END_TIME" smartFilterId="idOrderFilterBar" fitContainer="true">
+				requestAtLeastFields="EARLIEST_START_DATE,EARLIEST_START_TIME,EARLIEST_END_DATE,EARLIEST_END_TIME" smartFilterId="idOrderFilterBar"
+				fitContainer="true">
 				<smartTable:layoutData>
 					<FlexItemData growFactor="1"/>
 				</smartTable:layoutData>
@@ -35,6 +36,7 @@
 						<core:ExtensionPoint name="TableExtP|OrderTable|OrderOperationsSet|CustomToolbar|Left"/>
 						<ToolbarSpacer/>
 						<core:ExtensionPoint name="TableExtP|OrderTable|OrderOperationsSet|CustomToolbar|Right"/>
+						<Button id="idBtnAddNewOperations" text="Add Operations To Network" tooltip="Add Operations" press="onPresAddNewOperations"/>
 						<Button text="Filter" press="onOrderFilterOpen"/>
 					</OverflowToolbar>
 				</smartTable:customToolbar>

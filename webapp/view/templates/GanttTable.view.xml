@@ -8,10 +8,6 @@
 				<Page id="idGanttViewPage" showFooter="false" class="sapUiNoContentPadding" showSubHeader="false" enableScrolling="false">
 					<customHeader>
 						<OverflowToolbar id="idCustomHeaderToolbar">
-							<Button id="idBtnTop" tooltip="{i18n>btn.top}" icon="sap-icon://collapse-group" press="onPressTop"/>
-							<Button id="idBtnUp" tooltip="{i18n>btn.up}" icon="sap-icon://navigation-up-arrow" press="onPressUp"/>
-							<Button id="idBtnDown" tooltip="{i18n>btn.down}" icon="sap-icon://navigation-down-arrow" press="onPressDown"/>
-							<Button id="idBtnBottom" tooltip="{i18n>btn.bottom}" icon="sap-icon://expand-group" press="onPressBottom"/>
 							<Label id="idLabelNetworksDropdown" text="{i18n>lbl.networks}"/>
 							<Select id="idNetworksDropdown" items="{path:'/SHNetworkSet', events:{dataReceived: '.networkDataReceived'}}" change="onChangeNetwork">
 								<core:Item key="{NETWORK_KEY}" text="{NETWORK_KEY}"/>
@@ -32,8 +28,10 @@
 							<gantt:toolbar>
 								<gantt:ContainerToolbar showDisplayTypeButton="true">
 									<gantt:content>
-										<Button id="idBtnAddNewOperations" text="Add Operations" tooltip="Add Operations" press="onPresAddNewOperations"/>
-										<!--	<Title text="{i18n>tit.orderOperation}({viewModel>/GanttRowCount})" level="H2"/>-->
+										<Button id="idBtnTop" tooltip="{i18n>btn.top}" icon="sap-icon://collapse-group" press="onPressTop"/>
+										<Button id="idBtnUp" tooltip="{i18n>btn.up}" icon="sap-icon://navigation-up-arrow" press="onPressUp"/>
+										<Button id="idBtnDown" tooltip="{i18n>btn.down}" icon="sap-icon://navigation-down-arrow" press="onPressDown"/>
+										<Button id="idBtnBottom" tooltip="{i18n>btn.bottom}" icon="sap-icon://expand-group" press="onPressBottom"/>
 										<core:ExtensionPoint name="GanttExtP|GanttTable|GanttSet|GanttToolbar|After"/>
 									</gantt:content>
 								</gantt:ContainerToolbar>
@@ -53,20 +51,20 @@
 																<table:template>
 																	<FlexBox fitContainer="true">
 																		<Select forceSelection="false" width="20%" items="{path:'/SHRelTypeSet', templateShareable: true}"
-																			visible="{= ${ganttModel>SORT_ID} !== '001'}" change="onChangeType"
-																			selectedKey="{= '{ganttModel>' + ${path : 'lineItem>Value/Path'} + '}' }">
+																			visible="{parts:['ganttModel>SORT_ID','viewModel>/GanttRowCount'],formatter:'.formatter.handleRelationshipDropDownVisibility'}"
+																			change="onChangeType" selectedKey="{= '{ganttModel>' + ${path : 'lineItem>Value/Path'} + '}' }">
 																			<items>
 																				<core:Item key="{AOBKT}" text="{AOBKT}"/>
 																			</items>
 																		</Select>
-																		<Text text="{= '{ganttModel>' + ${path : 'lineItem>Value/Path'} + '}' }" visible="{= ${ganttModel>SORT_ID} === '001'}"/>
+																		<!--<Text text="{= '{ganttModel>' + ${path : 'lineItem>Value/Path'} + '}' }"/>-->
 																	</FlexBox>
 																</table:template>
 															</table:Column>
 														</template:then>
 														<template:else>
 															<table:Column>
-																<Text text="{= '{/' + ${tabItem>entitySet} + '/' + ${lineItem>Value/Path} + '/##com.sap.vocabularies.Common.v1.Label/String}' }"/>
+																<Text text=" {='{/' + ${tabItem>entitySet} + '/' + ${lineItem>Value/Path} + '/##com.sap.vocabularies.Common.v1.Label/String}' }"/>
 																<table:template>
 																	<Text text="{= '{ganttModel>' + ${path : 'lineItem>Value/Path'} + '}' }"/>
 																</table:template>
@@ -85,7 +83,7 @@
 															hoverable="true" connectable="true" verticalTextAlignment="Center"/>
 													</gantt:shapes1>
 													<gantt:relationships>
-														<gantt:Relationship shapeId="{ganttModel>ObjectKey}" predecessor="{ganttModel>PRE_OBJECT_KEY}" successor="{ganttModel>SUC_OBJECT_KEY}"
+														<gantt:Relationship shapeId="{ganttModel>ObjectKey}" predecessor="{ganttModel>SUC_OBJECT_KEY}" successor="{ganttModel>PRE_OBJECT_KEY}"
 															type="{path:'ganttModel>REL_KEY',formatter:'.formatter.getRelationType'}"/>
 													</gantt:relationships>
 												</gantt:GanttRowSettings>

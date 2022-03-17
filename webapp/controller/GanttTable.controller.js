@@ -370,6 +370,7 @@ sap.ui.define([
 				oResetData = deepClone(this.oBackupData);
 				this.getModel("ganttModel").setData(oResetData);
 				this.getModel("ganttModel").refresh();
+				this.getModel("viewModel").setProperty("/GanttRowCount", oResetData.results.length);
 				this.oViewModel.setProperty("/pendingChanges", false);
 			};
 			this.showConfirmDialog(sTitle, sMsg, successFn.bind(this));
@@ -389,15 +390,6 @@ sap.ui.define([
 			//sKey = "000000834050_0050_01";
 			oNetworkSelect.setSelectedKey(sKey);
 			this._getGanttdata(sKey);
-		},
-
-		/**
-		 * Add new operation to the gantt network 
-		 */
-		onPresAddNewOperations: function () {
-			var eventBus = sap.ui.getCore().getEventBus();
-
-			eventBus.publish("TemplateRendererOrderOperation", "changedBinding", {});
 		},
 
 		/**
@@ -482,7 +474,7 @@ sap.ui.define([
 		 * @param [oData] gantt table data
 		 */
 		_updateSortandRelationshipSequence: function (oData) {
-			for (var i = 1; i < oData.length; i++) {
+			for (var i = 0; i < oData.length; i++) {
 				var sSortId = formatter.formatOperationNumber((i + 1).toString(), 3);
 				oData[i].SORT_ID = sSortId;
 
@@ -490,31 +482,34 @@ sap.ui.define([
 					oData[i].ObjectKey = oData[i].ORDER_NUMBER + "_" + oData[i].OPERATION_NUMBER + "_" + oData[i].SORT_ID + oData[i].SORT_ID + oData[
 						i].ORDER_NUMBER + oData[i].OPERATION_NUMBER;
 
-					//test 
-					/*oData[i].EARLIEST_START_DATE = new Date();
-					oData[i].EARLIEST_END_DATE = new Date(1651107831343);*/
 				}
-
 				oData[i].NetworkToGanttRelation.results[0] = {};
+				if (i === oData.length - 1) {
+					oData[i].REL_KEY = "";
+					oData[i].RELATION_TYPE = "";
+				} else {
+					oData[i].REL_KEY = oData[i].REL_KEY ? oData[i].REL_KEY : "1";
+					oData[i].RELATION_TYPE = oData[i].RELATION_TYPE ? oData[i].RELATION_TYPE : "FS";
 
-				oData[i].NetworkToGanttRelation.results[0].ObjectKey = oData[i].ObjectKey;
-				oData[i].NetworkToGanttRelation.results[0].HeaderObjectKe = oData[i].ObjectKey;
-				oData[i].NetworkToGanttRelation.results[0].NETWORK_KEY = oData[i].NETWORK_KEY;
-				oData[i].NetworkToGanttRelation.results[0].SORT_ID = oData[i].SORT_ID;
-				oData[i].NetworkToGanttRelation.results[0].ORDER_NUMBER = oData[i].ORDER_NUMBER;
-				oData[i].NetworkToGanttRelation.results[0].OPERATION_NUMBER = oData[i].OPERATION_NUMBER;
+					oData[i].NetworkToGanttRelation.results[0].ObjectKey = oData[i].ObjectKey;
+					oData[i].NetworkToGanttRelation.results[0].HeaderObjectKe = oData[i].ObjectKey;
+					oData[i].NetworkToGanttRelation.results[0].NETWORK_KEY = oData[i].NETWORK_KEY;
+					oData[i].NetworkToGanttRelation.results[0].SORT_ID = oData[i].SORT_ID;
+					oData[i].NetworkToGanttRelation.results[0].ORDER_NUMBER = oData[i].ORDER_NUMBER;
+					oData[i].NetworkToGanttRelation.results[0].OPERATION_NUMBER = oData[i].OPERATION_NUMBER;
 
-				oData[i].NetworkToGanttRelation.results[0].PRE_OBJECT_KEY = oData[i].ObjectKey;
-				oData[i].NetworkToGanttRelation.results[0].PRE_SORT_ID = oData[i].SORT_ID;
-				oData[i].NetworkToGanttRelation.results[0].PRE_ORDER_NUMBER = oData[i].ORDER_NUMBER;
-				oData[i].NetworkToGanttRelation.results[0].PRE_OPERATION_NUMBER = oData[i].OPERATION_NUMBER;
+					oData[i].NetworkToGanttRelation.results[0].SUC_OBJECT_KEY = oData[i].ObjectKey;
+					oData[i].NetworkToGanttRelation.results[0].SUC_SORT_ID = oData[i].SORT_ID;
+					oData[i].NetworkToGanttRelation.results[0].SUC_ORDER_NUMBER = oData[i].ORDER_NUMBER;
+					oData[i].NetworkToGanttRelation.results[0].SUC_OPERATION_NUMBER = oData[i].OPERATION_NUMBER;
 
-				oData[i].NetworkToGanttRelation.results[0].SUC_OBJECT_KEY = oData[i - 1].ObjectKey;
-				oData[i].NetworkToGanttRelation.results[0].SUC_SORT_ID = oData[i - 1].SORT_ID;
-				oData[i].NetworkToGanttRelation.results[0].SUC_ORDER_NUMBER = oData[i - 1].ORDER_NUMBER;
-				oData[i].NetworkToGanttRelation.results[0].SUC_OPERATION_NUMBER = oData[i - 1].OPERATION_NUMBER;
+					oData[i].NetworkToGanttRelation.results[0].PRE_OBJECT_KEY = oData[i + 1].ObjectKey;
+					oData[i].NetworkToGanttRelation.results[0].PRE_SORT_ID = oData[i + 1].SORT_ID;
+					oData[i].NetworkToGanttRelation.results[0].PRE_ORDER_NUMBER = oData[i + 1].ORDER_NUMBER;
+					oData[i].NetworkToGanttRelation.results[0].PRE_OPERATION_NUMBER = oData[i + 1].OPERATION_NUMBER;
 
-				oData[i].NetworkToGanttRelation.results[0].REL_KEY = oData[i].REL_KEY;
+					oData[i].NetworkToGanttRelation.results[0].REL_KEY = oData[i].REL_KEY;
+				}
 			}
 		},
 
