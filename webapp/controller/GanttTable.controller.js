@@ -92,6 +92,33 @@ sap.ui.define([
 		onInit: function () {
 			this.oViewModel = this.getModel("viewModel");
 			this.oViewModel.setProperty("/gantBusy", true);
+
+			var eventBus = sap.ui.getCore().getEventBus();
+			//Binnding has changed in TemplateRenderController.js
+			eventBus.subscribe("TemplateRendererNetworkOperation", "changedBinding", this._changedBinding, this);
+		},
+
+		/**
+		 * Called when the Controller is destroyed. Use this one to free resources and finalize activities.
+		 * @memberOf com.evorait.evosuite.evoorderrelate.view.GanttTable
+		 */
+		onExit: function () {
+			var eventBus = sap.ui.getCore().getEventBus();
+			eventBus.unsubscribe("TemplateRendererNetworkOperation", "changedBinding", this._changedBinding, this);
+		},
+
+		/**
+		 * Event bus method to add selected order operation to network
+		 */
+		_changedBinding: function (sChannel, sEvent, oData) {
+			if (sChannel === "TemplateRendererNetworkOperation" && sEvent === "changedBinding") {
+				var iDropPath = parseInt(this.oViewModel.getProperty("/GanttRowCount"), 10),
+					oDroppedBindingContext = this.getView().byId("idTableGanttTable").getContextByIndex(iDropPath - 1);
+				if (iDropPath && oDroppedBindingContext) {
+					var aOrderOperations = this._getFormatedOrderOperation(iDropPath, oDroppedBindingContext, oData.data);
+					this._tablSortAndDelete(null, iDropPath, aOrderOperations);
+				}
+			}
 		},
 
 		/**
@@ -177,29 +204,20 @@ sap.ui.define([
 		 * @param {sap.ui.base.Event} oEvent - the press event
 		 */
 		onPressTop: function (oEvent) {
-			if (!this._selectedRowIndex || this._selectedRowIndex === 0) {
-				this.showMessageToast("Select atleast one line item");
-				return;
-			}
-
-			if (this._selectedRowIndex < 2) {
+			if (this.selectionValidation(this._selectedRowIndex, "Up")) {
 				return;
 			}
 
 			this._tablSortAndDelete(this._selectedRowIndex, 1);
 		},
+
 		/**
 		 * Manual sort event to move selected row to one step up
 		 * validates the row selection
 		 * @param {sap.ui.base.Event} oEvent - the press event
 		 */
 		onPressUp: function (oEvent) {
-			if (!this._selectedRowIndex || this._selectedRowIndex === 0) {
-				this.showMessageToast("Select atleast one line item");
-				return;
-			}
-
-			if (this._selectedRowIndex < 2) {
+			if (this.selectionValidation(this._selectedRowIndex, "Up")) {
 				return;
 			}
 			this._tablSortAndDelete(this._selectedRowIndex, (this._selectedRowIndex - 1));
@@ -211,17 +229,10 @@ sap.ui.define([
 		 * @param {sap.ui.base.Event} oEvent - the press event
 		 */
 		onPressDown: function (oEvent) {
-			if (!this._selectedRowIndex || this._selectedRowIndex === 0) {
-				this.showMessageToast("Select atleast one line item");
-				return;
-			}
-
 			var iGanttRowCount = parseInt(this.oViewModel.getProperty("/GanttRowCount"), 10);
-
-			if (this._selectedRowIndex > (iGanttRowCount - 2)) {
+			if (this.selectionValidation(this._selectedRowIndex, "Down", iGanttRowCount)) {
 				return;
 			}
-
 			this._tablSortAndDelete(this._selectedRowIndex, (this._selectedRowIndex + 1));
 		},
 
@@ -231,14 +242,8 @@ sap.ui.define([
 		 * @param {sap.ui.base.Event} oEvent - the press event
 		 */
 		onPressBottom: function (oEvent) {
-			if (!this._selectedRowIndex || this._selectedRowIndex === 0) {
-				this.showMessageToast("Select atleast one line item");
-				return;
-			}
-
 			var iGanttRowCount = parseInt(this.oViewModel.getProperty("/GanttRowCount"), 10);
-
-			if (this._selectedRowIndex > (iGanttRowCount - 2)) {
+			if (this.selectionValidation(this._selectedRowIndex, "Down", iGanttRowCount)) {
 				return;
 			}
 
@@ -292,7 +297,33 @@ sap.ui.define([
 			}
 
 			this._tablSortAndDelete(iDragPath, iDropPath);
+		},
 
+		/**
+		 * Event to handle drop on the gantt table
+		 * @param {sap.ui.base.Event} oEvent - the grop event
+		 */
+		onDropGanttTableFromOperation: function (oEvent) {
+			var oDroppedControl = oEvent.getParameter("droppedControl"),
+				oDroppedBindingContext = oDroppedControl.getBindingContext("ganttModel"),
+				iDropPath = parseInt(oDroppedBindingContext.getPath().slice(-1), 10),
+				aOrderOperations = [],
+				aDraggedContext = this.getModel("viewModel").getProperty("/dragSession");
+
+			/*if (oEvent.getParameter("dropPosition") === "Before") {
+				iDropPath--;
+			} else*/
+			if (oEvent.getParameter("dropPosition") === "After") {
+				iDropPath++;
+			}
+
+			if (iDropPath === 0) {
+				oEvent.preventDefault();
+				return;
+			}
+
+			aOrderOperations = this._getFormatedOrderOperation(iDropPath, oDroppedBindingContext, aDraggedContext);
+			this._tablSortAndDelete(null, iDropPath, aOrderOperations);
 		},
 
 		/**
@@ -339,6 +370,7 @@ sap.ui.define([
 				oResetData = deepClone(this.oBackupData);
 				this.getModel("ganttModel").setData(oResetData);
 				this.getModel("ganttModel").refresh();
+				this.getModel("viewModel").setProperty("/GanttRowCount", oResetData.results.length);
 				this.oViewModel.setProperty("/pendingChanges", false);
 			};
 			this.showConfirmDialog(sTitle, sMsg, successFn.bind(this));
@@ -370,7 +402,6 @@ sap.ui.define([
 				mTabs = oTempModel.getProperty("/GanttConfigs"),
 				sEntitySet = mTabs.entitySet,
 				aFilters = [];
-
 			this.oViewModel.setProperty("/gantBusy", true);
 
 			aFilters.push(new Filter("NETWORK_KEY", FilterOperator.EQ, sNetworkId));
@@ -397,6 +428,7 @@ sap.ui.define([
 					"results": []
 				});
 				this.oViewModel.setProperty("/gantBusy", false);
+				this.oViewModel.setProperty("/pendingChanges", false);
 			}.bind(this));
 		},
 
@@ -405,17 +437,28 @@ sap.ui.define([
 		 * @param iDraggedPath index of where it placed before change
 		 * @param iDroppedPath index of where to place after change
 		 */
-		_tablSortAndDelete: function (iDraggedPath, iDroppedPath) {
+		_tablSortAndDelete: function (iDraggedPath, iDroppedPath, aDraggedOrderOperations) {
 			var sTitle = "Confirm",
 				sMsg = "Do you really want to continue after validation";
 
 			var successFn = function () {
 				var oModel = this.getModel("ganttModel"),
 					oData = oModel.getProperty("/results"),
-					DraggedData = oData.splice(iDraggedPath, 1);
+					DraggedData = [];
+				if (iDraggedPath && oData.length) {
+					DraggedData = oData.splice(iDraggedPath, 1)[0];
+				}
+				if (aDraggedOrderOperations) {
+					DraggedData = aDraggedOrderOperations;
+				}
 
-				if (iDroppedPath) {
-					oData.splice(iDroppedPath, 0, DraggedData[0]);
+				if (iDroppedPath && DraggedData.length) {
+					DraggedData.forEach(function (oDragged) {
+						oData.splice(iDroppedPath, 0, oDragged);
+						iDroppedPath++;
+					}.bind(this));
+				} else if (iDroppedPath) {
+					oData.splice(iDroppedPath, 0, DraggedData);
 				}
 				this._updateSortandRelationshipSequence(oData);
 				this.oViewModel.setProperty("/GanttRowCount", oData.length);
@@ -431,18 +474,74 @@ sap.ui.define([
 		 * @param [oData] gantt table data
 		 */
 		_updateSortandRelationshipSequence: function (oData) {
-			for (var i = 1; i < oData.length; i++) {
+			for (var i = 0; i < oData.length; i++) {
 				var sSortId = formatter.formatOperationNumber((i + 1).toString(), 3);
 				oData[i].SORT_ID = sSortId;
 
+				if (oData[i].ObjectKey === "") {
+					oData[i].ObjectKey = oData[i].ORDER_NUMBER + "_" + oData[i].OPERATION_NUMBER + "_" + oData[i].SORT_ID + oData[i].SORT_ID + oData[
+						i].ORDER_NUMBER + oData[i].OPERATION_NUMBER;
+
+				}
 				oData[i].NetworkToGanttRelation.results[0] = {};
+				if (i === oData.length - 1) {
+					oData[i].REL_KEY = "";
+					oData[i].RELATION_TYPE = "";
+				} else {
+					oData[i].REL_KEY = oData[i].REL_KEY ? oData[i].REL_KEY : "1";
+					oData[i].RELATION_TYPE = oData[i].RELATION_TYPE ? oData[i].RELATION_TYPE : "FS";
 
-				oData[i].NetworkToGanttRelation.results[0].ObjectKey = oData[i].ObjectKey;
-				oData[i].NetworkToGanttRelation.results[0].HeaderObjectKe = oData[i].ObjectKey;
-				oData[i].NetworkToGanttRelation.results[0].PRE_OBJECT_KEY = oData[i].ObjectKey;
+					oData[i].NetworkToGanttRelation.results[0].ObjectKey = oData[i].ObjectKey;
+					oData[i].NetworkToGanttRelation.results[0].HeaderObjectKe = oData[i].ObjectKey;
+					oData[i].NetworkToGanttRelation.results[0].NETWORK_KEY = oData[i].NETWORK_KEY;
+					oData[i].NetworkToGanttRelation.results[0].SORT_ID = oData[i].SORT_ID;
+					oData[i].NetworkToGanttRelation.results[0].ORDER_NUMBER = oData[i].ORDER_NUMBER;
+					oData[i].NetworkToGanttRelation.results[0].OPERATION_NUMBER = oData[i].OPERATION_NUMBER;
 
-				oData[i].NetworkToGanttRelation.results[0].SUC_OBJECT_KEY = oData[i - 1].ObjectKey;
+					oData[i].NetworkToGanttRelation.results[0].SUC_OBJECT_KEY = oData[i].ObjectKey;
+					oData[i].NetworkToGanttRelation.results[0].SUC_SORT_ID = oData[i].SORT_ID;
+					oData[i].NetworkToGanttRelation.results[0].SUC_ORDER_NUMBER = oData[i].ORDER_NUMBER;
+					oData[i].NetworkToGanttRelation.results[0].SUC_OPERATION_NUMBER = oData[i].OPERATION_NUMBER;
+
+					oData[i].NetworkToGanttRelation.results[0].PRE_OBJECT_KEY = oData[i + 1].ObjectKey;
+					oData[i].NetworkToGanttRelation.results[0].PRE_SORT_ID = oData[i + 1].SORT_ID;
+					oData[i].NetworkToGanttRelation.results[0].PRE_ORDER_NUMBER = oData[i + 1].ORDER_NUMBER;
+					oData[i].NetworkToGanttRelation.results[0].PRE_OPERATION_NUMBER = oData[i + 1].OPERATION_NUMBER;
+
+					oData[i].NetworkToGanttRelation.results[0].REL_KEY = oData[i].REL_KEY;
+				}
 			}
+		},
+
+		/**
+		 * Format dragged order operation details according to network operation details
+		 */
+		_getFormatedOrderOperation: function (iDropPath, oDrppedContext, aDraggedContext) {
+			var aFormatedOrderOperation = [];
+
+			aDraggedContext.forEach(function (oDragItem) {
+				var oFormatJson = {
+					"ObjectKey": "",
+					"SORT_ID": "",
+					"ORDER_NUMBER": oDragItem.getProperty("ORDER_NUMBER"),
+					"NETWORK_KEY": oDrppedContext.getProperty("NETWORK_KEY"),
+					"OPERATION_NUMBER": oDragItem.getProperty("OPERATION_NUMBER"),
+					"RELATION_TYPE": "FS",
+					"REL_KEY": "1",
+					"ASSIGNMENT_TYPE": "",
+					"SCHEDULE_TYPE": oDrppedContext.getProperty("SCHEDULE_TYPE"),
+					"EARLIEST_START_DATE": oDragItem.getProperty("EARLIEST_START_DATE"),
+					"EARLIEST_START_TIME": oDragItem.getProperty("EARLIEST_START_TIME"),
+					"EARLIEST_END_DATE": oDragItem.getProperty("EARLIEST_END_DATE"),
+					"EARLIEST_END_TIME": oDragItem.getProperty("EARLIEST_END_TIME"),
+					"NetworkToGanttRelation": {
+						"results": []
+					}
+				};
+				aFormatedOrderOperation.push(oFormatJson);
+			}.bind(this));
+
+			return aFormatedOrderOperation;
 		}
 	});
 });
