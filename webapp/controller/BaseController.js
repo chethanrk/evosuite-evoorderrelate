@@ -185,6 +185,30 @@ sap.ui.define([
 			});
 			dialog.addStyleClass(this.getModel("viewModel").getProperty("/densityClass"));
 			dialog.open();
+		},
+
+		/**
+		 * Validate the gantt table selection
+		 * @parm iSelectedIndex - selected index of gantt table
+		 * @param sPosition - manual sort position
+		 * @param iGanttRowCount - gantt row count
+		 * @ return param boolean
+		 */
+		selectionValidation: function (iSelectedIndex, sPosition, iGanttRowCount) {
+			if (!this._selectedRowIndex || this._selectedRowIndex === 0) {
+				this.showMessageToast("Select atleast one line item");
+				return true;
+			}
+
+			if (sPosition && sPosition === "Up" && this._selectedRowIndex < 2) {
+				return true;
+			}
+
+			if (sPosition && sPosition === "Down" && iGanttRowCount && this._selectedRowIndex > (iGanttRowCount - 2)) {
+				return true;
+			}
+
+			return false;
 		}
 
 	});
