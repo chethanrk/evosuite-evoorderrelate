@@ -1,11 +1,11 @@
 sap.ui.define([
-	"com/evorait/evosuite/evomanagedepend/controller/BaseController",
+	"com/evorait/evosuite/evoorderrelate/controller/BaseController",
 	"sap/ui/core/Fragment",
 	"sap/ui/core/mvc/OverrideExecution",
 	"sap/base/util/deepClone",
 	"sap/ui/model/Filter",
 	"sap/ui/model/FilterOperator",
-	"com/evorait/evosuite/evomanagedepend/model/formatter"
+	"com/evorait/evosuite/evoorderrelate/model/formatter"
 ], function (BaseController, Fragment, OverrideExecution, deepClone, Filter, FilterOperator, formatter) {
 	"use strict";
 

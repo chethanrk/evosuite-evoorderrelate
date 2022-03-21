@@ -2,13 +2,13 @@ sap.ui.define([
 	"sap/ui/core/mvc/Controller",
 	"sap/ui/core/Fragment",
 	"sap/ui/core/mvc/OverrideExecution",
-	"com/evorait/evosuite/evomanagedepend/model/models",
+	"com/evorait/evosuite/evoorderrelate/model/models",
 	"sap/ui/model/Filter",
 	"sap/ui/model/FilterOperator",
 	"sap/m/MessageBox"
 ], function (Controller, Fragment, OverrideExecution, models, Filter, FilterOperator, MessageBox) {
 	"use strict";
-	return Controller.extend("com.evorait.evosuite.evomanagedepend.controller.NewNetworkDialog", {
+	return Controller.extend("com.evorait.evosuite.evoorderrelate.controller.NewNetworkDialog", {
 
 		metadata: {
 			// extension can declare the public methods
@@ -62,7 +62,7 @@ sap.ui.define([
 			// lazy loading
 			if (!this._oNewNetworkDialog) {
 				Fragment.load({
-					name: "com.evorait.evosuite.evomanagedepend.view.fragments.NewNetworkDialog",
+					name: "com.evorait.evosuite.evoorderrelate.view.fragments.NewNetworkDialog",
 					type: "XML",
 					controller: this
 				}).then(function (oDialog) {
@@ -211,7 +211,7 @@ sap.ui.define([
 		 * Bind the dialog with a new created Network instance
 		 */
 		_bindDialog: function () {
-			var oContext = this._oController.getModel().createEntry("/" + "NetworkSet");
+			var oContext = this._oController.getModel().createEntry("/" + "WONetworkSet");
 			this._oNewNetworkDialog.bindElement(oContext.getPath());
 		},
 
@@ -282,19 +282,14 @@ sap.ui.define([
 					aFilters = [];
 
 				oValueHelpProps.Parameters.forEach(function (oProp) {
-					if (oProp.RecordType === "com.sap.vocabularies.Common.v1.ValueListParameterIn" || oProp.RecordType ===
-						"com.sap.vocabularies.Common.v1.ValueListParameterInOut") {
-						var oFilter = new Filter(oProp.ValueListProperty.String, sap.ui.model.FilterOperator.EQ, mFilterIds[oProp.ValueListProperty
-							.String]);
+					if (oProp.RecordType === "com.sap.vocabularies.Common.v1.ValueListParameterIn") {
+						var oFilter = new Filter(oProp.ValueListProperty.String, sap.ui.model.FilterOperator.EQ, mFilterIds[oProp.LocalDataProperty
+							.PropertyPath]);
 						aFilters.push(oFilter);
-
-					} else if (oProp.RecordType === "com.sap.vocabularies.Common.v1.ValueListParameterOut" || oProp.RecordType ===
-						"com.sap.vocabularies.Common.v1.ValueListParameterInOut") {
+						sTextProp = oProp.ValueListProperty.String;
+					} else if (oProp.RecordType === "com.sap.vocabularies.Common.v1.ValueListParameterInOut") {
 						sKeyProp = oProp.ValueListProperty.String;
-						sTextProp = oProp.ValueListProperty.String;
 
-					} else if (oProp.RecordType === "com.sap.vocabularies.Common.v1.ValueListParameterDisplayOnly") {
-						sTextProp = oProp.ValueListProperty.String;
 					}
 				});
 

@@ -6,11 +6,11 @@
 			<smartForm:SmartForm id="idNewNetworkSmartForm" editable="true">
 				<smartForm:layout>
 					<smartForm:Layout labelSpanXL="3" labelSpanL="3" labelSpanM="4" labelSpanS="12" emptySpanXL="2" emptySpanL="2" emptySpanM="2" emptySpanS="0"
-						columnsXL="1" columnsL="1" columnsM="1" singleContainerFullSize="false"></smartForm:Layout>
+						columnsXL="1" columnsL="1" columnsM="1"></smartForm:Layout>
 				</smartForm:layout>
 				<smartForm:Group>
 					<smartForm:GroupElement>
-						<smartField:SmartField id="idNewNetworkOrderNumber" value="{ORDER_NUMBER}" entitySet="NetworkSet" change="onChangeOrderNumber"
+						<smartField:SmartField id="idNewNetworkOrderNumber" value="{ORDER_NUMBER}" entitySet="WONetworkSet" change="onChangeOrderNumber"
 							showLabel="true" editable="true" mandatory="true">
 							<smartField:configuration>
 								<smartField:Configuration controlType="input" displayBehaviour="descriptionAndId" preventInitialDataFetchInValueHelpDialog="false"/>
@@ -18,7 +18,7 @@
 						</smartField:SmartField>
 					</smartForm:GroupElement>
 					<smartForm:GroupElement>
-						<smartField:SmartField id="idNewNetworkOperationNumber" value="{OPERATION_NUMBER}" entitySet="NetworkSet" showLabel="true" editable="true"
+						<smartField:SmartField id="idNewNetworkOperationNumber" value="{OPERATION_NUMBER}" entitySet="WONetworkSet" showLabel="true" editable="true"
 							mandatory="true" enabled="false">
 							<smartField:configuration>
 								<smartField:Configuration controlType="dropDownList" displayBehaviour="descriptionAndId" preventInitialDataFetchInValueHelpDialog="false"/>

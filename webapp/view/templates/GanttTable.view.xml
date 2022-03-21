@@ -17,7 +17,8 @@
 								<core:Item key="{NETWORK_KEY}" text="{NETWORK_KEY}"/>
 							</Select>
 							<Button id="idBtnCreateNewNetwork" text="{i18n>btn.createNewNetwork}" tooltip="{i18n>btn.createNewNetwork}" press="onPressCreateNewNetwork"
-								visible="{= ${user>/ENABLE_CREATE_NEW_NETWORK} === 'X'}"/>
+								/>
+								<!--visible="{= ${user>/ENABLE_CREATE_NEW_NETWORK} === 'X'}"-->
 							<core:ExtensionPoint name="PageExtP|GanttTable|GanttSet|CustomHeader|Left"/>
 							<ToolbarSpacer id="idGanttTableToolbarSpacer"/>
 							<Button id="idBtnSave" type="Emphasized" tooltip="{i18n>btn.save}" text="{i18n>btn.save}" press="onPressNetworkSave"

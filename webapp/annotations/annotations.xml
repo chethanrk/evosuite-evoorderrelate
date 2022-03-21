@@ -12,64 +12,6 @@
 		<edmx:Include Alias="Metadata" Namespace="com.evorait.evoorderrelate"/>
 	</edmx:Reference>
 	<edmx:DataServices>
-		<Schema xmlns="http://docs.oasis-open.org/odata/ns/edm" Namespace="com.evorait.evoorder">
-			<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="com.evorait.evoorder.Network/ORDER_NUMBER">
-				<Annotation Term="com.sap.vocabularies.Common.v1.ValueList">
-					<Record Type="com.sap.vocabularies.Common.v1.ValueListType">
-						<PropertyValue Property="CollectionPath" String="SHOrderNumberSet"/>
-						<PropertyValue Property="CollectionRoot" String=""/>
-						<PropertyValue Property="SearchSupported" Bool="false"/>
-						<PropertyValue Property="Parameters">
-							<Collection>
-								<Record Type="com.sap.vocabularies.Common.v1.ValueListParameterInOut">
-									<PropertyValue Property="LocalDataProperty" PropertyPath="ORDER_NUMBER"/>
-									<PropertyValue Property="ValueListProperty" String="AUFNR"/>
-								</Record>
-								<Record Type="com.sap.vocabularies.Common.v1.ValueListParameterIn">
-									<PropertyValue Property="ValueListProperty" String="AUART"/>
-								</Record>
-								<Record Type="com.sap.vocabularies.Common.v1.ValueListParameterDisplayOnly">
-									<PropertyValue Property="ValueListProperty" String="KTEXT"/>
-								</Record>
-								<Record Type="com.sap.vocabularies.Common.v1.ValueListParameterIn">
-									<PropertyValue Property="ValueListProperty" String="WERKS"/>
-								</Record>
-								<Record Type="com.sap.vocabularies.Common.v1.ValueListParameterIn">
-									<PropertyValue Property="ValueListProperty" String="ERNAM"/>
-								</Record>
-								<Record Type="com.sap.vocabularies.Common.v1.ValueListParameterIn">
-									<PropertyValue Property="ValueListProperty" String="ERDAT"/>
-								</Record>
-							</Collection>
-						</PropertyValue>
-					</Record>
-				</Annotation>
-				<Annotation Term="com.sap.vocabularies.Common.v1.Label" String="Order"/>
-			</Annotations>
-			<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="com.evorait.evoorder.Network/OPERATION_NUMBER">
-				<Annotation Term="com.sap.vocabularies.Common.v1.ValueList">
-					<Record Type="com.sap.vocabularies.Common.v1.ValueListType">
-						<PropertyValue Property="Label" String="Operations"/>
-						<PropertyValue Property="CollectionPath" String="WOHeaderSet"/>
-						<PropertyValue Property="CollectionRoot" String=""/>
-						<PropertyValue Property="SearchSupported" Bool="true" />
-						<PropertyValue Property="Parameters">
-							<Collection>
-								<Record Type="com.sap.vocabularies.Common.v1.ValueListParameterIn">
-									<PropertyValue Property="LocalDataProperty" PropertyPath="ORDER_NUMBER" />
-									<PropertyValue Property="ValueListProperty" String="ORDER_NUMBER"/>
-								</Record>
-								<Record	Type="com.sap.vocabularies.Common.v1.ValueListParameterOut">
-									<PropertyValue Property="ValueListProperty" String="OPERATION_NUMBER" />
-								</Record>
-								<Record	Type="com.sap.vocabularies.Common.v1.ValueListParameterDisplayOnly">
-									<PropertyValue Property="ValueListProperty" String="ORDER_DESCRIPTION" />
-								</Record>
-							</Collection>
-						</PropertyValue>
-					</Record>
-				</Annotation>
-			</Annotations>
-		</Schema>
+		<Schema xmlns="http://docs.oasis-open.org/odata/ns/edm" Namespace="com.evorait.evoorderrelate"></Schema>
 	</edmx:DataServices>
 </edmx:Edmx>

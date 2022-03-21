@@ -1,10 +1,10 @@
 sap.ui.define([
 	"sap/ui/core/UIComponent",
 	"sap/ui/Device",
-	"com/evorait/evosuite/evomanagedepend/model/models",
-	"com/evorait/evosuite/evomanagedepend/controller/ErrorHandler",
-	"com/evorait/evosuite/evomanagedepend/controller/MessageManager",
-	"com/evorait/evosuite/evomanagedepend/controller/NewNetworkDialog",
+	"com/evorait/evosuite/evoorderrelate/model/models",
+	"com/evorait/evosuite/evoorderrelate/controller/ErrorHandler",
+	"com/evorait/evosuite/evoorderrelate/controller/MessageManager",
+	"com/evorait/evosuite/evoorderrelate/controller/NewNetworkDialog",
 	"sap/ui/model/json/JSONModel"
 ], function (UIComponent, Device, models, ErrorHandler, MessageManager, NewNetworkDialog, JSONModel) {
 	"use strict";
