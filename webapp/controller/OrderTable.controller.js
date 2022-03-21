@@ -39,6 +39,7 @@ sap.ui.define([
 		},
 
 		oOrderTable: null,
+		oOrderOperationTable: null,
 		oOrderFilterDialog: null,
 		pOrderFilterDialogLoaded: null,
 		aPageDefaultFilters: [],
@@ -54,6 +55,7 @@ sap.ui.define([
 		 */
 		onInit: function () {
 			this.oOrderTable = this.getView().byId("idTableOrderTable");
+			this.oOrderOperationTable = this.oOrderTable.getTable();
 			// initialise Order SmartFilterBar to make the Order table be able to subscribe to the SmartFilterBar's events
 			this.pOrderFilterDialogLoaded = Fragment.load({
 				name: "com.evorait.evosuite.evoorderrelate.view.fragments.OrderFilterDialog",
@@ -64,33 +66,39 @@ sap.ui.define([
 				this.oOrderFilterDialog.addStyleClass(this.getOwnerComponent().getContentDensityClass());
 				this.getView().addDependent(oFragment);
 			}.bind(this));
+
+			/*var eventBus = sap.ui.getCore().getEventBus();
+			//Binnding has changed in TemplateRenderController.js
+			eventBus.subscribe("TemplateRendererOrderOperation", "changedBinding", this._changedBinding, this);*/
 		},
 
 		/**
-		 * Similar to onAfterRendering, but this hook is invoked before the controller's View is re-rendered
-		 * (NOT before the first rendering! onInit() is used for that one!).
-		 * @memberOf com.evorait.evosuite.evoorderrelate.view.OrderTable
+		 * Method to handle table selection and collect selected context
 		 */
-		//	onBeforeRendering: function() {
-		//
-		//	},
+		onPresAddNewOperations: function (oEvent) {
+			var aContext = this.oOrderOperationTable.getSelectedContexts();
 
-		/**
-		 * Called when the View has been rendered (so its HTML is part of the document). Post-rendering manipulations of the HTML could be done here.
-		 * This hook is the same one that SAPUI5 controls get after being rendered.
-		 * @memberOf com.evorait.evosuite.evoorderrelate.view.OrderTable
-		 */
-		//	onAfterRendering: function() {
-		//
-		//	},
+			//get selected rows when checkboxes in table selected
+			if (aContext.length > 0) {
+				var eventBus = sap.ui.getCore().getEventBus();
+				eventBus.publish("TemplateRendererNetworkOperation", "changedBinding", {
+					data: aContext
+				});
+			}
+			this.oOrderOperationTable.removeSelections();
+			if (!aContext || (aContext && aContext.length === 0)) {
+				sap.m.MessageToast.show("Select atleast one line item");
+			}
+		},
 
 		/**
 		 * Called when the Controller is destroyed. Use this one to free resources and finalize activities.
 		 * @memberOf com.evorait.evosuite.evoorderrelate.view.OrderTable
 		 */
-		//	onExit: function() {
-		//
-		//	}
+		onExit: function () {
+			/*var eventBus = sap.ui.getCore().getEventBus();
+			eventBus.unsubscribe("TemplateRendererOrderOperation", "changedBinding", this._changedBinding, this);*/
+		},
 
 		/**
 		 * allows extension to add filters. They will be combined via AND with all other filters
@@ -148,6 +156,39 @@ sap.ui.define([
 			}.bind(this));
 		},
 
+		/**
+		 * On DragStart set the dragSession selected demands
+		 */
+		onDragStart: function (oEvent) {
+			var oDragSession = oEvent.getParameter("dragSession"),
+				oDraggedControl = oDragSession.getDragControl(),
+				aContext = this.oOrderOperationTable.getSelectedContexts(),
+				aSelectedContext;
+
+			oDragSession.setTextData("Hi I am dragging");
+			//get selected rows when checkboxes in table selected
+			if (aContext.length > 0) {
+				aSelectedContext = aContext;
+			} else {
+				//table tr single dragged element
+				aSelectedContext = [oDraggedControl.getBindingContext()];
+			}
+
+			// keeping the data in drag session
+			this.getModel("viewModel").setProperty("/dragSession", aSelectedContext);
+			if (!aSelectedContext || (aSelectedContext && aSelectedContext.length === 0)) {
+				oEvent.preventDefault();
+			}
+		},
+		/**
+		 * On Drag end check for dropped control, If dropped control not found
+		 * then make reset the selection
+		 * @param oEvent
+		 */
+		onDragEnd: function (oEvent) {
+			this._deselectAll();
+		},
+
 		/* =========================================================== */
 		/* internal methods                                            */
 		/* =========================================================== */
@@ -200,6 +241,14 @@ sap.ui.define([
 				aResArray.push([avalue, obj[avalue][0]]);
 			});
 			return aResArray;
+		},
+
+		/**
+		 * deselect all checkboxes in table
+		 * @private
+		 */
+		_deselectAll: function () {
+			this.oOrderOperationTable.removeSelections();
 		}
 	});
 
