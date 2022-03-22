@@ -179,7 +179,25 @@ sap.ui.define([
 			}.bind(this));
 		},
 
-		callFunctionImport: function (sFunctionName, mUrlParams) {
+		/**
+		 * post data
+		 * returns promise
+		 */
+		postData: function (sUri, oEntry) {
+			return new Promise(function (resolve, reject) {
+				this.getModel().create(sUri, oEntry, {
+					refreshAfterChange: false,
+					success: function (oData) {
+						resolve(oData);
+					},
+					error: function (oError) {
+						//Handle Error
+						reject(oError);
+					}
+				});
+			}.bind(this));
+		},
+        callFunctionImport: function (sFunctionName, mUrlParams) {
 			return new Promise(function (resolve, reject) {
 				this.getModel().callFunction(sFunctionName, {
 					urlParameters: mUrlParams || {},

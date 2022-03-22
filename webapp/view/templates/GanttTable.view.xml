@@ -1,6 +1,6 @@
 <mvc:View height="100%" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:gantt="sap.gantt.simple"
 	xmlns:axistime="sap.gantt.axistime" xmlns:config="sap.gantt.config" xmlns:shapes="sap.gantt.simple.shapes" xmlns:table="sap.ui.table"
-	xmlns:dnd="sap.ui.core.dnd" controllerName="com.evorait.evosuite.evoorderrelate.controller.GanttTable"
+	xmlns:dnd="sap.ui.core.dnd" controllerName="com.evorait.evosuite.evoorderrelate.controller.GanttTable" xmlns:f="sap.ui.layout.form"
 	xmlns:html="http://www.w3.org/1999/xhtml" xmlns:template="http://schemas.sap.com/sapui5/extension/sap.ui.core.template/1">
 	<template:alias name=".AH" value="sap.ui.model.odata.AnnotationHelper">
 		<template:alias name=".evoAH" value="com.evorait.evosuite.evoorderrelate.model.AnnotationHelper">
@@ -40,8 +40,8 @@
 							</gantt:toolbar>
 							<gantt:GanttChartWithTable id="gantt" shapeSelectionMode="Single" selectionPanelSize="40%">
 								<gantt:table>
-									<table:Table id="idTableGanttTable" selectionMode="Single" rows="{path:'ganttModel>/results'}" visibleRowCountMode="Auto"
-										selectionBehavior="RowOnly" fixedRowCount="1" rowActionCount="1" rowSelectionChange="onGanttRowSelectionChange">
+									<table:Table id="idTableGanttTable" selectionMode="Single" rows="{path:'ganttModel>/NetworkHeaderToOperations/results'}"
+										visibleRowCountMode="Auto" selectionBehavior="RowOnly" fixedRowCount="1" rowActionCount="1" rowSelectionChange="onGanttRowSelectionChange">
 										<template:with path="tempProps>/GanttConfigs/" var="tabItem">
 											<table:columns>
 												<core:ExtensionPoint name="TableExtP|GanttTable|{:= ${tabItem>entitySet} }|CustomColumn"/>
@@ -59,7 +59,6 @@
 																				<core:Item key="{AOBKT}" text="{AOBKT}"/>
 																			</items>
 																		</Select>
-																		<!--<Text text="{= '{ganttModel>' + ${path : 'lineItem>Value/Path'} + '}' }"/>-->
 																	</FlexBox>
 																</table:template>
 															</table:Column>
@@ -77,7 +76,7 @@
 											</table:columns>
 											<table:rowSettingsTemplate>
 												<gantt:GanttRowSettings rowId="{ganttModel>ObjectKey}"
-													relationships="{path:'ganttModel>NetworkToGanttRelation/results', templateShareable: 'true'}">
+													relationships="{path:'ganttModel>NetworkOperationsToGantt/results', templateShareable: 'true'}">
 													<gantt:shapes1>
 														<gantt:BaseRectangle shapeId="{ganttModel>ObjectKey}"
 															time="{parts:['ganttModel>EARLIEST_START_DATE','ganttModel>EARLIEST_START_TIME'],formatter:'.formatter.mergeDateTime'}"
