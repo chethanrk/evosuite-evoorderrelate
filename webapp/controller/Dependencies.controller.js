@@ -38,7 +38,7 @@ sap.ui.define([
 						//route for page gantt view
 						if (sRouteName === "ManageDependencies") {
 							sViewName = "com.evorait.evosuite.evoorderrelate.view.templates.GanttTable#Table";
-							this._onRouteMatched(oEvent, sViewName, "WONetworkSet");
+							this._onRouteMatched(oEvent, sViewName, "WONetworkHeaderSet");
 						}
 					}.bind(this));
 				}.bind(this));

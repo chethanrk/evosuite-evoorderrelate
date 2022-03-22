@@ -33,7 +33,11 @@ sap.ui.define([
 				}
 			}
 		},
-
+		/**
+		 * Called when a controller is instantiated and its View controls (if available) are already created.
+		 * Can be used to modify the View before it is displayed, to bind event handlers and do other one-time initialization.
+		 * @memberOf com.evorait.evosuite.evoorderrelate.controller.App
+		 */
 		onInit: function () {
 			//Bind the message model to the view and register it
 			this.getOwnerComponent().registerViewToMessageManager(this.getView());
@@ -60,6 +64,10 @@ sap.ui.define([
 			}
 		},
 
+		/**
+		 * Open information popover 
+		 * @param {oDialog}  -- information dialog instance
+		 */
 		open: function (oDialog) {
 			var oView = this.getView();
 			oDialog.addStyleClass(this.getOwnerComponent().getContentDensityClass());

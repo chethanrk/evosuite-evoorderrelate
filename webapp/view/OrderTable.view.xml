@@ -36,8 +36,9 @@
 						<core:ExtensionPoint name="TableExtP|OrderTable|OrderOperationsSet|CustomToolbar|Left"/>
 						<ToolbarSpacer/>
 						<core:ExtensionPoint name="TableExtP|OrderTable|OrderOperationsSet|CustomToolbar|Right"/>
-						<Button id="idBtnAddNewOperations" text="Add Operations To Network" tooltip="Add Operations" press="onPresAddNewOperations"/>
-						<Button text="Filter" press="onOrderFilterOpen"/>
+						<Button id="idBtnAddNewOperations" text="{i18n>btn.addOperationsToNetwork}" tooltip="{i18n>btn.addOperationsToNetwork}"
+							press="onPresAddNewOperations"/>
+						<Button text="{i18n>btn.filers}" press="onOrderFilterOpen"/>
 					</OverflowToolbar>
 				</smartTable:customToolbar>
 				<Table id="idOrderTableInnerTable" mode="MultiSelect" growing="true">

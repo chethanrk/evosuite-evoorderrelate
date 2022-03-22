@@ -34,6 +34,21 @@ sap.ui.define([
 				onInitializedSmartVariant: {
 					public: true,
 					final: true
+				},
+				onPresAddNewOperations: {
+					public: true,
+					final: false,
+					overrideExecution: OverrideExecution.Instead
+				},
+				onDragEnd: {
+					public: true,
+					final: false,
+					overrideExecution: OverrideExecution.Instead
+				},
+				onDragStart: {
+					public: true,
+					final: false,
+					overrideExecution: OverrideExecution.Instead
 				}
 			}
 		},
@@ -67,28 +82,6 @@ sap.ui.define([
 				this.getView().addDependent(oFragment);
 			}.bind(this));
 
-			/*var eventBus = sap.ui.getCore().getEventBus();
-			//Binnding has changed in TemplateRenderController.js
-			eventBus.subscribe("TemplateRendererOrderOperation", "changedBinding", this._changedBinding, this);*/
-		},
-
-		/**
-		 * Method to handle table selection and collect selected context
-		 */
-		onPresAddNewOperations: function (oEvent) {
-			var aContext = this.oOrderOperationTable.getSelectedContexts();
-
-			//get selected rows when checkboxes in table selected
-			if (aContext.length > 0) {
-				var eventBus = sap.ui.getCore().getEventBus();
-				eventBus.publish("TemplateRendererNetworkOperation", "changedBinding", {
-					data: aContext
-				});
-			}
-			this.oOrderOperationTable.removeSelections();
-			if (!aContext || (aContext && aContext.length === 0)) {
-				sap.m.MessageToast.show("Select atleast one line item");
-			}
 		},
 
 		/**
@@ -96,8 +89,7 @@ sap.ui.define([
 		 * @memberOf com.evorait.evosuite.evoorderrelate.view.OrderTable
 		 */
 		onExit: function () {
-			/*var eventBus = sap.ui.getCore().getEventBus();
-			eventBus.unsubscribe("TemplateRendererOrderOperation", "changedBinding", this._changedBinding, this);*/
+
 		},
 
 		/**
@@ -112,6 +104,28 @@ sap.ui.define([
 		/* =========================================================== */
 		/* event handlers                                              */
 		/* =========================================================== */
+
+		/**
+		 * Method to handle table selection and collect selected context
+		 * @param {sap.ui.base.Event} oEvent - the press event
+		 */
+		onPresAddNewOperations: function (oEvent) {
+			var aContext = this.oOrderOperationTable.getSelectedContexts();
+
+			if (!aContext || (aContext && aContext.length === 0)) {
+				var sMsg = this.getResourceBundle().getText("msg.selectAtleastOneLineItem");
+				this.showMessageToast(sMsg);
+				return;
+			}
+			//get selected rows when checkboxes in table selected
+			if (aContext.length > 0) {
+				var eventBus = sap.ui.getCore().getEventBus();
+				eventBus.publish("TemplateRendererNetworkOperation", "changedBinding", {
+					data: aContext
+				});
+			}
+			this.oOrderOperationTable.removeSelections();
+		},
 
 		/**
 		 * Handles press event on the 'Filter' button in the Order Table toolbar
@@ -158,6 +172,7 @@ sap.ui.define([
 
 		/**
 		 * On DragStart set the dragSession selected demands
+		 * @param {sap.ui.base.Event} oEvent - the drag event
 		 */
 		onDragStart: function (oEvent) {
 			var oDragSession = oEvent.getParameter("dragSession"),
@@ -183,7 +198,7 @@ sap.ui.define([
 		/**
 		 * On Drag end check for dropped control, If dropped control not found
 		 * then make reset the selection
-		 * @param oEvent
+		 * @param {sap.ui.base.Event} oEvent - the drag event
 		 */
 		onDragEnd: function (oEvent) {
 			this._deselectAll();
@@ -199,6 +214,7 @@ sap.ui.define([
 		 * when property exist is is allowed to filter create new filters
 		 * returns Promise with array of filters
 		 * @param sEntitySet
+		 * @Private
 		 */
 		_getDefaultTableFiltersFromUrlParams: function (sEntitySet) {
 			return new Promise(function (resolve) {
@@ -233,6 +249,7 @@ sap.ui.define([
 		 * Alternate function for Object.entries()
 		 * @{obj} selected object entry
 		 * returns object which has array of key and value
+		 * @Private
 		 */
 		_getObjectEntries: function (obj) {
 			var aEntries = Object.keys(obj),
@@ -245,7 +262,7 @@ sap.ui.define([
 
 		/**
 		 * deselect all checkboxes in table
-		 * @private
+		 * @Private
 		 */
 		_deselectAll: function () {
 			this.oOrderOperationTable.removeSelections();
