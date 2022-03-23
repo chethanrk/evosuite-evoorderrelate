@@ -120,12 +120,6 @@ sap.ui.define([
 			}
 			if (mParams) {
 				return "/" + oModel.createKey(sEntitySet, mParams);
-			} else {
-				var oContext = oModel.createEntry("/" + sEntitySet, {
-					context: oParentContext,
-					groupId: sGroupId
-				});
-				return oContext.getPath();
 			}
 		},
 

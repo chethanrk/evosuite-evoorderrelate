@@ -1,11 +1,12 @@
 sap.ui.define([
 	"com/evorait/evosuite/evoorderrelate/controller/BaseController",
+	"sap/ui/core/Fragment",
 	"sap/ui/core/mvc/OverrideExecution",
 	"sap/base/util/deepClone",
 	"sap/ui/model/Filter",
 	"sap/ui/model/FilterOperator",
 	"com/evorait/evosuite/evoorderrelate/model/formatter"
-], function (BaseController, OverrideExecution, deepClone, Filter, FilterOperator, formatter) {
+], function (BaseController, Fragment, OverrideExecution, deepClone, Filter, FilterOperator, formatter) {
 	"use strict";
 
 	return BaseController.extend("com.evorait.evosuite.evoorderrelate.controller.GanttTable", {
@@ -63,6 +64,11 @@ sap.ui.define([
 				},
 
 				onDragEnter: {
+					public: true,
+					final: true
+				},
+
+				onPressCreateNewNetwork: {
 					public: true,
 					final: true
 				},
@@ -155,7 +161,7 @@ sap.ui.define([
 				oSelectedItem = oEvent.getParameter("selectedItem"),
 				oSelectedContext = oSelectedItem.getBindingContext(),
 				sType = oSelectedContext.getProperty("AOBKY"),
-				oRelashinShip = oSourceModel.getProperty("NetworkToGanttRelation");
+				oRelashinShip = oSourceModel.getProperty("NetworkOperationsToGantt");
 
 			var sTitle = "Confirm",
 				sMsg = "Do you really want to continue after validation";
@@ -310,9 +316,6 @@ sap.ui.define([
 				aOrderOperations = [],
 				aDraggedContext = this.getModel("viewModel").getProperty("/dragSession");
 
-			/*if (oEvent.getParameter("dropPosition") === "Before") {
-				iDropPath--;
-			} else*/
 			if (oEvent.getParameter("dropPosition") === "After") {
 				iDropPath++;
 			}
@@ -347,13 +350,27 @@ sap.ui.define([
 		 * @param {sap.ui.base.Event} oEvent - the press event
 		 */
 		onPressNetworkDelete: function (oEvent) {
+			var oNetworkSelect = this.getView().byId("idNetworksDropdown"),
+				sKey = oNetworkSelect.getSelectedKey();
+
+			if (!oNetworkSelect || !sKey) {
+				var sMsgv = this.getResourceBundle().getText("msg.noNetworkSelected");
+				this.showMessageToast(sMsgv);
+				return;
+			}
+
 			var sTitle = this.getResourceBundle().getText("tit.confirmDeleteSelected"),
 				sMsg = this.getResourceBundle().getText("msg.confirmNetworkDelete");
+			if (this.getModel("viewModel").getProperty("/pendingChanges")) {
+				sMsg = this.getResourceBundle().getText("msg.leaveWithoutSave") +
+					"\n\n" + sMsg;
+			}
 
 			var successFn = function () {
-				sap.m.MessageToast.show("Delete Network");
+				this.getModel().refresh();
+				this.deleteNetwork(sKey);
 			};
-			this.showConfirmDialog(sTitle, sMsg, successFn.bind(this));
+			this.showConfirmDialog(sTitle, sMsg, successFn.bind(this, sKey));
 		},
 
 		/**
@@ -368,17 +385,14 @@ sap.ui.define([
 			var successFn = function () {
 				var oResetData = {};
 				oResetData = deepClone(this.oBackupData);
-				this.getModel("ganttModel").setData(oResetData);
-				this.getModel("ganttModel").refresh();
-				this.getModel("viewModel").setProperty("/GanttRowCount", oResetData.results.length);
-				this.oViewModel.setProperty("/pendingChanges", false);
+				this.refreshGanttModel(oResetData, true);
 			};
 			this.showConfirmDialog(sTitle, sMsg, successFn.bind(this));
 		},
 
 		/**
 		 * Handle data recived for the network selection
-		 * * @param {sap.ui.base.Event} oEvent - the dataReceived event
+		 * @param {sap.ui.base.Event} oEvent - the dataReceived event
 		 */
 		networkDataReceived: function (oEvent) {
 			if (oEvent.getSource().getPath() !== "/SHNetworkSet") {
@@ -387,9 +401,47 @@ sap.ui.define([
 			var oNetworkSelect = this.getView().byId("idNetworksDropdown"),
 				oFirstItem = oNetworkSelect.getFirstItem(),
 				sKey = oFirstItem.getKey();
+			if (this.oViewModel.getProperty("/networkKey")) {
+				sKey = this.oViewModel.getProperty("/networkKey");
+			}
 			//sKey = "000000834050_0050_01";
 			oNetworkSelect.setSelectedKey(sKey);
 			this._getGanttdata(sKey);
+		},
+
+		/**
+		 * Handle `press` event on 'Create Network' button
+		 * Open Dialog for a new Network creation
+		 * @param {sap.ui.base.Event} oEvent - The `press` event
+		 */
+		onPressCreateNewNetwork: function (oEvent) {
+			var oView = this.getView();
+
+			if (this.oViewModel.getProperty("/pendingChanges")) {
+				var sTitle = "Confirm",
+					sMsg = this.getResourceBundle().getText("msg.leaveWithoutSave");
+
+				var successFn = function () {
+					this.getOwnerComponent().NewNetworkDialog.open(oView);
+				};
+				this.showConfirmDialog(sTitle, sMsg, successFn.bind(this));
+			} else {
+				this.getOwnerComponent().NewNetworkDialog.open(oView);
+			}
+		},
+
+		/**
+		 * Function to handle save of updated network
+		 * prepare batch for each rows of the table
+		 */
+		onPressNetworkSave: function (oEvent) {
+			var oModelData = this.getModel("ganttModel").getData();
+			var oPayloadData = {};
+			oPayloadData = deepClone(oModelData);
+			oPayloadData.NetworkHeaderToOperations.results.forEach(function (oLineItem) {
+
+			}.bind(this));
+			this.saveChanges(oPayloadData);
 		},
 
 		/**
@@ -400,123 +452,115 @@ sap.ui.define([
 		_getGanttdata: function (sNetworkId) {
 			var oTempModel = this.getModel("templateProperties"),
 				mTabs = oTempModel.getProperty("/GanttConfigs"),
-				sEntitySet = mTabs.entitySet,
-				aFilters = [];
+				sEntitySet = mTabs.headerEntitySet;
 			this.oViewModel.setProperty("/gantBusy", true);
 
-			aFilters.push(new Filter("NETWORK_KEY", FilterOperator.EQ, sNetworkId));
-
-			var oFilter = new Filter({
-				filters: aFilters,
-				and: true
-			});
-
-			this.getOwnerComponent().readData("/" + sEntitySet, [oFilter], {
-				$expand: "NetworkToGanttRelation"
+			var sPath = sEntitySet + "('" + sNetworkId + "')";
+			this.getOwnerComponent().readData("/" + sPath, [], {
+				$expand: "NetworkHeaderToOperations,NetworkHeaderToOperations/NetworkOperationsToGantt"
 			}).then(function (oResult) {
 				this.oBackupData = deepClone(oResult);
-				this.getModel("ganttModel").setData(oResult);
-				this.getModel("viewModel").setProperty("/GanttRowCount", oResult.results.length);
-				if (oResult.results && oResult.results.length) {
-					this.oViewModel.setProperty("/pendingChanges", false);
-					this._selectedRowIndex = null;
-				}
+				this.oUpdatedBackupData = deepClone(oResult);
+				this.refreshGanttModel(oResult, true);
 				this.oViewModel.setProperty("/gantBusy", false);
 			}.bind(this), function (error) {
 				this.oBackupData = null;
-				this.getModel("ganttModel").setData({
-					"results": []
-				});
+				this.refreshGanttModel({}, true);
 				this.oViewModel.setProperty("/gantBusy", false);
-				this.oViewModel.setProperty("/pendingChanges", false);
 			}.bind(this));
 		},
 
 		/**
 		 * Handle to sort and delete functionality
+		 * @private
 		 * @param iDraggedPath index of where it placed before change
 		 * @param iDroppedPath index of where to place after change
+		 * @param [aDraggedOrderOperations] Copied order operation data
 		 */
 		_tablSortAndDelete: function (iDraggedPath, iDroppedPath, aDraggedOrderOperations) {
-			var sTitle = "Confirm",
-				sMsg = "Do you really want to continue after validation";
+			var oModel = this.getModel("ganttModel"),
+				oOperations = oModel.getProperty("/NetworkHeaderToOperations"),
+				oData = oOperations.results,
+				DraggedData = [];
+			if (iDraggedPath && oData.length) {
+				DraggedData = oData.splice(iDraggedPath, 1)[0];
+			}
+			if (aDraggedOrderOperations) {
+				DraggedData = aDraggedOrderOperations;
+			}
 
-			var successFn = function () {
-				var oModel = this.getModel("ganttModel"),
-					oData = oModel.getProperty("/results"),
-					DraggedData = [];
-				if (iDraggedPath && oData.length) {
-					DraggedData = oData.splice(iDraggedPath, 1)[0];
-				}
-				if (aDraggedOrderOperations) {
-					DraggedData = aDraggedOrderOperations;
-				}
+			if (iDroppedPath && DraggedData.length) {
+				DraggedData.forEach(function (oDragged) {
+					oData.splice(iDroppedPath, 0, oDragged);
+					iDroppedPath++;
+				}.bind(this));
+			} else if (iDroppedPath) {
+				oData.splice(iDroppedPath, 0, DraggedData);
+			}
+			this._updateSortandRelationshipSequence(oData);
+			this.oViewModel.setProperty("/GanttRowCount", oData.length);
+			this.oViewModel.setProperty("/pendingChanges", true);
+			oModel.refresh();
 
-				if (iDroppedPath && DraggedData.length) {
-					DraggedData.forEach(function (oDragged) {
-						oData.splice(iDroppedPath, 0, oDragged);
-						iDroppedPath++;
-					}.bind(this));
-				} else if (iDroppedPath) {
-					oData.splice(iDroppedPath, 0, DraggedData);
-				}
-				this._updateSortandRelationshipSequence(oData);
-				this.oViewModel.setProperty("/GanttRowCount", oData.length);
-				this.oViewModel.setProperty("/pendingChanges", true);
-				oModel.refresh();
-			};
-			this.showConfirmDialog(sTitle, sMsg, successFn.bind(this));
+			//sort/delete code
+			this.validateNetworkOperations(oModel.getData());
+
 		},
 
 		/**
 		 * update sort id and relationship after each sort/delete functionality
 		 * Formatter used to format the sortid as 3 digit
-		 * @param [oData] gantt table data
+		 * @private
+		 * @param [aData] gantt table data
 		 */
-		_updateSortandRelationshipSequence: function (oData) {
-			for (var i = 0; i < oData.length; i++) {
+		_updateSortandRelationshipSequence: function (aData) {
+			for (var i = 0; i < aData.length; i++) {
 				var sSortId = formatter.formatOperationNumber((i + 1).toString(), 3);
-				oData[i].SORT_ID = sSortId;
+				aData[i].SORT_ID = sSortId;
 
-				if (oData[i].ObjectKey === "") {
-					oData[i].ObjectKey = oData[i].ORDER_NUMBER + "_" + oData[i].OPERATION_NUMBER + "_" + oData[i].SORT_ID + oData[i].SORT_ID + oData[
-						i].ORDER_NUMBER + oData[i].OPERATION_NUMBER;
-
-				}
-				oData[i].NetworkToGanttRelation.results[0] = {};
-				if (i === oData.length - 1) {
-					oData[i].REL_KEY = "";
-					oData[i].RELATION_TYPE = "";
+				aData[i].NetworkOperationsToGantt.results[0] = {};
+				if (i === aData.length - 1) {
+					aData[i].REL_KEY = "";
+					aData[i].RELATION_TYPE = "";
 				} else {
-					oData[i].REL_KEY = oData[i].REL_KEY ? oData[i].REL_KEY : "1";
-					oData[i].RELATION_TYPE = oData[i].RELATION_TYPE ? oData[i].RELATION_TYPE : "FS";
+					if (aData[i].ObjectKey === "") {
+						aData[i].ObjectKey = aData[i].ORDER_NUMBER + "_" + aData[i].OPERATION_NUMBER + "_" + aData[i].SORT_ID + aData[i].SORT_ID + aData[
+							i].ORDER_NUMBER + aData[i].OPERATION_NUMBER;
 
-					oData[i].NetworkToGanttRelation.results[0].ObjectKey = oData[i].ObjectKey;
-					oData[i].NetworkToGanttRelation.results[0].HeaderObjectKe = oData[i].ObjectKey;
-					oData[i].NetworkToGanttRelation.results[0].NETWORK_KEY = oData[i].NETWORK_KEY;
-					oData[i].NetworkToGanttRelation.results[0].SORT_ID = oData[i].SORT_ID;
-					oData[i].NetworkToGanttRelation.results[0].ORDER_NUMBER = oData[i].ORDER_NUMBER;
-					oData[i].NetworkToGanttRelation.results[0].OPERATION_NUMBER = oData[i].OPERATION_NUMBER;
+					}
+					aData[i].REL_KEY = aData[i].REL_KEY ? aData[i].REL_KEY : this.getModel("user").getProperty("/DEFAULT_RELATION_KEY");
+					aData[i].RELATION_TYPE = aData[i].RELATION_TYPE ? aData[i].RELATION_TYPE : "FS";
 
-					oData[i].NetworkToGanttRelation.results[0].SUC_OBJECT_KEY = oData[i].ObjectKey;
-					oData[i].NetworkToGanttRelation.results[0].SUC_SORT_ID = oData[i].SORT_ID;
-					oData[i].NetworkToGanttRelation.results[0].SUC_ORDER_NUMBER = oData[i].ORDER_NUMBER;
-					oData[i].NetworkToGanttRelation.results[0].SUC_OPERATION_NUMBER = oData[i].OPERATION_NUMBER;
+					aData[i].NetworkOperationsToGantt.results[0].ObjectKey = aData[i].ObjectKey;
+					aData[i].NetworkOperationsToGantt.results[0].HeaderObjectKey = aData[i].ObjectKey;
+					aData[i].NetworkOperationsToGantt.results[0].NETWORK_KEY = aData[i].NETWORK_KEY;
+					aData[i].NetworkOperationsToGantt.results[0].SORT_ID = aData[i].SORT_ID;
+					aData[i].NetworkOperationsToGantt.results[0].ORDER_NUMBER = aData[i].ORDER_NUMBER;
+					aData[i].NetworkOperationsToGantt.results[0].OPERATION_NUMBER = aData[i].OPERATION_NUMBER;
 
-					oData[i].NetworkToGanttRelation.results[0].PRE_OBJECT_KEY = oData[i + 1].ObjectKey;
-					oData[i].NetworkToGanttRelation.results[0].PRE_SORT_ID = oData[i + 1].SORT_ID;
-					oData[i].NetworkToGanttRelation.results[0].PRE_ORDER_NUMBER = oData[i + 1].ORDER_NUMBER;
-					oData[i].NetworkToGanttRelation.results[0].PRE_OPERATION_NUMBER = oData[i + 1].OPERATION_NUMBER;
+					aData[i].NetworkOperationsToGantt.results[0].SUC_OBJECT_KEY = aData[i].ObjectKey;
+					aData[i].NetworkOperationsToGantt.results[0].SUC_SORT_ID = aData[i].SORT_ID;
+					aData[i].NetworkOperationsToGantt.results[0].SUC_ORDER_NUMBER = aData[i].ORDER_NUMBER;
+					aData[i].NetworkOperationsToGantt.results[0].SUC_OPERATION_NUMBER = aData[i].OPERATION_NUMBER;
 
-					oData[i].NetworkToGanttRelation.results[0].REL_KEY = oData[i].REL_KEY;
+					aData[i].NetworkOperationsToGantt.results[0].PRE_OBJECT_KEY = aData[i + 1].ObjectKey;
+					aData[i].NetworkOperationsToGantt.results[0].PRE_SORT_ID = aData[i + 1].SORT_ID;
+					aData[i].NetworkOperationsToGantt.results[0].PRE_ORDER_NUMBER = aData[i + 1].ORDER_NUMBER;
+					aData[i].NetworkOperationsToGantt.results[0].PRE_OPERATION_NUMBER = aData[i + 1].OPERATION_NUMBER;
+
+					aData[i].NetworkOperationsToGantt.results[0].REL_KEY = aData[i].REL_KEY;
 				}
 			}
 		},
 
 		/**
 		 * Format dragged order operation details according to network operation details
+		 * @private
+		 * @param iDropPath  -- row number
+		 * @param {oDrppedContext} -- dropped copied context
+		 * @param [aDraggedContext] -- dragged context
 		 */
-		_getFormatedOrderOperation: function (iDropPath, oDrppedContext, aDraggedContext) {
+		_getFormatedOrderOperation: function (iDropPath, oDroppedContext, aDraggedContext) {
 			var aFormatedOrderOperation = [];
 
 			aDraggedContext.forEach(function (oDragItem) {
@@ -524,17 +568,17 @@ sap.ui.define([
 					"ObjectKey": "",
 					"SORT_ID": "",
 					"ORDER_NUMBER": oDragItem.getProperty("ORDER_NUMBER"),
-					"NETWORK_KEY": oDrppedContext.getProperty("NETWORK_KEY"),
+					"NETWORK_KEY": oDroppedContext.getProperty("NETWORK_KEY"),
 					"OPERATION_NUMBER": oDragItem.getProperty("OPERATION_NUMBER"),
 					"RELATION_TYPE": "FS",
 					"REL_KEY": "1",
 					"ASSIGNMENT_TYPE": "",
-					"SCHEDULE_TYPE": oDrppedContext.getProperty("SCHEDULE_TYPE"),
+					"SCHEDULE_TYPE": oDroppedContext.getProperty("SCHEDULE_TYPE"),
 					"EARLIEST_START_DATE": oDragItem.getProperty("EARLIEST_START_DATE"),
 					"EARLIEST_START_TIME": oDragItem.getProperty("EARLIEST_START_TIME"),
 					"EARLIEST_END_DATE": oDragItem.getProperty("EARLIEST_END_DATE"),
 					"EARLIEST_END_TIME": oDragItem.getProperty("EARLIEST_END_TIME"),
-					"NetworkToGanttRelation": {
+					"NetworkOperationsToGantt": {
 						"results": []
 					}
 				};

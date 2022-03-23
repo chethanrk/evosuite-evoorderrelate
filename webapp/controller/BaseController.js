@@ -8,8 +8,9 @@ sap.ui.define([
 	"sap/m/MessageToast",
 	"sap/m/MessageBox",
 	"sap/ui/core/mvc/OverrideExecution",
-	"com/evorait/evosuite/evoorderrelate/model/formatter"
-], function (Controller, History, Dialog, Button, Text, MessageToast, MessageBox, OverrideExecution, formatter) {
+	"com/evorait/evosuite/evoorderrelate/model/formatter",
+	"sap/base/util/deepClone"
+], function (Controller, History, Dialog, Button, Text, MessageToast, MessageBox, OverrideExecution, formatter, deepClone) {
 	"use strict";
 
 	return Controller.extend("com.evorait.evosuite.evoorderrelate.controller.BaseController", {
@@ -60,6 +61,16 @@ sap.ui.define([
 				},
 
 				showConfirmDialog: {
+					public: true,
+					final: true
+				},
+
+				saveChanges: {
+					public: true,
+					final: true
+				},
+
+				refreshGanttModel: {
 					public: true,
 					final: true
 				}
@@ -121,6 +132,8 @@ sap.ui.define([
 
 		/**
 		 * On click, open Message Popover
+		 * @param oView  -- view which message popover open
+		 * @param oEvent  -- button press event
 		 */
 		openMessageManager: function (oView, oEvent) {
 			this.getOwnerComponent().MessageManager.open(oView, oEvent);
@@ -196,7 +209,8 @@ sap.ui.define([
 		 */
 		selectionValidation: function (iSelectedIndex, sPosition, iGanttRowCount) {
 			if (!this._selectedRowIndex || this._selectedRowIndex === 0) {
-				this.showMessageToast("Select atleast one line item");
+				var sMsg = this.getResourceBundle().getText("msg.selectAtleastOneLineItem");
+				this.showMessageToast(sMsg);
 				return true;
 			}
 
@@ -209,7 +223,82 @@ sap.ui.define([
 			}
 
 			return false;
-		}
+		},
+
+		/**
+		 * Save changes method to handle post request
+		 * @param sEntitySet   --- EntitySet name 
+		 * @param {oPayload}     --- Payload data to save updated network
+		 */
+		saveChanges: function (oPayload) {
+			this.oViewModel.setProperty("/gantBusy", true);
+			this.getOwnerComponent().postData("/WONetworkHeaderSet", oPayload).then(function (oResult) {
+				if (oResult && oResult.NETWORK_KEY) {
+					this.oUpdatedBackupData = deepClone(oResult);
+					this.refreshGanttModel(oResult, true);
+				}
+				this.getModel().refresh();
+				this.oViewModel.setProperty("/gantBusy", false);
+			}.bind(this), function (error) {
+				this.oViewModel.setProperty("/gantBusy", false);
+				var oBackupData = deepClone(this.oUpdatedBackupData);
+				this.refreshGanttModel(oBackupData);
+			}.bind(this));
+		},
+
+		/**
+		 * delete request
+		 */
+		deleteNetwork: function (sNetworkKey) {
+			//TODO delete network backend call
+			sap.m.MessageToast.show("Deleted");
+		},
+
+		/**
+		 *  validation request 
+		 */
+		validateNetworkOperations: function (oData) {
+			//TODO delete network backend call
+			sap.m.MessageToast.show("Backend validations");
+			//oData.VALIDATION_INDICATOR = true;
+			//this.saveChanges(oData);
+		},
+
+		/**
+		 * Set new data to model and network operation count to the property
+		 * Refresh if updating the json model with enw data
+		 * @param {oData}  -- Gantt data
+		 * @param bRefresh -- indicator to refresh model
+		 */
+		refreshGanttModel: function (oData, bRefresh) {
+			this.getModel("ganttModel").setData(oData);
+			if (bRefresh) {
+				this.getModel("ganttModel").refresh();
+			}
+			if (oData.NetworkHeaderToOperations && oData.NetworkHeaderToOperations.results && oData.NetworkHeaderToOperations.results.length) {
+				this.getModel("viewModel").setProperty("/GanttRowCount", oData.NetworkHeaderToOperations.results.length);
+			} else {
+				this.getModel("viewModel").setProperty("/GanttRowCount", 0);
+			}
+			this.oViewModel.setProperty("/pendingChanges", false);
+		},
+
+		/**
+		 * picks out the change response data from a batch call
+		 * Need for create/save entries 
+		 * Example: CreateOrder _saveCreateSuccessFn
+		 * @param oResponse
+		 */
+		getBatchChangeResponse: function (oResponse) {
+			var batch = oResponse.__batchResponses[0];
+			//success
+			if (batch.__changeResponses) {
+				if (batch.__changeResponses[0].data) {
+					return batch.__changeResponses[0].data;
+				}
+			}
+			return null;
+		},
 
 	});
 

@@ -16,6 +16,7 @@
 				<Property Name="HeaderObjectKey" Type="Edm.String" MaxLength="65" sap:label="Object Key" sap:creatable="false" sap:updatable="false"/>
 				<Property Name="ORDER_NUMBER" Type="Edm.String" MaxLength="12" sap:label="Order" sap:creatable="false" sap:updatable="false"
 					sap:is-extension-field="true"/>
+				<Property Name="OPERATION_NUMBER" Type="Edm.String" MaxLength="10" sap:label="Operation" sap:updatable="false" sap:is-extension-field="true"/>
 				<Property Name="ORDER_TYPE" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="Order Type" sap:updatable="false"
 					sap:is-extension-field="true"/>
 				<Property Name="ORDER_TYPE_DESCRIPTION" Type="Edm.String" MaxLength="40" sap:label="Short Text" sap:is-extension-field="true"/>
@@ -71,6 +72,20 @@
 					<PropertyRef Name="NETWORK_ID"/>
 				</Key>
 				<Property Name="NETWORK_ID" Type="Edm.String" MaxLength="15" sap:label="Network Id" sap:updatable="false" sap:is-extension-field="true"/>
+				<Property Name="ORDER_NUMBER" Type="Edm.String" MaxLength="10" sap:label="Order" sap:updatable="false" sap:is-extension-field="true"/>
+				<Property Name="OPERATION_NUMBER" Type="Edm.String" MaxLength="10" sap:label="Operation" sap:updatable="false" sap:is-extension-field="true"/>
+				<Property Name="COUNTER" Type="Edm.String" MaxLength="3" sap:label="Counter" sap:updatable="false" sap:is-extension-field="true"/>
+			</EntityType>
+			<EntityType Name="SHOrderNumber" sap:content-version="1">
+				<Key>
+					<PropertyRef Name="AUFNR"/>
+				</Key>
+				<Property Name="AUFNR" Type="Edm.String" Nullable="false" MaxLength="12" sap:label="Order"/>
+				<Property Name="AUART" Type="Edm.String" Nullable="false" MaxLength="4" sap:label="Order Type"/>
+				<Property Name="KTEXT" Type="Edm.String" Nullable="false" MaxLength="40" sap:label="Description"/>
+				<Property Name="WERKS" Type="Edm.String" Nullable="false" MaxLength="4" sap:label="Plant"/>
+				<Property Name="ERNAM" Type="Edm.String" Nullable="false" MaxLength="12" sap:label="Entered by"/>
+				<Property Name="ERDAT" Type="Edm.DateTime" Nullable="false" Precision="7" sap:label="Created on"/>
 			</EntityType>
 			<EntityType Name="SystemInformation" sap:content-version="1">
 				<Key>
@@ -95,6 +110,7 @@
 				<EntitySet Name="NetworkSet" EntityType="com.evorait.evoorder.Network" sap:content-version="1"/>
 				<EntitySet Name="RelationshipSet" EntityType="com.evorait.evoorder.Relationship" sap:content-version="1"/>
 				<EntitySet Name="SystemInformationSet" EntityType="com.evorait.evoorder.SystemInformation" sap:content-version="1"/>
+				<EntitySet Name="SHOrderNumberSet" EntityType="com.evorait.evoorder.SHOrderNumber" sap:content-version="1"/>
 				<Association Name="GanttToRelationship" sap:content-version="1">
 					<End Type="com.evorait.evoorder.Gantt" Multiplicity="1" Role="FromRole_GanttToRelationship"/>
 					<End Type="com.evorait.evoorder.Relationship" Multiplicity="*" Role="ToRole_GanttToRelationship"/>
@@ -107,6 +123,10 @@
 						</Dependent>
 					</ReferentialConstraint>
 				</Association>
+				<FunctionImport Name="CheckIfNetworkExists" EntitySet="NetworkSet" m:HttpMethod="GET">
+					<Parameter Name="ORDER_NUMBER" Type="Edm.String" Mode="In"/>
+					<Parameter Name="OPERATION_NUMBER" Type="Edm.String" Mode="In"/>
+				</FunctionImport>
 			</EntityContainer>
 			<AssociationSet Name="GanttToRelationshipSet" Association="com.evorait.evoorder.GanttToRelationship" sap:creatable="false"
 				sap:updatable="false" sap:deletable="false" sap:content-version="1">

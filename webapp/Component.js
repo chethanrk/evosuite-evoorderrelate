@@ -4,8 +4,9 @@ sap.ui.define([
 	"com/evorait/evosuite/evoorderrelate/model/models",
 	"com/evorait/evosuite/evoorderrelate/controller/ErrorHandler",
 	"com/evorait/evosuite/evoorderrelate/controller/MessageManager",
+	"com/evorait/evosuite/evoorderrelate/controller/NewNetworkDialog",
 	"sap/ui/model/json/JSONModel"
-], function (UIComponent, Device, models, ErrorHandler, MessageManager, JSONModel) {
+], function (UIComponent, Device, models, ErrorHandler, MessageManager, NewNetworkDialog, JSONModel) {
 	"use strict";
 
 	var oMessageManager = sap.ui.getCore().getMessageManager();
@@ -41,14 +42,16 @@ sap.ui.define([
 
 			this.MessageManager = new MessageManager();
 
+			this.NewNetworkDialog = new NewNetworkDialog();
+
 			var viewModelObj = {
+				formHandling: {},
 				busy: false,
 				gantBusy: false,
 				delay: 100,
 				densityClass: this.getContentDensityClass(),
 				pendingChanges: false,
-				startTime: new Date(),
-				endTime: new Date()
+				networkKey: null
 			};
 			this.setModel(models.createHelperModel(viewModelObj), "viewModel");
 			this.setModel(models.createGanttModel(), "ganttModel");
@@ -164,6 +167,25 @@ sap.ui.define([
 				this.getModel().read(sUri, {
 					filters: aFilters,
 					urlParameters: mUrlParams || {},
+					success: function (oData) {
+						resolve(oData);
+					},
+					error: function (oError) {
+						//Handle Error
+						reject(oError);
+					}
+				});
+			}.bind(this));
+		},
+
+		/**
+		 * post data
+		 * returns promise
+		 */
+		postData: function (sUri, oEntry) {
+			return new Promise(function (resolve, reject) {
+				this.getModel().create(sUri, oEntry, {
+					refreshAfterChange: false,
 					success: function (oData) {
 						resolve(oData);
 					},
