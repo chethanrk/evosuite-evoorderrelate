@@ -1,14 +1,15 @@
 sap.ui.define([
-	"sap/ui/core/mvc/Controller",
+	"com/evorait/evosuite/evoorderrelate/controller/BaseController",
 	"sap/ui/core/Fragment",
 	"sap/ui/core/mvc/OverrideExecution",
 	"com/evorait/evosuite/evoorderrelate/model/models",
 	"sap/ui/model/Filter",
 	"sap/ui/model/FilterOperator",
-	"sap/m/MessageBox"
-], function (Controller, Fragment, OverrideExecution, models, Filter, FilterOperator, MessageBox) {
+	"sap/m/MessageBox",
+	"com/evorait/evosuite/evoorderrelate/model/formatter"
+], function (BaseController, Fragment, OverrideExecution, models, Filter, FilterOperator, MessageBox, formatter) {
 	"use strict";
-	return Controller.extend("com.evorait.evosuite.evoorderrelate.controller.NewNetworkDialog", {
+	return BaseController.extend("com.evorait.evosuite.evoorderrelate.controller.NewNetworkDialog", {
 
 		metadata: {
 			// extension can declare the public methods
@@ -49,6 +50,7 @@ sap.ui.define([
 		_oComponent: null,
 		_oView: null,
 		_oOperationNumberCombobox: null,
+		_oContext: null,
 
 		/**
 		 * Open the New Network Dialog. Fill internal properties, add the dialog as dependent to the provided view.
@@ -115,6 +117,7 @@ sap.ui.define([
 
 			var sPath = oContext.getPath();
 			this._oController.getModel().resetChanges([sPath + "/OPERATION_NUMBER"]);
+			this._oController.getModel().resetChanges([sPath + "/NETWORK_COUNTER"]);
 			if (oSource.getValueState() === "None" && oContext) {
 				var oField = sap.ui.getCore().byId("idNewNetworkOperationNumber");
 
@@ -130,29 +133,27 @@ sap.ui.define([
 		 * @param {sap.ui.base.Event} oEvent - the `change` event
 		 */
 		onChangeOperationNumber: function (oEvent) {
-			var oSource = oEvent.getSource();
-			var oContext = oSource.getBindingContext();
+			var oSource = oEvent.getSource(),
+				oContext = oSource.getBindingContext(),
+				sOrderNUmber = oContext.getProperty("ORDER_NUMBER"),
+				sOpeationNUmber = oContext.getProperty("OPERATION_NUMBER");
 
-			this._validateForm();
+			if (sOrderNUmber && sOpeationNUmber) {
+				oSource.setValueState("None");
 
-			this._oComponent.callFunctionImport("/CheckIfNetworkExists", {
-				ORDER_NUMBER: oContext.getProperty("ORDER_NUMBER"),
-				OPERATION_NUMBER: oContext.getProperty("OPERATION_NUMBER")
-			}).then(function (oResponse) {
-				this._oNewNetworkDialog.setBusy(false);
-				if (oResponse.__batchResponses && oResponse.__batchResponses[0].response && oResponse.__batchResponses[0].response.statusCode ===
-					"400") {
-					this._oNewNetworkDialog.setState("Error");
-					var sErrorMessage = this._oController.getResourceBundle().getText("msg.networkExists");
-					MessageBox.error(sErrorMessage);
+				var aFilters = [];
+				aFilters.push(new Filter("ORDER_NUMBER", FilterOperator.EQ, sOrderNUmber));
+				aFilters.push(new Filter("OPERATION_NUMBER", FilterOperator.EQ, sOpeationNUmber));
+				aFilters.push(new Filter("VALIDATION_INDICATOR", FilterOperator.EQ, true));
 
-				} else {
-					// TODO set fields state to 'None'?
-				}
-			}.bind(this)).catch(function (oError) {
-				// failed requests are handled by ErrorHandler.js module
-				// additional logic for error handling may be defined here
-			});
+				var oFilter = new Filter({
+					filters: aFilters,
+					and: true
+				});
+
+				this._validateNetwork(oFilter);
+			}
+
 		},
 
 		/**
@@ -182,7 +183,7 @@ sap.ui.define([
 
 				this._oView.getModel().submitChanges({
 					success: function (oResponse) {
-						this._oNewNetworkDialog.setBusy(false);
+
 						if (oResponse.__batchResponses && oResponse.__batchResponses[0].response && oResponse.__batchResponses[0].response.statusCode ===
 							"400") {
 							if (oErrorCallback) {
@@ -208,11 +209,36 @@ sap.ui.define([
 		},
 
 		/**
+		 * validation for new network
+		 * add counter value to NETWORK_COUNTER property
+		 * @param filters
+		 */
+		_validateNetwork: function (oFilters) {
+			this._oNewNetworkDialog.setBusy(true);
+			this._oComponent.readData("/WONetworkHeaderSet/$count", [oFilters], {}).then(function (oResult) {
+				if (oResult) {
+					var iCount = parseInt(oResult, 10);
+					if (iCount) {
+						var sCounter = formatter.formatOperationNumber((iCount).toString(), 2);
+						this._oView.getModel().setProperty(this._oContext.getPath() + "/NETWORK_COUNTER", sCounter);
+						this._displayValidationText(sCounter);
+					} else {
+						this._oView.getModel().setProperty(this._oContext.getPath() + "/NETWORK_COUNTER", "00");
+					}
+				}
+				this._oNewNetworkDialog.setBusy(false);
+			}.bind(this), function (error) {
+				this._oNewNetworkDialog.setBusy(false);
+			}.bind(this));
+
+		},
+
+		/**
 		 * Bind the dialog with a new created Network instance
 		 */
 		_bindDialog: function () {
-			var oContext = this._oController.getModel().createEntry("/" + "WONetworkSet");
-			this._oNewNetworkDialog.bindElement(oContext.getPath());
+			this._oContext = this._oController.getModel().createEntry("/" + "WONetworkHeaderSet");
+			this._oNewNetworkDialog.bindElement(this._oContext.getPath());
 		},
 
 		/**
@@ -295,7 +321,7 @@ sap.ui.define([
 
 				if (sTextProp && sKeyProp) {
 					var oItemTemplate = new sap.ui.core.ListItem({
-						text: "{" + sKeyProp + "} - " + "{" + sTextProp + "}",
+						text: "{" + sKeyProp + "}",
 						key: "{" + sKeyProp + "}"
 					});
 
@@ -353,19 +379,39 @@ sap.ui.define([
 		/**
 		 * success callback after creating order
 		 */
-		_saveCreateSuccessFn: function () {
+		_saveCreateSuccessFn: function (OResponse) {
 			this._oView.getModel().refresh();
 			var msg = this._oController.getResourceBundle().getText("msg.saveSuccess");
 			this._oController.showMessageToast(msg);
+			var oData = this.getBatchChangeResponse(OResponse);
+			if (oData && oData.ObjectKey) {
+				this._oView.getModel("viewModel").setProperty("/networkKey", oData.ObjectKey);
+			}
+			this._oNewNetworkDialog.setBusy(false);
 			this._oNewNetworkDialog.close();
-			// TODO load the new created network to dependencies list
 		},
 
 		/**
 		 * error callback after save
 		 */
 		_saveErrorFn: function () {
-			this._oView.getModel().refresh();
+			this._oNewNetworkDialog.setBusy(false);
+		},
+
+		/*
+		 * Display warning messaage
+		 * Network validation warning message
+		 * iCounter  counter value
+		 */
+		_displayValidationText: function (iCounter) {
+			var oResourceBundle = this._oView.getModel("i18n").getResourceBundle(),
+				title = oResourceBundle.getText("tit.networkValidation"),
+				sMsg = oResourceBundle.getText("msg.netWorkValidationMsg", iCounter);
+
+			MessageBox.warning(sMsg, {
+				title: title,
+				actions: [MessageBox.Action.OK]
+			});
 		}
 
 	});

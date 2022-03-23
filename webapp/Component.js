@@ -51,8 +51,7 @@ sap.ui.define([
 				delay: 100,
 				densityClass: this.getContentDensityClass(),
 				pendingChanges: false,
-				startTime: new Date(),
-				endTime: new Date()
+				networkKey: null
 			};
 			this.setModel(models.createHelperModel(viewModelObj), "viewModel");
 			this.setModel(models.createGanttModel(), "ganttModel");
@@ -192,19 +191,6 @@ sap.ui.define([
 					},
 					error: function (oError) {
 						//Handle Error
-						reject(oError);
-					}
-				});
-			}.bind(this));
-		},
-        callFunctionImport: function (sFunctionName, mUrlParams) {
-			return new Promise(function (resolve, reject) {
-				this.getModel().callFunction(sFunctionName, {
-					urlParameters: mUrlParams || {},
-					success: function (oData) {
-						resolve(oData);
-					},
-					error: function (oError) {
 						reject(oError);
 					}
 				});

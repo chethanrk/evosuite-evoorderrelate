@@ -281,7 +281,24 @@ sap.ui.define([
 				this.getModel("viewModel").setProperty("/GanttRowCount", 0);
 			}
 			this.oViewModel.setProperty("/pendingChanges", false);
-		}
+		},
+
+		/**
+		 * picks out the change response data from a batch call
+		 * Need for create/save entries 
+		 * Example: CreateOrder _saveCreateSuccessFn
+		 * @param oResponse
+		 */
+		getBatchChangeResponse: function (oResponse) {
+			var batch = oResponse.__batchResponses[0];
+			//success
+			if (batch.__changeResponses) {
+				if (batch.__changeResponses[0].data) {
+					return batch.__changeResponses[0].data;
+				}
+			}
+			return null;
+		},
 
 	});
 

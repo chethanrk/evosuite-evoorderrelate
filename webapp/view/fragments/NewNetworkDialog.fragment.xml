@@ -10,7 +10,7 @@
 				</smartForm:layout>
 				<smartForm:Group>
 					<smartForm:GroupElement>
-						<smartField:SmartField id="idNewNetworkOrderNumber" value="{ORDER_NUMBER}" entitySet="WONetworkSet" change="onChangeOrderNumber"
+						<smartField:SmartField id="idNewNetworkOrderNumber" value="{ORDER_NUMBER}" entitySet="WONetworkHeaderSet" change="onChangeOrderNumber"
 							showLabel="true" editable="true" mandatory="true">
 							<smartField:configuration>
 								<smartField:Configuration controlType="input" displayBehaviour="descriptionAndId" preventInitialDataFetchInValueHelpDialog="false"/>
@@ -18,10 +18,18 @@
 						</smartField:SmartField>
 					</smartForm:GroupElement>
 					<smartForm:GroupElement>
-						<smartField:SmartField id="idNewNetworkOperationNumber" value="{OPERATION_NUMBER}" entitySet="WONetworkSet" showLabel="true" editable="true"
-							mandatory="true" enabled="false">
+						<smartField:SmartField id="idNewNetworkOperationNumber" value="{OPERATION_NUMBER}" entitySet="WONetworkHeaderSet" showLabel="true"
+							editable="true" mandatory="true" enabled="false">
 							<smartField:configuration>
 								<smartField:Configuration controlType="dropDownList" displayBehaviour="descriptionAndId" preventInitialDataFetchInValueHelpDialog="false"/>
+							</smartField:configuration>
+						</smartField:SmartField>
+					</smartForm:GroupElement>
+					<smartForm:GroupElement>
+						<smartField:SmartField id="idNewNetworkCounterNumber" value="{NETWORK_COUNTER}" entitySet="WONetworkHeaderSet" showLabel="true"
+							editable="true" mandatory="true" enabled="false">
+							<smartField:configuration>
+								<smartField:Configuration controlType="input" displayBehaviour="descriptionAndId" preventInitialDataFetchInValueHelpDialog="false"/>
 							</smartField:configuration>
 						</smartField:SmartField>
 					</smartForm:GroupElement>

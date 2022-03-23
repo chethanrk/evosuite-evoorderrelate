@@ -68,6 +68,11 @@ sap.ui.define([
 					final: true
 				},
 
+				onPressCreateNewNetwork: {
+					public: true,
+					final: true
+				},
+
 				onPressNetworkDelete: {
 					public: true,
 					final: true
@@ -396,19 +401,33 @@ sap.ui.define([
 			var oNetworkSelect = this.getView().byId("idNetworksDropdown"),
 				oFirstItem = oNetworkSelect.getFirstItem(),
 				sKey = oFirstItem.getKey();
+			if (this.oViewModel.getProperty("/networkKey")) {
+				sKey = this.oViewModel.getProperty("/networkKey");
+			}
 			//sKey = "000000834050_0050_01";
 			oNetworkSelect.setSelectedKey(sKey);
 			this._getGanttdata(sKey);
 		},
-        
-        /**
+
+		/**
 		 * Handle `press` event on 'Create Network' button
 		 * Open Dialog for a new Network creation
 		 * @param {sap.ui.base.Event} oEvent - The `press` event
 		 */
 		onPressCreateNewNetwork: function (oEvent) {
 			var oView = this.getView();
-			this.getOwnerComponent().NewNetworkDialog.open(oView);
+
+			if (this.oViewModel.getProperty("/pendingChanges")) {
+				var sTitle = "Confirm",
+					sMsg = this.getResourceBundle().getText("msg.leaveWithoutSave");
+
+				var successFn = function () {
+					this.getOwnerComponent().NewNetworkDialog.open(oView);
+				};
+				this.showConfirmDialog(sTitle, sMsg, successFn.bind(this));
+			} else {
+				this.getOwnerComponent().NewNetworkDialog.open(oView);
+			}
 		},
 
 		/**
@@ -459,10 +478,6 @@ sap.ui.define([
 		 * @param [aDraggedOrderOperations] Copied order operation data
 		 */
 		_tablSortAndDelete: function (iDraggedPath, iDroppedPath, aDraggedOrderOperations) {
-			/*	var sTitle = "Confirm",
-					sMsg = "Do you really want to continue after validation";
-
-				var successFn = function () {*/
 			var oModel = this.getModel("ganttModel"),
 				oOperations = oModel.getProperty("/NetworkHeaderToOperations"),
 				oData = oOperations.results,
@@ -487,9 +502,9 @@ sap.ui.define([
 			this.oViewModel.setProperty("/pendingChanges", true);
 			oModel.refresh();
 
-			this.validateNetworkOperations(oModel.getData());
-			/*};
-			this.showConfirmDialog(sTitle, sMsg, successFn.bind(this));*/
+			//sort/delete code
+			//this.validateNetworkOperations(oModel.getData());
+
 		},
 
 		/**
