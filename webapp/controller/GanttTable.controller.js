@@ -503,7 +503,7 @@ sap.ui.define([
 			oModel.refresh();
 
 			//sort/delete code
-			//this.validateNetworkOperations(oModel.getData());
+			this.validateNetworkOperations(oModel.getData());
 
 		},
 

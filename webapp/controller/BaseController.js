@@ -260,8 +260,8 @@ sap.ui.define([
 		validateNetworkOperations: function (oData) {
 			//TODO delete network backend call
 			sap.m.MessageToast.show("Backend validations");
-			oData.VALIDATION_INDICATOR = true;
-			this.saveChanges(oData);
+			//oData.VALIDATION_INDICATOR = true;
+			//this.saveChanges(oData);
 		},
 
 		/**
