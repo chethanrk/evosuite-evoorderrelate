@@ -146,7 +146,6 @@ sap.ui.define([
 			} else {
 				this._getGanttdata(sKey);
 			}
-
 		},
 
 		/**
@@ -161,17 +160,9 @@ sap.ui.define([
 				sType = oSelectedContext.getProperty("AOBKY"),
 				oRelashinShip = oSourceModel.getProperty("NetworkOperationsToGantt");
 
-			var sTitle = "Confirm",
-				sMsg = "Do you really want to continue after validation";
-
-			var successFn = function () {
+			if (oSourceModel && sType && oRelashinShip && oRelashinShip.results && oRelashinShip.results.length) {
 				oRelashinShip.results[0].REL_KEY = sType;
-				this.oViewModel.setProperty("/pendingChanges", true);
-				this.getModel("ganttModel").refresh();
-			};
-
-			if (oRelashinShip && oRelashinShip.results && oRelashinShip.results.length) {
-				this.showConfirmDialog(sTitle, sMsg, successFn.bind(this));
+				this.validateNetworkOperations(this.getModel("ganttModel").getData());
 			}
 		},
 
@@ -211,7 +202,6 @@ sap.ui.define([
 			if (this.selectionValidation(this._selectedRowIndex, "Up")) {
 				return;
 			}
-
 			this._tablSortAndDelete(this._selectedRowIndex, 1);
 		},
 
@@ -504,7 +494,6 @@ sap.ui.define([
 
 			//sort/delete code
 			this.validateNetworkOperations(oModel.getData());
-
 		},
 
 		/**
@@ -526,7 +515,6 @@ sap.ui.define([
 					if (aData[i].ObjectKey === "") {
 						aData[i].ObjectKey = aData[i].ORDER_NUMBER + "_" + aData[i].OPERATION_NUMBER + "_" + aData[i].SORT_ID + aData[i].SORT_ID + aData[
 							i].ORDER_NUMBER + aData[i].OPERATION_NUMBER;
-
 					}
 					aData[i].REL_KEY = aData[i].REL_KEY ? aData[i].REL_KEY : this.getModel("user").getProperty("/DEFAULT_RELATION_KEY");
 					aData[i].RELATION_TYPE = aData[i].RELATION_TYPE ? aData[i].RELATION_TYPE : "FS";
