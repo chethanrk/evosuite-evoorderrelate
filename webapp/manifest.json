@@ -84,20 +84,32 @@
 					"defaultBindingMode": "TwoWay"
 				}
 			},
+			"OrderOperation": {
+				"type": "sap.ui.model.odata.v2.ODataModel",
+				"dataSource": "mainService",
+				"settings": {
+					"defaultBindingMode": "TwoWay"
+				}
+			},
 			"@i18n": {
 				"type": "sap.ui.model.resource.ResourceModel",
 				"uri": "i18n/i18n.properties"
 			}
 		},
 		"resources": {
-			"css": [{
-				"uri": "assets/css/style.css"
-			}],
-			"js": [{
-				"uri": "assets/js/url-search-params.min.js"
-			}, {
-				"uri": "assets/js/promise-polyfills.js"
-			}]
+			"css": [
+				{
+					"uri": "assets/css/style.css"
+				}
+			],
+			"js": [
+				{
+					"uri": "assets/js/url-search-params.min.js"
+				},
+				{
+					"uri": "assets/js/promise-polyfills.js"
+				}
+			]
 		},
 		"routing": {
 			"config": {
@@ -114,14 +126,16 @@
 				},
 				"async": true
 			},
-			"routes": [{
-				"name": "ManageDependencies",
-				"pattern": "",
-				"target": [
-					"Dependencies",
-					"OrderTable"
-				]
-			}],
+			"routes": [
+				{
+					"name": "ManageDependencies",
+					"pattern": "",
+					"target": [
+						"Dependencies",
+						"OrderTable"
+					]
+				}
+			],
 			"targets": {
 				"splitNavigation": {
 					"viewType": "XML",
@@ -156,6 +170,10 @@
 	},
 	"sap.platform.abap": {
 		"uri": "/sap/bc/ui5_ui5/evora/eor_ui5/webapp",
+		"_version": "1.1.0"
+	},
+	"sap.platform.hcp": {
+		"uri": "webapp",
 		"_version": "1.1.0"
 	}
 }
