@@ -69,6 +69,7 @@ sap.ui.define([
 		 * @memberOf com.evorait.evosuite.evoorderrelate.view.OrderTable
 		 */
 		onInit: function () {
+			this.getView().byId("idTableOrderTable").setModel(this.getModel("OrderOperation"));
 			this.oOrderTable = this.getView().byId("idTableOrderTable");
 			this.oOrderOperationTable = this.oOrderTable.getTable();
 			// initialise Order SmartFilterBar to make the Order table be able to subscribe to the SmartFilterBar's events
@@ -110,7 +111,7 @@ sap.ui.define([
 		 * @param {sap.ui.base.Event} oEvent - the press event
 		 */
 		onPresAddNewOperations: function (oEvent) {
-			var aContext = this.oOrderOperationTable.getSelectedContexts();
+			var aContext = this.oOrderOperationTable.getSelectedContexts("OrderOperation");
 
 			if (!aContext || (aContext && aContext.length === 0)) {
 				var sMsg = this.getResourceBundle().getText("msg.selectAtleastOneLineItem");
@@ -177,7 +178,7 @@ sap.ui.define([
 		onDragStart: function (oEvent) {
 			var oDragSession = oEvent.getParameter("dragSession"),
 				oDraggedControl = oDragSession.getDragControl(),
-				aContext = this.oOrderOperationTable.getSelectedContexts(),
+				aContext = this.oOrderOperationTable.getSelectedContexts("OrderOperation"),
 				aSelectedContext;
 
 			oDragSession.setTextData("Hi I am dragging");

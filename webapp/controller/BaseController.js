@@ -65,7 +65,7 @@ sap.ui.define([
 					final: true
 				},
 
-				saveChanges: {
+				saveNetworkChanges: {
 					public: true,
 					final: true
 				},
@@ -78,6 +78,8 @@ sap.ui.define([
 		},
 
 		formatter: formatter,
+		oBackupData: {},
+		oUpdatedBackupData: {},
 
 		/**
 		 * Convenience method for accessing the router in every controller of the application.
@@ -227,22 +229,23 @@ sap.ui.define([
 
 		/**
 		 * Save changes method to handle post request
-		 * @param sEntitySet   --- EntitySet name 
 		 * @param {oPayload}     --- Payload data to save updated network
+		 * @param successCallback  --- success callback function
+		 * @param errorCallback  --- error callback function
 		 */
-		saveChanges: function (oPayload) {
+		saveNetworkChanges: function (oPayload, successCallback, errorCallback) {
 			this.oViewModel.setProperty("/gantBusy", true);
 			this.getOwnerComponent().postData("/WONetworkHeaderSet", oPayload).then(function (oResult) {
-				if (oResult && oResult.NETWORK_KEY) {
-					this.oUpdatedBackupData = deepClone(oResult);
-					this.refreshGanttModel(oResult, true);
+				if (successCallback) {
+					successCallback(oResult);
 				}
-				this.getModel().refresh();
+
 				this.oViewModel.setProperty("/gantBusy", false);
 			}.bind(this), function (error) {
+				if (errorCallback) {
+					errorCallback(error);
+				}
 				this.oViewModel.setProperty("/gantBusy", false);
-				var oBackupData = deepClone(this.oUpdatedBackupData);
-				this.refreshGanttModel(oBackupData);
 			}.bind(this));
 		},
 
@@ -252,16 +255,15 @@ sap.ui.define([
 		deleteNetwork: function (sNetworkKey) {
 			//TODO delete network backend call
 			sap.m.MessageToast.show("Deleted");
+			//this.getModel().refresh();
 		},
 
 		/**
 		 *  validation request 
 		 */
 		validateNetworkOperations: function (oData) {
-			//TODO delete network backend call
-			sap.m.MessageToast.show("Backend validations");
-			//oData.VALIDATION_INDICATOR = true;
-			//this.saveChanges(oData);
+			oData.VALIDATION_INDICATOR = true;
+			this.saveNetworkChanges(oData, this._validationSuccess.bind(this), this._validationFail.bind(this));
 		},
 
 		/**
@@ -280,7 +282,6 @@ sap.ui.define([
 			} else {
 				this.getModel("viewModel").setProperty("/GanttRowCount", 0);
 			}
-			this.oViewModel.setProperty("/pendingChanges", false);
 		},
 
 		/**
@@ -299,6 +300,42 @@ sap.ui.define([
 			}
 			return null;
 		},
+
+		/**
+		 * Actions after validation success
+		 * @param {oResult} - after validation returned new result
+		 */
+		_validationSuccess: function (oResult) {
+			if (oResult && oResult.NETWORK_KEY) {
+				this._removeRelationship(oResult);
+				this.oUpdatedBackupData = deepClone(oResult);
+				this.refreshGanttModel(oResult, true);
+				this.oViewModel.setProperty("/pendingChanges", true);
+			}
+		},
+
+		/**
+		 * Actions after validation fail
+		 * set the previous changes to the gantt
+		 */
+		_validationFail: function () {
+			var oBackupData = deepClone(this.oUpdatedBackupData);
+			this.refreshGanttModel(oBackupData);
+		},
+
+		/**
+		 * Remove last shape relationship values after succcessfull validation
+		 * @param{oResult} ---oResult which returns fom the validation request
+		 */
+		_removeRelationship: function (oResult) {
+			if (oResult.NetworkHeaderToOperations && oResult.NetworkHeaderToOperations.results && oResult.NetworkHeaderToOperations.results.length) {
+				var oLastshpe = oResult.NetworkHeaderToOperations.results[oResult.NetworkHeaderToOperations.results.length - 1];
+				if (oLastshpe && oLastshpe.NetworkOperationsToGantt && oLastshpe.NetworkOperationsToGantt.results && oLastshpe.NetworkOperationsToGantt
+					.results.length) {
+					oLastshpe.NetworkOperationsToGantt.results[0] = {};
+				}
+			}
+		}
 
 	});
 

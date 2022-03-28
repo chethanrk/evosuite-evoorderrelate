@@ -87,8 +87,6 @@ sap.ui.define([
 
 		_selectedRowIndex: null,
 		oViewModel: null,
-		oBackupData: {},
-		oUpdatedBackupData: {},
 
 		/**
 		 * Called when a controller is instantiated and its View controls (if available) are already created.
@@ -148,7 +146,6 @@ sap.ui.define([
 			} else {
 				this._getGanttdata(sKey);
 			}
-
 		},
 
 		/**
@@ -163,17 +160,9 @@ sap.ui.define([
 				sType = oSelectedContext.getProperty("AOBKY"),
 				oRelashinShip = oSourceModel.getProperty("NetworkOperationsToGantt");
 
-			var sTitle = "Confirm",
-				sMsg = "Do you really want to continue after validation";
-
-			var successFn = function () {
+			if (oSourceModel && sType && oRelashinShip && oRelashinShip.results && oRelashinShip.results.length) {
 				oRelashinShip.results[0].REL_KEY = sType;
-				this.oViewModel.setProperty("/pendingChanges", true);
-				this.getModel("ganttModel").refresh();
-			};
-
-			if (oRelashinShip && oRelashinShip.results && oRelashinShip.results.length) {
-				this.showConfirmDialog(sTitle, sMsg, successFn.bind(this));
+				this.validateNetworkOperations(this.getModel("ganttModel").getData());
 			}
 		},
 
@@ -213,7 +202,6 @@ sap.ui.define([
 			if (this.selectionValidation(this._selectedRowIndex, "Up")) {
 				return;
 			}
-
 			this._tablSortAndDelete(this._selectedRowIndex, 1);
 		},
 
@@ -367,7 +355,6 @@ sap.ui.define([
 			}
 
 			var successFn = function () {
-				this.getModel().refresh();
 				this.deleteNetwork(sKey);
 			};
 			this.showConfirmDialog(sTitle, sMsg, successFn.bind(this, sKey));
@@ -385,7 +372,9 @@ sap.ui.define([
 			var successFn = function () {
 				var oResetData = {};
 				oResetData = deepClone(this.oBackupData);
+				this.oUpdatedBackupData = deepClone(this.oBackupData);
 				this.refreshGanttModel(oResetData, true);
+				this.oViewModel.setProperty("/pendingChanges", false);
 			};
 			this.showConfirmDialog(sTitle, sMsg, successFn.bind(this));
 		},
@@ -399,14 +388,15 @@ sap.ui.define([
 				return;
 			}
 			var oNetworkSelect = this.getView().byId("idNetworksDropdown"),
-				oFirstItem = oNetworkSelect.getFirstItem(),
-				sKey = oFirstItem.getKey();
-			if (this.oViewModel.getProperty("/networkKey")) {
-				sKey = this.oViewModel.getProperty("/networkKey");
+				oFirstItem = oNetworkSelect.getFirstItem();
+			if (oFirstItem) {
+				var sKey = oFirstItem.getKey();
+				if (this.oViewModel.getProperty("/networkKey")) {
+					sKey = this.oViewModel.getProperty("/networkKey");
+				}
+				oNetworkSelect.setSelectedKey(sKey);
+				this._getGanttdata(sKey);
 			}
-			//sKey = "000000834050_0050_01";
-			oNetworkSelect.setSelectedKey(sKey);
-			this._getGanttdata(sKey);
 		},
 
 		/**
@@ -418,10 +408,13 @@ sap.ui.define([
 			var oView = this.getView();
 
 			if (this.oViewModel.getProperty("/pendingChanges")) {
-				var sTitle = "Confirm",
+				var sTitle = this.getResourceBundle().getText("btn.confirm"),
 					sMsg = this.getResourceBundle().getText("msg.leaveWithoutSave");
 
 				var successFn = function () {
+					var oBackupDataCopy = deepClone(this.oBackupData);
+					this.refreshGanttModel(oBackupDataCopy, true);
+					this.oViewModel.setProperty("/pendingChanges", false);
 					this.getOwnerComponent().NewNetworkDialog.open(oView);
 				};
 				this.showConfirmDialog(sTitle, sMsg, successFn.bind(this));
@@ -438,10 +431,8 @@ sap.ui.define([
 			var oModelData = this.getModel("ganttModel").getData();
 			var oPayloadData = {};
 			oPayloadData = deepClone(oModelData);
-			oPayloadData.NetworkHeaderToOperations.results.forEach(function (oLineItem) {
-
-			}.bind(this));
-			this.saveChanges(oPayloadData);
+			oPayloadData.VALIDATION_INDICATOR = false;
+			this.saveNetworkChanges(oPayloadData, this._saveSuccessFn.bind(this), this._saveErrorFn.bind(this));
 		},
 
 		/**
@@ -499,12 +490,10 @@ sap.ui.define([
 			}
 			this._updateSortandRelationshipSequence(oData);
 			this.oViewModel.setProperty("/GanttRowCount", oData.length);
-			this.oViewModel.setProperty("/pendingChanges", true);
 			oModel.refresh();
 
 			//sort/delete code
 			this.validateNetworkOperations(oModel.getData());
-
 		},
 
 		/**
@@ -526,7 +515,6 @@ sap.ui.define([
 					if (aData[i].ObjectKey === "") {
 						aData[i].ObjectKey = aData[i].ORDER_NUMBER + "_" + aData[i].OPERATION_NUMBER + "_" + aData[i].SORT_ID + aData[i].SORT_ID + aData[
 							i].ORDER_NUMBER + aData[i].OPERATION_NUMBER;
-
 					}
 					aData[i].REL_KEY = aData[i].REL_KEY ? aData[i].REL_KEY : this.getModel("user").getProperty("/DEFAULT_RELATION_KEY");
 					aData[i].RELATION_TYPE = aData[i].RELATION_TYPE ? aData[i].RELATION_TYPE : "FS";
@@ -586,6 +574,26 @@ sap.ui.define([
 			}.bind(this));
 
 			return aFormatedOrderOperation;
+		},
+
+		/**
+		 * success callback after creating order
+		 */
+		_saveSuccessFn: function (OResponse) {
+			this.getModel().refresh();
+			if (OResponse && OResponse.ObjectKey) {
+				this.oViewModel.setProperty("/networkKey", OResponse.ObjectKey);
+			}
+			this.oViewModel.setProperty("/pendingChanges", false);
+			var msg = this.getResourceBundle().getText("msg.saveSuccess");
+			this.showMessageToast(msg);
+		},
+
+		/**
+		 * error callback after save
+		 */
+		_saveErrorFn: function () {
+
 		}
 	});
 });
