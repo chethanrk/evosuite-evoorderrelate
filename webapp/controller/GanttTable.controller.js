@@ -141,6 +141,7 @@ sap.ui.define([
 
 				var successFn = function () {
 					this._getGanttdata(sKey);
+					this.oViewModel.setProperty("/pendingChanges", false);
 				};
 				this.showConfirmDialog(sTitle, sMsg, successFn.bind(this));
 			} else {
