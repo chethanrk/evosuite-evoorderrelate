@@ -121,8 +121,8 @@ sap.ui.define([
 			var mParams = this._getStartupParamFilter();
 			if (typeof mParams === "object") {
 				this.readData("/" + mParams.entitySet, [mParams.filter]).then(function (mResult) {
-					if (mResult) {
-						this.getModel("viewModel").setProperty("/networkKey", mResult.ObjectKey);
+					if (mResult && mResult.results && mResult.results.length) {
+						this.getModel("viewModel").setProperty("/networkKey", mResult.results[0].ObjectKey);
 					}
 					this.getRouter().initialize();
 				}.bind(this));
