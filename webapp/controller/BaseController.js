@@ -311,8 +311,6 @@ sap.ui.define([
 				this.oUpdatedBackupData = deepClone(oResult);
 				this.refreshGanttModel(oResult, true);
 				this.oViewModel.setProperty("/pendingChanges", true);
-				var sMsg = this.getResourceBundle().getText("msg.validatedSuccessfully");
-				this.showMessageToast(sMsg);
 			}
 		},
 
