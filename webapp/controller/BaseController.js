@@ -311,6 +311,11 @@ sap.ui.define([
 				this.oUpdatedBackupData = deepClone(oResult);
 				this.refreshGanttModel(oResult, true);
 				this.oViewModel.setProperty("/pendingChanges", true);
+			}else{
+				var oData = deepClone(this.oBackupData);
+				this.oUpdatedBackupData = deepClone(this.oBackupData);
+				this.refreshGanttModel(oData, true);
+				this.oViewModel.setProperty("/pendingChanges", false);
 			}
 		},
 
