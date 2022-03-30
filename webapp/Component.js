@@ -5,8 +5,11 @@ sap.ui.define([
 	"com/evorait/evosuite/evoorderrelate/controller/ErrorHandler",
 	"com/evorait/evosuite/evoorderrelate/controller/MessageManager",
 	"com/evorait/evosuite/evoorderrelate/controller/NewNetworkDialog",
-	"sap/ui/model/json/JSONModel"
-], function (UIComponent, Device, models, ErrorHandler, MessageManager, NewNetworkDialog, JSONModel) {
+	"sap/ui/model/json/JSONModel",
+	"com/evorait/evosuite/evoorderrelate/model/Constants",
+	"sap/ui/model/Filter",
+	"sap/ui/model/FilterOperator"
+], function (UIComponent, Device, models, ErrorHandler, MessageManager, NewNetworkDialog, JSONModel, Constants, Filter, FilterOperator) {
 	"use strict";
 
 	var oMessageManager = sap.ui.getCore().getMessageManager();
@@ -63,7 +66,11 @@ sap.ui.define([
 			this.setModel(oMessageManager.getMessageModel(), "message");
 
 			// enable routing
-			this.getRouter().initialize();
+			//this.getRouter().initialize();
+			//get start parameter when app2app navigation is in URL
+			//replace hash when startup parameter
+			//and init Router after success or fail
+			this._initRouter();
 		},
 
 		/**
@@ -107,6 +114,25 @@ sap.ui.define([
 		},
 
 		/**
+		 * Check for a Startup parameter and look for Order ID in Backend
+		 * When there is a filtered Order replace route hash
+		 */
+		_initRouter: function () {
+			var mParams = this._getStartupParamFilter();
+			if (typeof mParams === "object") {
+				this.readData("/" + mParams.entitySet, [mParams.filter]).then(function (mResult) {
+					if (mResult && mResult.results && mResult.results.length) {
+						this.getModel("viewModel").setProperty("/networkKey", mResult.results[0].ObjectKey);
+					}
+					this.getRouter().initialize();
+				}.bind(this));
+			} else {
+				// create the views based on the url/hash
+				this.getRouter().initialize();
+			}
+		},
+
+		/**
 		 * Get url GET parameter by key name
 		 * @param {string} sKey - key of the parameter
 		 */
@@ -131,6 +157,33 @@ sap.ui.define([
 			}
 			return false;
 		},
+
+		/**
+		 * When in link is startup parameter from FLP or Standalone app
+		 * then App2App navigation happened and this app shoul show a detail page
+		 */
+		_getStartupParamFilter: function () {
+			var sKey1 = this.getLinkParameterByName(Constants.PROPERTY.EVOORDERRELATE[0]),
+				sKey2 = this.getLinkParameterByName(Constants.PROPERTY.EVOORDERRELATE[1]),
+				sKey3 = this.getLinkParameterByName(Constants.PROPERTY.EVOORDERRELATE[2]);
+
+			if (sKey1 && sKey2 && sKey3) {
+				return {
+					entitySet: "WONetworkHeaderSet",
+					filter: new Filter({
+						filters: [
+							new Filter(Constants.PROPERTY.EVOORDERRELATE[0], FilterOperator.EQ, sKey1),
+							new Filter(Constants.PROPERTY.EVOORDERRELATE[1], FilterOperator.EQ, sKey2),
+							new Filter(Constants.PROPERTY.EVOORDERRELATE[2], FilterOperator.EQ, sKey3)
+						],
+						and: true
+					})
+				};
+			}
+
+			return false;
+		},
+
 		/**
 		 * get Template properties as model inside a global Promise
 		 */
