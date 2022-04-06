@@ -632,11 +632,12 @@ sap.ui.define([
 		_saveSuccessFn: function (OResponse) {
 			this.getModel().refresh();
 			if (OResponse && OResponse.ObjectKey && this.oNetworkSelection) {
+				this.oViewModel.setProperty("/pendingChanges", false);
 				this.oNetworkSelection.fireChange({
 					value: OResponse.ObjectKey
 				});
 			}
-			this.oViewModel.setProperty("/pendingChanges", false);
+
 			var msg = this.getResourceBundle().getText("msg.saveSuccess");
 			this.showMessageToast(msg);
 		},
