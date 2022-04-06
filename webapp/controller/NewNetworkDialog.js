@@ -51,16 +51,18 @@ sap.ui.define([
 		_oView: null,
 		_oOperationNumberCombobox: null,
 		_oContext: null,
+		_oNeteorkSelection: null,
 
 		/**
 		 * Open the New Network Dialog. Fill internal properties, add the dialog as dependent to the provided view.
 		 * @param {sap.ui.core.mvc.View} oView - Parent view, where the dialog is opened
 		 */
-		open: function (oView) {
+		open: function (oView, oNetworkSelect) {
 			// init internal properties
 			this._oComponent = oView.getController().getOwnerComponent();
 			this._oView = oView;
 			this._oController = oView.getController();
+			this._oNeteorkSelection = oNetworkSelect;
 			// lazy loading
 			if (!this._oNewNetworkDialog) {
 				Fragment.load({
@@ -384,8 +386,11 @@ sap.ui.define([
 			var msg = this._oController.getResourceBundle().getText("msg.saveSuccess");
 			this._oController.showMessageToast(msg);
 			var oData = this.getBatchChangeResponse(OResponse);
-			if (oData && oData.ObjectKey) {
-				this._oView.getModel("viewModel").setProperty("/networkKey", oData.ObjectKey);
+			if (oData && oData.ObjectKey && this._oNeteorkSelection) {
+				//this._oView.getModel("viewModel").setProperty("/networkKey", oData.ObjectKey);
+				this._oNeteorkSelection.fireChange({
+					value: oData.ObjectKey
+				});
 			}
 			this._oNewNetworkDialog.setBusy(false);
 			this._oNewNetworkDialog.close();

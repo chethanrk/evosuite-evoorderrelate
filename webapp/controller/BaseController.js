@@ -252,10 +252,9 @@ sap.ui.define([
 		/**
 		 * delete request
 		 */
-		deleteNetwork: function (sNetworkKey) {
-			//TODO delete network backend call
-			sap.m.MessageToast.show("Deleted");
-			//this.getModel().refresh();
+		deleteNetwork: function (oData) {
+			oData.DELETE_INDICATOR = true;
+			this.saveNetworkChanges(oData, this._deleteSuccess.bind(this), this._validationFail.bind(this));
 		},
 
 		/**
@@ -311,7 +310,7 @@ sap.ui.define([
 				this.oUpdatedBackupData = deepClone(oResult);
 				this.refreshGanttModel(oResult, true);
 				this.oViewModel.setProperty("/pendingChanges", true);
-			}else{
+			} else {
 				var oData = deepClone(this.oBackupData);
 				this.oUpdatedBackupData = deepClone(this.oBackupData);
 				this.refreshGanttModel(oData, true);
@@ -320,12 +319,25 @@ sap.ui.define([
 		},
 
 		/**
-		 * Actions after validation fail
+		 * Actions after validation/delete fail
 		 * set the previous changes to the gantt
 		 */
 		_validationFail: function () {
 			var oBackupData = deepClone(this.oUpdatedBackupData);
 			this.refreshGanttModel(oBackupData);
+		},
+
+		/**
+		 * Actions after validation success
+		 * @param {oResult} - after validation returned new result
+		 */
+		_deleteSuccess: function (oResult) {
+			this.oViewModel.setProperty("/pendingChanges", false);
+			var msg = this.getResourceBundle().getText("msg.saveSuccess");
+			this.showMessageToast(msg);
+			this.getModel().refresh();
+			this.oNetworkSelection.resetProperty("value");
+			this.refreshGanttModel({}, true);
 		},
 
 		/**

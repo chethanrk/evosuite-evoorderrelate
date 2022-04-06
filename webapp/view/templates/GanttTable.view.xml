@@ -8,10 +8,13 @@
 				<Page id="idGanttViewPage" showFooter="false" class="sapUiNoContentPadding" showSubHeader="false" enableScrolling="false">
 					<customHeader>
 						<OverflowToolbar id="idCustomHeaderToolbar">
-							<Label id="idLabelNetworksDropdown" text="{i18n>lbl.networks}"/>
+							<!--<Label id="idLabelNetworksDropdown" text="{i18n>lbl.networks}"/>
 							<Select id="idNetworksDropdown" items="{path:'/SHNetworkSet', events:{dataReceived: '.networkDataReceived'}}" change="onChangeNetwork">
 								<core:Item key="{NETWORK_KEY}" text="{NETWORK_KEY}"/>
-							</Select>
+							</Select>-->
+							<FlexBox>
+								<core:Fragment fragmentName="com.evorait.evosuite.evoorderrelate.view.fragments.NetworkSelection" type="XML"/>
+							</FlexBox>
 							<Button id="idBtnCreateNewNetwork" text="{i18n>btn.createNewNetwork}" tooltip="{i18n>btn.createNewNetwork}" press="onPressCreateNewNetwork"/>
 							<!--visible="{= ${user>/ENABLE_CREATE_NEW_NETWORK} === 'X'}"-->
 							<core:ExtensionPoint name="PageExtP|GanttTable|WONetworkHeader|CustomHeader|Left"/>
@@ -38,6 +41,14 @@
 								</gantt:ContainerToolbar>
 							</gantt:toolbar>
 							<gantt:GanttChartWithTable id="gantt" shapeSelectionMode="Single" selectionPanelSize="40%">
+								<gantt:axisTimeStrategy>
+									<axistime:StepwiseZoomStrategy id="idOrderRelatePlanGanttZoom" zoomLevels="3">
+										<axistime:totalHorizon>
+											<config:TimeHorizon id="idOrderRelatePlanGanttTimeHorizon" startTime="{viewModel>/gantt/defaultStartDate}"
+												endTime="{viewModel>/gantt/defaultEndDate}"/>
+										</axistime:totalHorizon>
+									</axistime:StepwiseZoomStrategy>
+								</gantt:axisTimeStrategy>
 								<gantt:table>
 									<table:Table id="idTableGanttTable" selectionMode="Single" rows="{path:'ganttModel>/NetworkHeaderToOperations/results'}"
 										visibleRowCountMode="Auto" selectionBehavior="RowOnly" fixedRowCount="1" rowActionCount="1" rowSelectionChange="onGanttRowSelectionChange">

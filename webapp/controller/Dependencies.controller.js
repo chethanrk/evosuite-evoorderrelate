@@ -22,9 +22,6 @@ sap.ui.define([
 		onInit: function () {
 			this.oViewModel = this.getModel("viewModel");
 
-			//get annotation line items
-			this._getLineItems();
-
 			var oRouter = this.getRouter();
 
 			if (!this.oViewModel.getProperty("/bDependencyPageRouteMatchAttached")) {
@@ -38,6 +35,10 @@ sap.ui.define([
 						//route for page gantt view
 						if (sRouteName === "ManageDependencies") {
 							sViewName = "com.evorait.evosuite.evoorderrelate.view.templates.GanttTable#Table";
+
+							//get annotation line items
+							this._getLineItems();
+							
 							this._onRouteMatched(oEvent, sViewName, "WONetworkHeaderSet");
 						}
 					}.bind(this));

@@ -125,6 +125,16 @@ sap.ui.define([
 				return true;
 			}
 			return false;
+		},
+
+		/**
+		 * Convert string number to integer
+		 */
+		getIntMaxLength: function (sMaxLength) {
+			if (!sMaxLength) {
+				return 0;
+			}
+			return parseInt(sMaxLength, 10);
 		}
 
 	};
