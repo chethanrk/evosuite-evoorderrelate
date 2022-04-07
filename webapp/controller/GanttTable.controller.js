@@ -144,8 +144,9 @@ sap.ui.define([
 				var iDropPath = parseInt(this.oViewModel.getProperty("/GanttRowCount"), 10),
 					oDroppedBindingContext = this.getView().byId("idTableGanttTable").getContextByIndex(iDropPath - 1);
 				if (iDropPath && oDroppedBindingContext) {
-					var aOrderOperations = this._getFormatedOrderOperation(iDropPath, oDroppedBindingContext, oData.data);
-					this._tablSortAndDelete(null, iDropPath, aOrderOperations);
+					this._getFormatedOrderOperation(iDropPath, oDroppedBindingContext, oData.data).then(function (aOrderOperations) {
+						this._tablSortAndDelete(null, iDropPath, aOrderOperations);
+					}.bind(this));
 				}
 			}
 		},
@@ -303,7 +304,6 @@ sap.ui.define([
 			var oDroppedControl = oEvent.getParameter("droppedControl"),
 				oDroppedBindingContext = oDroppedControl.getBindingContext("ganttModel"),
 				iDropPath = parseInt(oDroppedBindingContext.getPath().slice(-1), 10),
-				aOrderOperations = [],
 				aDraggedContext = this.getModel("viewModel").getProperty("/dragSession");
 
 			if (oEvent.getParameter("dropPosition") === "After") {
@@ -315,8 +315,9 @@ sap.ui.define([
 				return;
 			}
 
-			aOrderOperations = this._getFormatedOrderOperation(iDropPath, oDroppedBindingContext, aDraggedContext);
-			this._tablSortAndDelete(null, iDropPath, aOrderOperations);
+			this._getFormatedOrderOperation(iDropPath, oDroppedBindingContext, aDraggedContext).then(function (aOrderOperations) {
+				this._tablSortAndDelete(null, iDropPath, aOrderOperations);
+			}.bind(this));
 		},
 
 		/**
@@ -556,7 +557,7 @@ sap.ui.define([
 
 				aData[i].NetworkOperationsToGantt.results[0] = {};
 
-				var obj = {};
+				var obj = aData[i].NetworkOperationsToGantt.results[0];
 				if (i === aData.length - 1) {
 					aData[i].REL_KEY = "";
 					aData[i].RELATION_TYPE = "";
@@ -586,7 +587,6 @@ sap.ui.define([
 					obj.PRE_OPERATION_NUMBER = aData[i + 1].OPERATION_NUMBER;
 
 					obj.REL_KEY = aData[i].REL_KEY;
-					aData[i].NetworkOperationsToGantt.results.push(obj);
 				}
 			}
 		},
@@ -599,31 +599,12 @@ sap.ui.define([
 		 * @param [aDraggedContext] -- dragged context
 		 */
 		_getFormatedOrderOperation: function (iDropPath, oDroppedContext, aDraggedContext) {
-			var aFormatedOrderOperation = [];
-
-			aDraggedContext.forEach(function (oDragItem) {
-				var oFormatJson = {
-					"ObjectKey": "",
-					"SORT_ID": "",
-					"ORDER_NUMBER": oDragItem.getProperty("ORDER_NUMBER"),
-					"NETWORK_KEY": oDroppedContext.getProperty("NETWORK_KEY"),
-					"OPERATION_NUMBER": oDragItem.getProperty("OPERATION_NUMBER"),
-					"RELATION_TYPE": "FS",
-					"REL_KEY": "1",
-					"ASSIGNMENT_TYPE": "",
-					"SCHEDULE_TYPE": oDroppedContext.getProperty("SCHEDULE_TYPE"),
-					"EARLIEST_START_DATE": oDragItem.getProperty("EARLIEST_START_DATE"),
-					"EARLIEST_START_TIME": oDragItem.getProperty("EARLIEST_START_TIME"),
-					"EARLIEST_END_DATE": oDragItem.getProperty("EARLIEST_END_DATE"),
-					"EARLIEST_END_TIME": oDragItem.getProperty("EARLIEST_END_TIME"),
-					"NetworkOperationsToGantt": {
-						"results": []
-					}
-				};
-				aFormatedOrderOperation.push(oFormatJson);
+			return new Promise(function (resolve) {
+				var oDrdData = oDroppedContext.getObject();
+				this.adddependencies(aDraggedContext, oDrdData).then(function (aFormatedOrderOperation) {
+					resolve(aFormatedOrderOperation);
+				}.bind(this));
 			}.bind(this));
-
-			return aFormatedOrderOperation;
 		},
 
 		/**

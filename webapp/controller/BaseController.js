@@ -73,6 +73,11 @@ sap.ui.define([
 				refreshGanttModel: {
 					public: true,
 					final: true
+				},
+
+				adddependencies: {
+					public: true,
+					final: true
 				}
 			}
 		},
@@ -298,6 +303,44 @@ sap.ui.define([
 				}
 			}
 			return null;
+		},
+
+		/**
+		 * Add dependencies when it is dragged from order operation and 
+		 * adjust the dependency when operation dragged inside gantt table
+		 * @param {oRowDraggedContext}  DraggedRow Context
+		 * @param {oRowDroppedData} Dropped Row data
+		 */
+		adddependencies: function (oRowDraggedContext, oRowDroppedData) {
+			return new Promise(function (resolve) {
+				var obj = {},
+					oDataPrepared = [];
+				//collect all assignment properties who allowed for create
+				this.getModel().getMetaModel().loaded().then(function () {
+					var oMetaModel = this.getModel().getMetaModel(),
+						oEntitySet = oMetaModel.getODataEntitySet("WONetworkOperationsSet"),
+						oEntityType = oEntitySet ? oMetaModel.getODataEntityType(oEntitySet.entityType) : null,
+						aProperty = oEntityType ? oEntityType.property : [];
+					oRowDraggedContext.forEach(function (oContext) {
+						var oRowDraggedData = oContext.getObject();
+						aProperty.forEach(function (property) {
+							if (oRowDraggedData[property.name]) {
+								obj[property.name] = oRowDraggedData[property.name];
+							}
+						}.bind(this));
+						obj.ObjectKey = "";
+						obj.SORT_ID = "";
+						obj.NETWORK_KEY = oRowDroppedData.NETWORK_KEY;
+						obj.SCHEDULE_TYPE = oRowDroppedData.SCHEDULE_TYPE;
+						obj.NetworkOperationsToGantt = {
+							"results": []
+						};
+						oDataPrepared.push(obj);
+					}.bind(this));
+
+					resolve(oDataPrepared);
+				}.bind(this));
+			}.bind(this));
 		},
 
 		/**
