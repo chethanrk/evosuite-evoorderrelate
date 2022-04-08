@@ -8,19 +8,19 @@
 				<Page id="idGanttViewPage" showFooter="false" class="sapUiNoContentPadding" showSubHeader="false" enableScrolling="false">
 					<customHeader>
 						<OverflowToolbar id="idCustomHeaderToolbar">
-							<Label id="idLabelNetworksDropdown" text="{i18n>lbl.networks}"/>
-							<Select id="idNetworksDropdown" items="{path:'/SHNetworkSet', events:{dataReceived: '.networkDataReceived'}}" change="onChangeNetwork">
-								<core:Item key="{NETWORK_KEY}" text="{NETWORK_KEY}"/>
-							</Select>
-							<Button id="idBtnCreateNewNetwork" text="{i18n>btn.createNewNetwork}" tooltip="{i18n>btn.createNewNetwork}" press="onPressCreateNewNetwork"/>
-							<!--visible="{= ${user>/ENABLE_CREATE_NEW_NETWORK} === 'X'}"-->
+							<FlexBox>
+								<core:Fragment fragmentName="com.evorait.evosuite.evoorderrelate.view.fragments.NetworkSelection" type="XML"/>
+							</FlexBox>
+							<Button id="idBtnCreateNewNetwork" text="{i18n>btn.createNewNetwork}" tooltip="{i18n>btn.createNewNetwork}" press="onPressCreateNewNetwork"
+								visible="{= ${user>/ENABLE_NETWORK_CREATE} === 'X'}"/>
 							<core:ExtensionPoint name="PageExtP|GanttTable|WONetworkHeader|CustomHeader|Left"/>
 							<ToolbarSpacer id="idGanttTableToolbarSpacer"/>
 							<Button id="idBtnSave" type="Emphasized" tooltip="{i18n>btn.save}" text="{i18n>btn.save}" press="onPressNetworkSave"
 								enabled="{viewModel>/pendingChanges}"/>
 							<Button id="idBtnCancel" type="Accept" tooltip="{i18n>btn.cancel}" text="{i18n>btn.cancel}" press="onPressNetwokCancel"
 								enabled="{viewModel>/pendingChanges}"/>
-							<Button id="idBtnDeleteNetwork" icon="sap-icon://delete" tooltip="{i18n>btn.delete}" press="onPressNetworkDelete"/>
+							<Button id="idBtnDeleteNetwork" icon="sap-icon://delete" tooltip="{i18n>btn.delete}" press="onPressNetworkDelete"
+								visible="{= ${user>/ENABLE_NETWORK_DELETE} === 'X'}"/>
 							<core:ExtensionPoint name="PageExtP|GanttTable|WONetworkHeader|CustomHeader|Right"/>
 						</OverflowToolbar>
 					</customHeader>
@@ -38,6 +38,14 @@
 								</gantt:ContainerToolbar>
 							</gantt:toolbar>
 							<gantt:GanttChartWithTable id="gantt" shapeSelectionMode="Single" selectionPanelSize="40%">
+								<gantt:axisTimeStrategy>
+									<axistime:StepwiseZoomStrategy id="idOrderRelatePlanGanttZoom" zoomLevels="3">
+										<axistime:totalHorizon>
+											<config:TimeHorizon id="idOrderRelatePlanGanttTimeHorizon" startTime="{viewModel>/gantt/defaultStartDate}"
+												endTime="{viewModel>/gantt/defaultEndDate}"/>
+										</axistime:totalHorizon>
+									</axistime:StepwiseZoomStrategy>
+								</gantt:axisTimeStrategy>
 								<gantt:table>
 									<table:Table id="idTableGanttTable" selectionMode="Single" rows="{path:'ganttModel>/NetworkHeaderToOperations/results'}"
 										visibleRowCountMode="Auto" selectionBehavior="RowOnly" fixedRowCount="1" rowActionCount="1" rowSelectionChange="onGanttRowSelectionChange">

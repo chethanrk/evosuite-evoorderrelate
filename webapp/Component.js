@@ -1,3 +1,4 @@
+/* globals moment */
 sap.ui.define([
 	"sap/ui/core/UIComponent",
 	"sap/ui/Device",
@@ -5,11 +6,13 @@ sap.ui.define([
 	"com/evorait/evosuite/evoorderrelate/controller/ErrorHandler",
 	"com/evorait/evosuite/evoorderrelate/controller/MessageManager",
 	"com/evorait/evosuite/evoorderrelate/controller/NewNetworkDialog",
+	"com/evorait/evosuite/evoorderrelate/controller/NetworkSelection",
 	"sap/ui/model/json/JSONModel",
 	"com/evorait/evosuite/evoorderrelate/model/Constants",
 	"sap/ui/model/Filter",
 	"sap/ui/model/FilterOperator"
-], function (UIComponent, Device, models, ErrorHandler, MessageManager, NewNetworkDialog, JSONModel, Constants, Filter, FilterOperator) {
+], function (UIComponent, Device, models, ErrorHandler, MessageManager, NewNetworkDialog, NetworkSelection, JSONModel, Constants, Filter,
+	FilterOperator) {
 	"use strict";
 
 	var oMessageManager = sap.ui.getCore().getMessageManager();
@@ -46,6 +49,7 @@ sap.ui.define([
 			this.MessageManager = new MessageManager();
 
 			this.NewNetworkDialog = new NewNetworkDialog();
+			this.NetworkSelection = new NetworkSelection();
 
 			var viewModelObj = {
 				formHandling: {},
@@ -54,7 +58,12 @@ sap.ui.define([
 				delay: 100,
 				densityClass: this.getContentDensityClass(),
 				pendingChanges: false,
-				networkKey: null
+				networkKey: null,
+				gantt: {
+					defaultStartDate: moment().startOf("month").subtract(1, "months").toDate(),
+					defaultEndDate: moment().endOf("month").add(1, "months").toDate()
+				},
+				draggedData: null
 			};
 			this.setModel(models.createHelperModel(viewModelObj), "viewModel");
 			this.setModel(models.createGanttModel(), "ganttModel");

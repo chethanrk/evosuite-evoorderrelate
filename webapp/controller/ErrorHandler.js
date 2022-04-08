@@ -51,18 +51,21 @@ sap.ui.define([
 		/**
 		 * Shows a {@link sap.m.MessageBox} when a service call has failed.
 		 * Only the first error message will be display.
-		 * @param {string} sDetails a technical error to be displayed on request
 		 * @private
+		 * @param sMessage
 		 */
-		_showServiceError: function (sDetails) {
+		_showServiceError: function (sMessage) {
 			if (this._bMessageOpen) {
 				return;
 			}
 			this._bMessageOpen = true;
+			if (typeof sMessage === "object") {
+				sMessage = this._extractError(sMessage);
+			}
+
 			MessageBox.error(
 				this._sErrorText, {
-					id: "serviceErrorMessageBox",
-					details: this._extractError(sDetails),
+					details: sMessage.replace(/\n/g, "<br/>"),
 					styleClass: this._oComponent.getContentDensityClass(),
 					actions: [MessageBox.Action.CLOSE],
 					onClose: function () {
@@ -73,38 +76,45 @@ sap.ui.define([
 		},
 
 		/**
-		 * Extract errors from a backend message class.
-		 * @param {object} sDetails a technical error
-		 * @return a either messages from the backend message class or return the initial error object
-		 * @function
+		 * Extract errors from a backend message class
+		 * either messages from the backend message class or return the initial error object
+		 * @param oResponse
+		 * @returns {{responseText}|*|string|string|{responseText}|*}
 		 * @private
 		 */
-
-		_extractError: function (sDetails) {
-			if (sDetails.responseText) {
+		_extractError: function (oResponse) {
+			if (!oResponse) {
+				return this._oResourceBundle.getText("errorText");
+			}
+			if (oResponse.responseText) {
 				var parsedJSError = null;
 				try {
-					parsedJSError = jQuery.sap.parseJS(sDetails.responseText);
+					parsedJSError = jQuery.sap.parseJS(oResponse.responseText);
 				} catch (err) {
-					return sDetails;
+					return oResponse;
 				}
-
 				if (parsedJSError && parsedJSError.error && parsedJSError.error.code) {
 					var strError = "";
 					//check if the error is from our backend error class
 					if (parsedJSError.error.innererror && parsedJSError.error.innererror.errordetails) {
-						var array = parsedJSError.error.innererror.errordetails;
-						for (var i = 0; i < array.length; i++) {
-							strError += String.fromCharCode("8226") + " " + array[i].message + "\n\n";
+						var aInnerDetails = parsedJSError.error.innererror.errordetails;
+						if (aInnerDetails.length > 0) {
+							for (var i = 0; i < aInnerDetails.length; i++) {
+								strError += String.fromCharCode("8226") + " " + aInnerDetails[i].message + "\n\n";
+							}
+						} else {
+							strError = parsedJSError.error.code + ": " + parsedJSError.error.message.value;
 						}
 					} else {
 						//if there is no message class found
-						return sDetails;
+						return oResponse;
 					}
 					return strError;
 				}
+			} else if (oResponse.body) {
+				return oResponse.body;
 			}
-			return sDetails;
+			return oResponse;
 		}
 	});
 });

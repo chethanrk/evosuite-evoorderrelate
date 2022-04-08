@@ -30,42 +30,50 @@ sap.ui.define([
 
 				onPressDeleteDependency: {
 					public: true,
-					final: true
+					final: false,
+					overrideExecution: OverrideExecution.Before
 				},
 
 				onPresTop: {
 					public: true,
-					final: true
+					final: false,
+					overrideExecution: OverrideExecution.After
 				},
 
 				onPresUp: {
 					public: true,
-					final: true
+					final: false,
+					overrideExecution: OverrideExecution.After
 				},
 
 				onPresDown: {
 					public: true,
-					final: true
+					final: false,
+					overrideExecution: OverrideExecution.After
 				},
 
 				onPresBottom: {
 					public: true,
-					final: true
+					final: false,
+					overrideExecution: OverrideExecution.After
 				},
 
 				onGanttTableDragStart: {
 					public: true,
-					final: true
+					final: false,
+					overrideExecution: OverrideExecution.After
 				},
 
 				onDropGanttTable: {
 					public: true,
-					final: true
+					final: false,
+					overrideExecution: OverrideExecution.After
 				},
 
 				onDragEnter: {
 					public: true,
-					final: true
+					final: false,
+					overrideExecution: OverrideExecution.After
 				},
 
 				onPressCreateNewNetwork: {
@@ -81,12 +89,18 @@ sap.ui.define([
 				onPressNetwokCancel: {
 					public: true,
 					final: true
+				},
+				onNetworkValueHelpRequested: {
+					public: true,
+					final: false,
+					overrideExecution: OverrideExecution.Instead
 				}
 			}
 		},
 
 		_selectedRowIndex: null,
 		oViewModel: null,
+		oNetworkSelection: null,
 
 		/**
 		 * Called when a controller is instantiated and its View controls (if available) are already created.
@@ -95,11 +109,22 @@ sap.ui.define([
 		 */
 		onInit: function () {
 			this.oViewModel = this.getModel("viewModel");
-			this.oViewModel.setProperty("/gantBusy", true);
+			this.oNetworkSelection = this.getView().byId("idNetworkKey");
 
 			var eventBus = sap.ui.getCore().getEventBus();
 			//Binnding has changed in TemplateRenderController.js
 			eventBus.subscribe("TemplateRendererNetworkOperation", "changedBinding", this._changedBinding, this);
+		},
+
+		onAfterRendering: function (oEvent) {
+			this.oViewModel.setProperty("/gantBusy", false);
+			//set special network from app-to-app navigation 
+			if (this.oViewModel.getProperty("/networkKey") && this.oNetworkSelection) {
+				var sKey = this.oViewModel.getProperty("/networkKey");
+				this.oNetworkSelection.fireChange({
+					value: sKey
+				});
+			}
 		},
 
 		/**
@@ -119,33 +144,10 @@ sap.ui.define([
 				var iDropPath = parseInt(this.oViewModel.getProperty("/GanttRowCount"), 10),
 					oDroppedBindingContext = this.getView().byId("idTableGanttTable").getContextByIndex(iDropPath - 1);
 				if (iDropPath && oDroppedBindingContext) {
-					var aOrderOperations = this._getFormatedOrderOperation(iDropPath, oDroppedBindingContext, oData.data);
-					this._tablSortAndDelete(null, iDropPath, aOrderOperations);
+					this._getFormatedOrderOperation(iDropPath, oDroppedBindingContext, oData.data).then(function (aOrderOperations) {
+						this._tablSortAndDelete(null, iDropPath, aOrderOperations);
+					}.bind(this));
 				}
-			}
-		},
-
-		/**
-		 * Change network selection which fetch selected netwotk detail to gantt
-		 * Confirmation dialog will open if existing entry has some changes 
-		 * New data fetch  from backend for the selected network
-		 * @param {sap.ui.base.Event} oEvent - the change event
-		 */
-		onChangeNetwork: function (oEvent) {
-			var oSelectedItem = oEvent.getParameter("selectedItem"),
-				sKey = oSelectedItem.getKey();
-
-			if (this.oViewModel.getProperty("/pendingChanges")) {
-				var sTitle = "Confirm",
-					sMsg = this.getResourceBundle().getText("msg.leaveWithoutSave");
-
-				var successFn = function () {
-					this._getGanttdata(sKey);
-					this.oViewModel.setProperty("/pendingChanges", false);
-				};
-				this.showConfirmDialog(sTitle, sMsg, successFn.bind(this));
-			} else {
-				this._getGanttdata(sKey);
 			}
 		},
 
@@ -302,7 +304,6 @@ sap.ui.define([
 			var oDroppedControl = oEvent.getParameter("droppedControl"),
 				oDroppedBindingContext = oDroppedControl.getBindingContext("ganttModel"),
 				iDropPath = parseInt(oDroppedBindingContext.getPath().slice(-1), 10),
-				aOrderOperations = [],
 				aDraggedContext = this.getModel("viewModel").getProperty("/dragSession");
 
 			if (oEvent.getParameter("dropPosition") === "After") {
@@ -314,8 +315,9 @@ sap.ui.define([
 				return;
 			}
 
-			aOrderOperations = this._getFormatedOrderOperation(iDropPath, oDroppedBindingContext, aDraggedContext);
-			this._tablSortAndDelete(null, iDropPath, aOrderOperations);
+			this._getFormatedOrderOperation(iDropPath, oDroppedBindingContext, aDraggedContext).then(function (aOrderOperations) {
+				this._tablSortAndDelete(null, iDropPath, aOrderOperations);
+			}.bind(this));
 		},
 
 		/**
@@ -339,10 +341,9 @@ sap.ui.define([
 		 * @param {sap.ui.base.Event} oEvent - the press event
 		 */
 		onPressNetworkDelete: function (oEvent) {
-			var oNetworkSelect = this.getView().byId("idNetworksDropdown"),
-				sKey = oNetworkSelect.getSelectedKey();
+			var sKey = this.oNetworkSelection.getValue();
 
-			if (!oNetworkSelect || !sKey) {
+			if (!this.oNetworkSelection || !sKey) {
 				var sMsgv = this.getResourceBundle().getText("msg.noNetworkSelected");
 				this.showMessageToast(sMsgv);
 				return;
@@ -356,9 +357,14 @@ sap.ui.define([
 			}
 
 			var successFn = function () {
-				this.deleteNetwork(sKey);
+				var oResetData = {};
+				oResetData = deepClone(this.oBackupData);
+				this.oUpdatedBackupData = deepClone(this.oBackupData);
+				this.refreshGanttModel(oResetData, true);
+				this.oViewModel.setProperty("/pendingChanges", false);
+				this.deleteNetwork(oResetData);
 			};
-			this.showConfirmDialog(sTitle, sMsg, successFn.bind(this, sKey));
+			this.showConfirmDialog(sTitle, sMsg, successFn.bind(this));
 		},
 
 		/**
@@ -381,26 +387,6 @@ sap.ui.define([
 		},
 
 		/**
-		 * Handle data recived for the network selection
-		 * @param {sap.ui.base.Event} oEvent - the dataReceived event
-		 */
-		networkDataReceived: function (oEvent) {
-			if (oEvent.getSource().getPath() !== "/SHNetworkSet") {
-				return;
-			}
-			var oNetworkSelect = this.getView().byId("idNetworksDropdown"),
-				oFirstItem = oNetworkSelect.getFirstItem();
-			if (oFirstItem) {
-				var sKey = oFirstItem.getKey();
-				if (this.oViewModel.getProperty("/networkKey")) {
-					sKey = this.oViewModel.getProperty("/networkKey");
-				}
-				oNetworkSelect.setSelectedKey(sKey);
-				this._getGanttdata(sKey);
-			}
-		},
-
-		/**
 		 * Handle `press` event on 'Create Network' button
 		 * Open Dialog for a new Network creation
 		 * @param {sap.ui.base.Event} oEvent - The `press` event
@@ -416,11 +402,72 @@ sap.ui.define([
 					var oBackupDataCopy = deepClone(this.oBackupData);
 					this.refreshGanttModel(oBackupDataCopy, true);
 					this.oViewModel.setProperty("/pendingChanges", false);
-					this.getOwnerComponent().NewNetworkDialog.open(oView);
+					this.getOwnerComponent().NewNetworkDialog.open(oView, this.oNetworkSelection);
 				};
 				this.showConfirmDialog(sTitle, sMsg, successFn.bind(this));
 			} else {
-				this.getOwnerComponent().NewNetworkDialog.open(oView);
+				this.getOwnerComponent().NewNetworkDialog.open(oView, this.oNetworkSelection);
+			}
+		},
+
+		/**
+		 * Value help request for the network selection
+		 * @param {sap.ui.base.Event} oEvent - The `press` event
+		 */
+		onNetworkValueHelpRequested: function (oEvent) {
+			var oView = this.getView(),
+				oSource = oEvent.getSource(),
+				mCustomData = oSource.data(),
+				oModel = this.getModel();
+
+			oModel.getMetaModel().loaded().then(function () {
+				var oMetaModel = oModel.getMetaModel() || oModel.getProperty("/metaModel"),
+					oEntitySet = oMetaModel.getODataEntitySet("WONetworkHeaderSet"),
+					oEntityType = oMetaModel.getODataEntityType(oEntitySet.entityType);
+
+				var oProperty = oMetaModel.getODataProperty(oEntityType, mCustomData.property);
+				if (oProperty !== null) {
+					var aValueList = oProperty["com.sap.vocabularies.Common.v1.ValueList"];
+					if (aValueList) {
+						var aValueListParameter = aValueList["Parameters"];
+
+						mCustomData["entitySet"] = aValueList.CollectionPath["String"];
+						mCustomData["vhSet"] = aValueList.CollectionPath["String"];
+
+						// load fragment 
+						this.getOwnerComponent().NetworkSelection.open(oView, oSource, mCustomData, aValueListParameter);
+					}
+				}
+
+			}.bind(this));
+		},
+
+		/**
+		 * change event for network selection
+		 * @param {sap.ui.base.Event} oEvent - The `press` event
+		 */
+		onChangeNetwork: function (oEvent) {
+			var svalue = oEvent.getParameter("value");
+
+			if (this.oViewModel.getProperty("/pendingChanges")) {
+				var sTitle = this.getResourceBundle().getText("btn.confirm"),
+					sMsg = this.getResourceBundle().getText("msg.leaveWithoutSave");
+
+				var successFn = function () {
+					var oBackupDataCopy = deepClone(this.oBackupData);
+					this.refreshGanttModel(oBackupDataCopy, true);
+					this.oViewModel.setProperty("/pendingChanges", false);
+					this._getGanttdata(svalue);
+				};
+				var errorFn = function () {
+					var sNetworkKey = this.oBackupData.NETWORK_KEY;
+					this.oNetworkSelection.setValue(sNetworkKey);
+				};
+
+				this.showConfirmDialog(sTitle, sMsg, successFn.bind(this), errorFn.bind(this));
+			} else {
+				oEvent.getSource().setValue(svalue);
+				this._getGanttdata(svalue);
 			}
 		},
 
@@ -509,6 +556,8 @@ sap.ui.define([
 				aData[i].SORT_ID = sSortId;
 
 				aData[i].NetworkOperationsToGantt.results[0] = {};
+
+				var obj = aData[i].NetworkOperationsToGantt.results[0];
 				if (i === aData.length - 1) {
 					aData[i].REL_KEY = "";
 					aData[i].RELATION_TYPE = "";
@@ -520,24 +569,24 @@ sap.ui.define([
 					aData[i].REL_KEY = aData[i].REL_KEY ? aData[i].REL_KEY : this.getModel("user").getProperty("/DEFAULT_RELATION_KEY");
 					aData[i].RELATION_TYPE = aData[i].RELATION_TYPE ? aData[i].RELATION_TYPE : "FS";
 
-					aData[i].NetworkOperationsToGantt.results[0].ObjectKey = aData[i].ObjectKey;
-					aData[i].NetworkOperationsToGantt.results[0].HeaderObjectKey = aData[i].ObjectKey;
-					aData[i].NetworkOperationsToGantt.results[0].NETWORK_KEY = aData[i].NETWORK_KEY;
-					aData[i].NetworkOperationsToGantt.results[0].SORT_ID = aData[i].SORT_ID;
-					aData[i].NetworkOperationsToGantt.results[0].ORDER_NUMBER = aData[i].ORDER_NUMBER;
-					aData[i].NetworkOperationsToGantt.results[0].OPERATION_NUMBER = aData[i].OPERATION_NUMBER;
+					obj.ObjectKey = aData[i].ObjectKey;
+					obj.HeaderObjectKey = aData[i].ObjectKey;
+					obj.NETWORK_KEY = aData[i].NETWORK_KEY;
+					obj.SORT_ID = aData[i].SORT_ID;
+					obj.ORDER_NUMBER = aData[i].ORDER_NUMBER;
+					obj.OPERATION_NUMBER = aData[i].OPERATION_NUMBER;
 
-					aData[i].NetworkOperationsToGantt.results[0].SUC_OBJECT_KEY = aData[i].ObjectKey;
-					aData[i].NetworkOperationsToGantt.results[0].SUC_SORT_ID = aData[i].SORT_ID;
-					aData[i].NetworkOperationsToGantt.results[0].SUC_ORDER_NUMBER = aData[i].ORDER_NUMBER;
-					aData[i].NetworkOperationsToGantt.results[0].SUC_OPERATION_NUMBER = aData[i].OPERATION_NUMBER;
+					obj.SUC_OBJECT_KEY = aData[i].ObjectKey;
+					obj.SUC_SORT_ID = aData[i].SORT_ID;
+					obj.SUC_ORDER_NUMBER = aData[i].ORDER_NUMBER;
+					obj.SUC_OPERATION_NUMBER = aData[i].OPERATION_NUMBER;
 
-					aData[i].NetworkOperationsToGantt.results[0].PRE_OBJECT_KEY = aData[i + 1].ObjectKey;
-					aData[i].NetworkOperationsToGantt.results[0].PRE_SORT_ID = aData[i + 1].SORT_ID;
-					aData[i].NetworkOperationsToGantt.results[0].PRE_ORDER_NUMBER = aData[i + 1].ORDER_NUMBER;
-					aData[i].NetworkOperationsToGantt.results[0].PRE_OPERATION_NUMBER = aData[i + 1].OPERATION_NUMBER;
+					obj.PRE_OBJECT_KEY = aData[i + 1].ObjectKey;
+					obj.PRE_SORT_ID = aData[i + 1].SORT_ID;
+					obj.PRE_ORDER_NUMBER = aData[i + 1].ORDER_NUMBER;
+					obj.PRE_OPERATION_NUMBER = aData[i + 1].OPERATION_NUMBER;
 
-					aData[i].NetworkOperationsToGantt.results[0].REL_KEY = aData[i].REL_KEY;
+					obj.REL_KEY = aData[i].REL_KEY;
 				}
 			}
 		},
@@ -550,31 +599,12 @@ sap.ui.define([
 		 * @param [aDraggedContext] -- dragged context
 		 */
 		_getFormatedOrderOperation: function (iDropPath, oDroppedContext, aDraggedContext) {
-			var aFormatedOrderOperation = [];
-
-			aDraggedContext.forEach(function (oDragItem) {
-				var oFormatJson = {
-					"ObjectKey": "",
-					"SORT_ID": "",
-					"ORDER_NUMBER": oDragItem.getProperty("ORDER_NUMBER"),
-					"NETWORK_KEY": oDroppedContext.getProperty("NETWORK_KEY"),
-					"OPERATION_NUMBER": oDragItem.getProperty("OPERATION_NUMBER"),
-					"RELATION_TYPE": "FS",
-					"REL_KEY": "1",
-					"ASSIGNMENT_TYPE": "",
-					"SCHEDULE_TYPE": oDroppedContext.getProperty("SCHEDULE_TYPE"),
-					"EARLIEST_START_DATE": oDragItem.getProperty("EARLIEST_START_DATE"),
-					"EARLIEST_START_TIME": oDragItem.getProperty("EARLIEST_START_TIME"),
-					"EARLIEST_END_DATE": oDragItem.getProperty("EARLIEST_END_DATE"),
-					"EARLIEST_END_TIME": oDragItem.getProperty("EARLIEST_END_TIME"),
-					"NetworkOperationsToGantt": {
-						"results": []
-					}
-				};
-				aFormatedOrderOperation.push(oFormatJson);
+			return new Promise(function (resolve) {
+				var oDrdData = oDroppedContext.getObject();
+				this.adddependencies(aDraggedContext, oDrdData).then(function (aFormatedOrderOperation) {
+					resolve(aFormatedOrderOperation);
+				}.bind(this));
 			}.bind(this));
-
-			return aFormatedOrderOperation;
 		},
 
 		/**
@@ -582,10 +612,13 @@ sap.ui.define([
 		 */
 		_saveSuccessFn: function (OResponse) {
 			this.getModel().refresh();
-			if (OResponse && OResponse.ObjectKey) {
-				this.oViewModel.setProperty("/networkKey", OResponse.ObjectKey);
+			if (OResponse && OResponse.ObjectKey && this.oNetworkSelection) {
+				this.oViewModel.setProperty("/pendingChanges", false);
+				this.oNetworkSelection.fireChange({
+					value: OResponse.ObjectKey
+				});
 			}
-			this.oViewModel.setProperty("/pendingChanges", false);
+
 			var msg = this.getResourceBundle().getText("msg.saveSuccess");
 			this.showMessageToast(msg);
 		},

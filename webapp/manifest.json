@@ -107,7 +107,7 @@
 					"uri": "assets/js/url-search-params.min.js"
 				},
 				{
-					"uri": "assets/js/promise-polyfills.js"
+					"uri": "assets/js/moment-with-locales.min.js"
 				}
 			]
 		},

@@ -73,6 +73,11 @@ sap.ui.define([
 				refreshGanttModel: {
 					public: true,
 					final: true
+				},
+
+				adddependencies: {
+					public: true,
+					final: true
 				}
 			}
 		},
@@ -252,10 +257,9 @@ sap.ui.define([
 		/**
 		 * delete request
 		 */
-		deleteNetwork: function (sNetworkKey) {
-			//TODO delete network backend call
-			sap.m.MessageToast.show("Deleted");
-			//this.getModel().refresh();
+		deleteNetwork: function (oData) {
+			oData.DELETE_INDICATOR = true;
+			this.saveNetworkChanges(oData, this._deleteSuccess.bind(this), this._validationFail.bind(this));
 		},
 
 		/**
@@ -302,6 +306,44 @@ sap.ui.define([
 		},
 
 		/**
+		 * Add dependencies when it is dragged from order operation and 
+		 * adjust the dependency when operation dragged inside gantt table
+		 * @param {oRowDraggedContext}  DraggedRow Context
+		 * @param {oRowDroppedData} Dropped Row data
+		 */
+		adddependencies: function (oRowDraggedContext, oRowDroppedData) {
+			return new Promise(function (resolve) {
+				var obj = {},
+					oDataPrepared = [];
+				//collect all assignment properties who allowed for create
+				this.getModel().getMetaModel().loaded().then(function () {
+					var oMetaModel = this.getModel().getMetaModel(),
+						oEntitySet = oMetaModel.getODataEntitySet("WONetworkOperationsSet"),
+						oEntityType = oEntitySet ? oMetaModel.getODataEntityType(oEntitySet.entityType) : null,
+						aProperty = oEntityType ? oEntityType.property : [];
+					oRowDraggedContext.forEach(function (oContext) {
+						var oRowDraggedData = oContext.getObject();
+						aProperty.forEach(function (property) {
+							if (oRowDraggedData[property.name]) {
+								obj[property.name] = oRowDraggedData[property.name];
+							}
+						}.bind(this));
+						obj.ObjectKey = "";
+						obj.SORT_ID = "";
+						obj.NETWORK_KEY = oRowDroppedData.NETWORK_KEY;
+						obj.SCHEDULE_TYPE = oRowDroppedData.SCHEDULE_TYPE;
+						obj.NetworkOperationsToGantt = {
+							"results": []
+						};
+						oDataPrepared.push(obj);
+					}.bind(this));
+
+					resolve(oDataPrepared);
+				}.bind(this));
+			}.bind(this));
+		},
+
+		/**
 		 * Actions after validation success
 		 * @param {oResult} - after validation returned new result
 		 */
@@ -311,7 +353,7 @@ sap.ui.define([
 				this.oUpdatedBackupData = deepClone(oResult);
 				this.refreshGanttModel(oResult, true);
 				this.oViewModel.setProperty("/pendingChanges", true);
-			}else{
+			} else {
 				var oData = deepClone(this.oBackupData);
 				this.oUpdatedBackupData = deepClone(this.oBackupData);
 				this.refreshGanttModel(oData, true);
@@ -320,12 +362,25 @@ sap.ui.define([
 		},
 
 		/**
-		 * Actions after validation fail
+		 * Actions after validation/delete fail
 		 * set the previous changes to the gantt
 		 */
 		_validationFail: function () {
 			var oBackupData = deepClone(this.oUpdatedBackupData);
 			this.refreshGanttModel(oBackupData);
+		},
+
+		/**
+		 * Actions after validation success
+		 * @param {oResult} - after validation returned new result
+		 */
+		_deleteSuccess: function (oResult) {
+			this.oViewModel.setProperty("/pendingChanges", false);
+			var msg = this.getResourceBundle().getText("msg.saveSuccess");
+			this.showMessageToast(msg);
+			this.getModel().refresh();
+			this.oNetworkSelection.resetProperty("value");
+			this.refreshGanttModel({}, true);
 		},
 
 		/**
