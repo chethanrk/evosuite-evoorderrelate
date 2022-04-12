@@ -387,7 +387,6 @@ sap.ui.define([
 			this._oController.showMessageToast(msg);
 			var oData = this.getBatchChangeResponse(OResponse);
 			if (oData && oData.ObjectKey && this._oNeteorkSelection) {
-				//this._oView.getModel("viewModel").setProperty("/networkKey", oData.ObjectKey);
 				this._oNeteorkSelection.fireChange({
 					value: oData.ObjectKey
 				});

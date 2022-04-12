@@ -100,6 +100,7 @@ sap.ui.define([
 
 		_selectedRowIndex: null,
 		oViewModel: null,
+		oGanttModel: null,
 		oNetworkSelection: null,
 
 		/**
@@ -109,6 +110,7 @@ sap.ui.define([
 		 */
 		onInit: function () {
 			this.oViewModel = this.getModel("viewModel");
+			this.oGanttModel = this.getModel("ganttModel");
 			this.oNetworkSelection = this.getView().byId("idNetworkKey");
 
 			var eventBus = sap.ui.getCore().getEventBus();
@@ -165,7 +167,7 @@ sap.ui.define([
 
 			if (oSourceModel && sType && oRelashinShip && oRelashinShip.results && oRelashinShip.results.length) {
 				oRelashinShip.results[0].REL_KEY = sType;
-				this.validateNetworkOperations(this.getModel("ganttModel").getData());
+				this.validateNetworkOperations(this.oGanttModel.getData());
 			}
 		},
 
@@ -357,12 +359,10 @@ sap.ui.define([
 			}
 
 			var successFn = function () {
-				var oResetData = {};
-				oResetData = deepClone(this.oBackupData);
 				this.oUpdatedBackupData = deepClone(this.oBackupData);
-				this.refreshGanttModel(oResetData, true);
+				this.refreshGanttModel(deepClone(this.oBackupData));
 				this.oViewModel.setProperty("/pendingChanges", false);
-				this.deleteNetwork(oResetData);
+				this.deleteNetwork(deepClone(this.oBackupData));
 			};
 			this.showConfirmDialog(sTitle, sMsg, successFn.bind(this));
 		},
@@ -377,10 +377,8 @@ sap.ui.define([
 				sMsg = this.getResourceBundle().getText("msg.confirmNetworkCancel");
 
 			var successFn = function () {
-				var oResetData = {};
-				oResetData = deepClone(this.oBackupData);
 				this.oUpdatedBackupData = deepClone(this.oBackupData);
-				this.refreshGanttModel(oResetData, true);
+				this.refreshGanttModel(deepClone(this.oBackupData));
 				this.oViewModel.setProperty("/pendingChanges", false);
 			};
 			this.showConfirmDialog(sTitle, sMsg, successFn.bind(this));
@@ -399,8 +397,7 @@ sap.ui.define([
 					sMsg = this.getResourceBundle().getText("msg.leaveWithoutSave");
 
 				var successFn = function () {
-					var oBackupDataCopy = deepClone(this.oBackupData);
-					this.refreshGanttModel(oBackupDataCopy, true);
+					this.refreshGanttModel(deepClone(this.oBackupData));
 					this.oViewModel.setProperty("/pendingChanges", false);
 					this.getOwnerComponent().NewNetworkDialog.open(oView, this.oNetworkSelection);
 				};
@@ -454,8 +451,7 @@ sap.ui.define([
 					sMsg = this.getResourceBundle().getText("msg.leaveWithoutSave");
 
 				var successFn = function () {
-					var oBackupDataCopy = deepClone(this.oBackupData);
-					this.refreshGanttModel(oBackupDataCopy, true);
+					this.refreshGanttModel(deepClone(this.oBackupData));
 					this.oViewModel.setProperty("/pendingChanges", false);
 					this._getGanttdata(svalue);
 				};
@@ -476,9 +472,8 @@ sap.ui.define([
 		 * prepare batch for each rows of the table
 		 */
 		onPressNetworkSave: function (oEvent) {
-			var oModelData = this.getModel("ganttModel").getData();
 			var oPayloadData = {};
-			oPayloadData = deepClone(oModelData);
+			oPayloadData = deepClone(this.oGanttModel.getData());
 			oPayloadData.VALIDATION_INDICATOR = false;
 			this.saveNetworkChanges(oPayloadData, this._saveSuccessFn.bind(this), this._saveErrorFn.bind(this));
 		},
@@ -500,11 +495,11 @@ sap.ui.define([
 			}).then(function (oResult) {
 				this.oBackupData = deepClone(oResult);
 				this.oUpdatedBackupData = deepClone(oResult);
-				this.refreshGanttModel(oResult, true);
+				this.refreshGanttModel(oResult);
 				this.oViewModel.setProperty("/gantBusy", false);
 			}.bind(this), function (error) {
 				this.oBackupData = null;
-				this.refreshGanttModel({}, true);
+				this.refreshGanttModel({});
 				this.oViewModel.setProperty("/gantBusy", false);
 			}.bind(this));
 		},
@@ -517,8 +512,7 @@ sap.ui.define([
 		 * @param [aDraggedOrderOperations] Copied order operation data
 		 */
 		_tablSortAndDelete: function (iDraggedPath, iDroppedPath, aDraggedOrderOperations) {
-			var oModel = this.getModel("ganttModel"),
-				oOperations = oModel.getProperty("/NetworkHeaderToOperations"),
+			var oOperations = this.oGanttModel.getProperty("/NetworkHeaderToOperations"),
 				oData = oOperations.results,
 				DraggedData = [];
 			if (iDraggedPath && oData.length) {
@@ -536,59 +530,75 @@ sap.ui.define([
 			} else if (iDroppedPath) {
 				oData.splice(iDroppedPath, 0, DraggedData);
 			}
-			this._updateSortandRelationshipSequence(oData);
-			this.oViewModel.setProperty("/GanttRowCount", oData.length);
-			oModel.refresh();
-
-			//sort/delete code
-			this.validateNetworkOperations(oModel.getData());
+			this._formatValidationData(oData);
 		},
 
 		/**
-		 * update sort id and relationship after each sort/delete functionality
-		 * Formatter used to format the sortid as 3 digit
+		 * Adjust Sortid and prapare date for the validation
+		 * @param oData network operatio
+		 */
+		_formatValidationData: function (oData) {
+			//adjust sortid
+			var iCounter = 1;
+			oData.forEach(function (data) {
+				//Formatter used to format the sortid as 3 digit
+				data.SORT_ID = formatter.formatOperationNumber((iCounter).toString(), 3);
+				data.ObjectKey = this._getLocalObjectKey(data.ORDER_NUMBER, data.OPERATION_NUMBER, data.SORT_ID);
+				iCounter++;
+			}.bind(this));
+
+			//update sequesnce with relationship
+			this._updateRelationshipSequence(oData).then(function () {
+				this.oViewModel.setProperty("/GanttRowCount", oData.length);
+
+				//sort/delete code
+				this.validateNetworkOperations(this.oGanttModel.getData());
+			}.bind(this));
+		},
+
+		/**
+		 * update relationship after each sort/delete functionality
 		 * @private
 		 * @param [aData] gantt table data
 		 */
-		_updateSortandRelationshipSequence: function (aData) {
-			for (var i = 0; i < aData.length; i++) {
-				var sSortId = formatter.formatOperationNumber((i + 1).toString(), 3);
-				aData[i].SORT_ID = sSortId;
+		_updateRelationshipSequence: function (aData) {
+			return new Promise(function (resolve) {
+				var iIndex = 0;
+				aData.forEach(function (data) {
+					data.NetworkOperationsToGantt.results[0] = {};
+					var obj = data.NetworkOperationsToGantt.results[0];
 
-				aData[i].NetworkOperationsToGantt.results[0] = {};
-
-				var obj = aData[i].NetworkOperationsToGantt.results[0];
-				if (i === aData.length - 1) {
-					aData[i].REL_KEY = "";
-					aData[i].RELATION_TYPE = "";
-				} else {
-					if (aData[i].ObjectKey === "") {
-						aData[i].ObjectKey = aData[i].ORDER_NUMBER + "_" + aData[i].OPERATION_NUMBER + "_" + aData[i].SORT_ID + aData[i].SORT_ID + aData[
-							i].ORDER_NUMBER + aData[i].OPERATION_NUMBER;
+					if (iIndex === aData.length - 1) {
+						data.REL_KEY = "";
+						data.RELATION_TYPE = "";
+						return;
 					}
-					aData[i].REL_KEY = aData[i].REL_KEY ? aData[i].REL_KEY : this.getModel("user").getProperty("/DEFAULT_RELATION_KEY");
-					aData[i].RELATION_TYPE = aData[i].RELATION_TYPE ? aData[i].RELATION_TYPE : "FS";
 
-					obj.ObjectKey = aData[i].ObjectKey;
-					obj.HeaderObjectKey = aData[i].ObjectKey;
-					obj.NETWORK_KEY = aData[i].NETWORK_KEY;
-					obj.SORT_ID = aData[i].SORT_ID;
-					obj.ORDER_NUMBER = aData[i].ORDER_NUMBER;
-					obj.OPERATION_NUMBER = aData[i].OPERATION_NUMBER;
+					data.REL_KEY = data.REL_KEY ? data.REL_KEY : this.getModel("user").getProperty("/DEFAULT_RELATION_KEY");
+					data.RELATION_TYPE = data.RELATION_TYPE ? data.RELATION_TYPE : "FS";
+					obj.REL_KEY = data.REL_KEY;
 
-					obj.SUC_OBJECT_KEY = aData[i].ObjectKey;
-					obj.SUC_SORT_ID = aData[i].SORT_ID;
-					obj.SUC_ORDER_NUMBER = aData[i].ORDER_NUMBER;
-					obj.SUC_OPERATION_NUMBER = aData[i].OPERATION_NUMBER;
+					obj.ObjectKey = data.ObjectKey;
+					obj.HeaderObjectKey = data.ObjectKey;
+					obj.NETWORK_KEY = data.NETWORK_KEY;
+					obj.SORT_ID = data.SORT_ID;
+					obj.ORDER_NUMBER = data.ORDER_NUMBER;
+					obj.OPERATION_NUMBER = data.OPERATION_NUMBER;
 
-					obj.PRE_OBJECT_KEY = aData[i + 1].ObjectKey;
-					obj.PRE_SORT_ID = aData[i + 1].SORT_ID;
-					obj.PRE_ORDER_NUMBER = aData[i + 1].ORDER_NUMBER;
-					obj.PRE_OPERATION_NUMBER = aData[i + 1].OPERATION_NUMBER;
+					obj.SUC_OBJECT_KEY = data.ObjectKey;
+					obj.SUC_SORT_ID = data.SORT_ID;
+					obj.SUC_ORDER_NUMBER = data.ORDER_NUMBER;
+					obj.SUC_OPERATION_NUMBER = data.OPERATION_NUMBER;
 
-					obj.REL_KEY = aData[i].REL_KEY;
-				}
-			}
+					obj.PRE_OBJECT_KEY = aData[iIndex + 1].ObjectKey;
+					obj.PRE_SORT_ID = aData[iIndex + 1].SORT_ID;
+					obj.PRE_ORDER_NUMBER = aData[iIndex + 1].ORDER_NUMBER;
+					obj.PRE_OPERATION_NUMBER = aData[iIndex + 1].OPERATION_NUMBER;
+
+					iIndex++;
+				}.bind(this));
+				resolve();
+			}.bind(this));
 		},
 
 		/**
@@ -611,7 +621,6 @@ sap.ui.define([
 		 * success callback after creating order
 		 */
 		_saveSuccessFn: function (OResponse) {
-			this.getModel().refresh();
 			if (OResponse && OResponse.ObjectKey && this.oNetworkSelection) {
 				this.oViewModel.setProperty("/pendingChanges", false);
 				this.oNetworkSelection.fireChange({

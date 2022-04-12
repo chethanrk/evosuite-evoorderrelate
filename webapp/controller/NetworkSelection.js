@@ -284,7 +284,15 @@ sap.ui.define([
 				if (oTable.bindRows) {
 					oTable.bindAggregation("rows", "/" + mCustomData.vhSet);
 				}
-
+				var oBinding = oTable.getBinding("rows");
+				oBinding.attachChange(function (sReason) {
+					var oResourceBundle = this._oView.getModel("i18n").getResourceBundle(),
+						sHeader = oResourceBundle.getText("tit.items", oBinding.getLength());
+					var sText = new sap.m.Text({
+						text: sHeader
+					});
+					this._oNetworkSelectionDialog.getTable().setTitle(sText);
+				}.bind(this));
 				this._oNetworkSelectionDialog.update();
 				oTable.setBusy(false);
 

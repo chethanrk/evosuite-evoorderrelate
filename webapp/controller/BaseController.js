@@ -274,13 +274,9 @@ sap.ui.define([
 		 * Set new data to model and network operation count to the property
 		 * Refresh if updating the json model with enw data
 		 * @param {oData}  -- Gantt data
-		 * @param bRefresh -- indicator to refresh model
 		 */
-		refreshGanttModel: function (oData, bRefresh) {
+		refreshGanttModel: function (oData) {
 			this.getModel("ganttModel").setData(oData);
-			if (bRefresh) {
-				this.getModel("ganttModel").refresh();
-			}
 			if (oData.NetworkHeaderToOperations && oData.NetworkHeaderToOperations.results && oData.NetworkHeaderToOperations.results.length) {
 				this.getModel("viewModel").setProperty("/GanttRowCount", oData.NetworkHeaderToOperations.results.length);
 			} else {
@@ -351,12 +347,11 @@ sap.ui.define([
 			if (oResult && oResult.NETWORK_KEY) {
 				this._removeRelationship(oResult);
 				this.oUpdatedBackupData = deepClone(oResult);
-				this.refreshGanttModel(oResult, true);
+				this.refreshGanttModel(oResult);
 				this.oViewModel.setProperty("/pendingChanges", true);
 			} else {
-				var oData = deepClone(this.oBackupData);
 				this.oUpdatedBackupData = deepClone(this.oBackupData);
-				this.refreshGanttModel(oData, true);
+				this.refreshGanttModel(deepClone(this.oBackupData));
 				this.oViewModel.setProperty("/pendingChanges", false);
 			}
 		},
@@ -380,7 +375,7 @@ sap.ui.define([
 			this.showMessageToast(msg);
 			this.getModel().refresh();
 			this.oNetworkSelection.resetProperty("value");
-			this.refreshGanttModel({}, true);
+			this.refreshGanttModel({});
 		},
 
 		/**
@@ -395,8 +390,20 @@ sap.ui.define([
 					oLastshpe.NetworkOperationsToGantt.results[0] = {};
 				}
 			}
-		}
+		},
 
+		/**
+		 * Generate local object key for gantt operations to handle visibility of relationship in local
+		 * @param sOrderNUm
+		 * @param sOprNUm
+		 * @param sSortId
+		 */
+		_getLocalObjectKey: function (sOrderNUm, sOprNUm, sSortId) {
+			if (sOrderNUm && sOprNUm && sSortId) {
+				return sOrderNUm + "_" + sOprNUm + "_" + sSortId + sSortId + sOrderNUm + sOprNUm;
+			}
+			return "";
+		}
 	});
 
 });
