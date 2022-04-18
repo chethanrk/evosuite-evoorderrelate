@@ -262,7 +262,9 @@ sap.ui.define([
 				}
 
 				setTimeout(function () {
-					this._oNetworkSelectionDialog.update();
+					if (this._oNetworkSelectionDialog) {
+						this._oNetworkSelectionDialog.update();
+					}
 					oTable.setBusy(false);
 				}.bind(this), 4000);
 
