@@ -87,7 +87,7 @@
 														<gantt:BaseRectangle shapeId="{ganttModel>ObjectKey}"
 															time="{parts:['ganttModel>EARLIEST_START_DATE','ganttModel>EARLIEST_START_TIME'],formatter:'.formatter.mergeDateTime'}"
 															endTime="{parts:['ganttModel>EARLIEST_END_DATE','ganttModel>EARLIEST_END_TIME'],formatter:'.formatter.mergeDateTime'}" fill="#0092D1"
-															hoverable="true" connectable="true" verticalTextAlignment="Center"/>
+															hoverable="true" connectable="true"/>
 													</gantt:shapes1>
 													<gantt:relationships>
 														<gantt:Relationship shapeId="{ganttModel>ObjectKey}" predecessor="{ganttModel>SUC_OBJECT_KEY}" successor="{ganttModel>PRE_OBJECT_KEY}"

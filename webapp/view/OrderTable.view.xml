@@ -2,8 +2,8 @@
 	xmlns:app="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1" xmlns:smartfilterbar="sap.ui.comp.smartfilterbar"
 	xmlns:dnd="sap.ui.core.dnd" controllerName="com.evorait.evosuite.evoorderrelate.controller.OrderTable"
 	xmlns:html="http://www.w3.org/1999/xhtml">
-	<f:DynamicPage id="idOrderTablePage" fitContent="true" headerPinned="true" headerExpanded="true" preserveHeaderStateOnScroll="true"
-		showFooter="false" class="sapUiNoContentPadding">
+	<f:DynamicPage id="idOrderTablePage" fitContent="true" headerExpanded="true" preserveHeaderStateOnScroll="true" showFooter="false"
+		class="sapUiNoContentPadding">
 		<f:title>
 			<f:DynamicPageTitle visible="false" id="idOrderTablePageTitle">
 				<f:heading>

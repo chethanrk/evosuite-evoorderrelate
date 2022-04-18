@@ -584,21 +584,29 @@ sap.ui.define([
 					obj.SORT_ID = data.SORT_ID;
 					obj.ORDER_NUMBER = data.ORDER_NUMBER;
 					obj.OPERATION_NUMBER = data.OPERATION_NUMBER;
-
-					obj.SUC_OBJECT_KEY = data.ObjectKey;
-					obj.SUC_SORT_ID = data.SORT_ID;
-					obj.SUC_ORDER_NUMBER = data.ORDER_NUMBER;
-					obj.SUC_OPERATION_NUMBER = data.OPERATION_NUMBER;
-
-					obj.PRE_OBJECT_KEY = aData[iIndex + 1].ObjectKey;
-					obj.PRE_SORT_ID = aData[iIndex + 1].SORT_ID;
-					obj.PRE_ORDER_NUMBER = aData[iIndex + 1].ORDER_NUMBER;
-					obj.PRE_OPERATION_NUMBER = aData[iIndex + 1].OPERATION_NUMBER;
-
+					this._setDataBasedOnScheduleType(obj, data, aData[iIndex + 1]);
 					iIndex++;
 				}.bind(this));
 				resolve();
 			}.bind(this));
+		},
+
+		/**
+		 * Set data based on Predecessor and Successor type
+		 * @param {oNewOprData} new operation data
+		 * @param {oOprData} existing operation data
+		 * @param {oNetworkData} next operation detail
+		 */
+		_setDataBasedOnScheduleType: function (oNewOprData, oOprData, oNetworkData) {
+			oNewOprData.SUC_OBJECT_KEY = oOprData.AOB_KEY === "2" ? oOprData.ObjectKey : oNetworkData.ObjectKey;
+			oNewOprData.SUC_SORT_ID = oOprData.AOB_KEY === "2" ? oOprData.SORT_ID : oNetworkData.SORT_ID;
+			oNewOprData.SUC_ORDER_NUMBER = oOprData.AOB_KEY === "2" ? oOprData.ORDER_NUMBER : oNetworkData.ORDER_NUMBER;
+			oNewOprData.SUC_OPERATION_NUMBER = oOprData.AOB_KEY === "2" ? oOprData.OPERATION_NUMBER : oNetworkData.OPERATION_NUMBER;
+
+			oNewOprData.PRE_OBJECT_KEY = oOprData.AOB_KEY === "2" ? oNetworkData.ObjectKey : oOprData.ObjectKey;
+			oNewOprData.PRE_SORT_ID = oOprData.AOB_KEY === "2" ? oNetworkData.SORT_ID : oOprData.SORT_ID;
+			oNewOprData.PRE_ORDER_NUMBER = oOprData.AOB_KEY === "2" ? oNetworkData.ORDER_NUMBER : oOprData.ORDER_NUMBER;
+			oNewOprData.PRE_OPERATION_NUMBER = oOprData.AOB_KEY === "2" ? oNetworkData.OPERATION_NUMBER : oOprData.OPERATION_NUMBER;
 		},
 
 		/**
