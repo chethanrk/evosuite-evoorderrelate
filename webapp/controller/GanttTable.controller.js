@@ -584,7 +584,11 @@ sap.ui.define([
 					obj.SORT_ID = data.SORT_ID;
 					obj.ORDER_NUMBER = data.ORDER_NUMBER;
 					obj.OPERATION_NUMBER = data.OPERATION_NUMBER;
-					this._setDataBasedOnScheduleType(obj, data, aData[iIndex + 1]);
+					if (data.AOB_KEY === "2") {
+						this._setDataBasedOnScheduleType(obj, data, aData[iIndex + 1]);
+					} else if (data.AOB_KEY === "1") {
+						this._setDataBasedOnScheduleType(obj, aData[iIndex + 1], data);
+					}
 					iIndex++;
 				}.bind(this));
 				resolve();
@@ -598,15 +602,15 @@ sap.ui.define([
 		 * @param {oNetworkData} next operation detail
 		 */
 		_setDataBasedOnScheduleType: function (oNewOprData, oOprData, oNetworkData) {
-			oNewOprData.SUC_OBJECT_KEY = oOprData.AOB_KEY === "2" ? oOprData.ObjectKey : oNetworkData.ObjectKey;
-			oNewOprData.SUC_SORT_ID = oOprData.AOB_KEY === "2" ? oOprData.SORT_ID : oNetworkData.SORT_ID;
-			oNewOprData.SUC_ORDER_NUMBER = oOprData.AOB_KEY === "2" ? oOprData.ORDER_NUMBER : oNetworkData.ORDER_NUMBER;
-			oNewOprData.SUC_OPERATION_NUMBER = oOprData.AOB_KEY === "2" ? oOprData.OPERATION_NUMBER : oNetworkData.OPERATION_NUMBER;
+			oNewOprData.SUC_OBJECT_KEY = oOprData.ObjectKey;
+			oNewOprData.SUC_SORT_ID = oOprData.SORT_ID;
+			oNewOprData.SUC_ORDER_NUMBER = oOprData.ORDER_NUMBER;
+			oNewOprData.SUC_OPERATION_NUMBER = oOprData.OPERATION_NUMBER;
 
-			oNewOprData.PRE_OBJECT_KEY = oOprData.AOB_KEY === "2" ? oNetworkData.ObjectKey : oOprData.ObjectKey;
-			oNewOprData.PRE_SORT_ID = oOprData.AOB_KEY === "2" ? oNetworkData.SORT_ID : oOprData.SORT_ID;
-			oNewOprData.PRE_ORDER_NUMBER = oOprData.AOB_KEY === "2" ? oNetworkData.ORDER_NUMBER : oOprData.ORDER_NUMBER;
-			oNewOprData.PRE_OPERATION_NUMBER = oOprData.AOB_KEY === "2" ? oNetworkData.OPERATION_NUMBER : oOprData.OPERATION_NUMBER;
+			oNewOprData.PRE_OBJECT_KEY = oNetworkData.ObjectKey;
+			oNewOprData.PRE_SORT_ID = oNetworkData.SORT_ID;
+			oNewOprData.PRE_ORDER_NUMBER = oNetworkData.ORDER_NUMBER;
+			oNewOprData.PRE_OPERATION_NUMBER = oNetworkData.OPERATION_NUMBER;
 		},
 
 		/**
