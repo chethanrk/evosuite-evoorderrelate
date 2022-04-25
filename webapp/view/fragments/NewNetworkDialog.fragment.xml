@@ -10,6 +10,14 @@
 				</smartForm:layout>
 				<smartForm:Group>
 					<smartForm:GroupElement>
+						<smartField:SmartField value="{NETWORK_DESCRIPTION}" entitySet="WONetworkHeaderSet" showLabel="true" editable="true"
+							maxLength="{path: '/#WONetworkHeader/NETWORK_DESCRIPTION/@maxLength', formatter:'.formatter.getIntMaxLength'}">
+							<smartField:configuration>
+								<smartField:Configuration controlType="input" displayBehaviour="descriptionAndId" preventInitialDataFetchInValueHelpDialog="false"/>
+							</smartField:configuration>
+						</smartField:SmartField>
+					</smartForm:GroupElement>
+					<smartForm:GroupElement>
 						<smartField:SmartField id="idNewNetworkOrderNumber" value="{ORDER_NUMBER}" entitySet="WONetworkHeaderSet" change="onChangeOrderNumber"
 							showLabel="true" editable="true" mandatory="true">
 							<smartField:configuration>
