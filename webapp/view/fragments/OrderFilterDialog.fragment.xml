@@ -2,7 +2,7 @@
 	<Dialog id="idOrderFilterDialog" title="{i18n>tit.orderFilter}" draggable="true" class="sapUiTinyMargin" contentWidth="100%">
 		<content>
 			<smartFilterBar:SmartFilterBar id="idOrderFilterBar" entitySet="OrderOperationsSet" useDateRangeType="true"
-				persistencyKey="com.evorait.evosuite.evoorderrelate.OrderFilterBar">
+				persistencyKey="com.evorait.evosuite.evoorderrelate.OrderFilterBar" liveMode="true">
 				<smartFilterBar:layoutData>
 					<core:ExtensionPoint name="FilterExtP|OrderTableFilter|OrderOperationsSet|LayoutData"/>
 				</smartFilterBar:layoutData>
