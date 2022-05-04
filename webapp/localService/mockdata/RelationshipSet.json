@@ -1,0 +1,35 @@
+{
+	"d": {
+		"results": [{
+			"ObjectKey": "00005",
+			"HeaderObjectKey": "0001",
+			"predecessor": "0001",
+			"successor": "0002",
+			"type": "FinishToStart"
+		}, {
+			"ObjectKey": "00001",
+			"HeaderObjectKey": "0002",
+			"predecessor": "0002",
+			"successor": "0003",
+			"type": "FinishToFinish"
+		}, {
+			"ObjectKey": "00002",
+			"HeaderObjectKey": "0003",
+			"predecessor": "0003",
+			"successor": "0004",
+			"type": "FinishToStart"
+		}, {
+			"ObjectKey": "00003",
+			"HeaderObjectKey": "0004",
+			"predecessor": "0004",
+			"successor": "0005",
+			"type": "FinishToStart"
+		}, {
+			"ObjectKey": "00004",
+			"HeaderObjectKey": "0005",
+			"predecessor": "0005",
+			"successor": "0006",
+			"type": "StartToStart"
+		}]
+	}
+}

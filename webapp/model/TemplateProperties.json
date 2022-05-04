@@ -1,0 +1,7 @@
+{
+	"GanttConfigs": {
+		"tab": "WONetworkOperations",
+		"entitySet": "WONetworkOperationsSet",
+		"headerEntitySet":"WONetworkHeaderSet"
+	}
+}

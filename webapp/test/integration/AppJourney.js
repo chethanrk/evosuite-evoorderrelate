@@ -1,6 +1,6 @@
 sap.ui.require([
 	"sap/ui/test/opaQunit",
-	"com/evorait/evosuite/evomanagedepend/test/integration/pages/App"
+	"com/evorait/evosuite/evoorderrelate/test/integration/pages/App"
 ], function (opaTest) {
 	"use strict";
 

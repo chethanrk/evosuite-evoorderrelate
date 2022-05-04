@@ -1,11 +1,21 @@
-<mvc:View controllerName="com.evorait.evosuite.evomanagedepend.controller.App" xmlns:mvc="sap.ui.core.mvc" displayBlock="true" xmlns="sap.m">
-	<Shell id="shell">
-		<App id="app">
-			<pages>
-				<Page id="page" title="{i18n>title}" titleAlignment="Center">
-					<content></content>
-				</Page>
-			</pages>
-		</App>
-	</Shell>
+<mvc:View controllerName="com.evorait.evosuite.evoorderrelate.controller.App" xmlns:mvc="sap.ui.core.mvc" displayBlock="true" xmlns="sap.m">
+	<App id="app" busy="{viewModel>/busy}" busyIndicatorDelay="{viewModel>/delay}">
+		<Page>
+			<customHeader>
+				<Bar>
+					<contentLeft></contentLeft>
+					<contentMiddle>
+						<Title level="H1" text="{i18n>appTitle}"/>
+					</contentMiddle>
+					<contentRight>
+						<Button id="idBtnMessageManager" icon="sap-icon://alert" text="{= ${message>/}.length }" type="Emphasized" press="onMessageManagerPress"/>
+						<Button id="idBtnAbout" icon="sap-icon://sys-help" press="onIconPress" tooltip="{i18n>tit.infoDialogTitle}"/>
+					</contentRight>
+				</Bar>
+			</customHeader>
+			<content>
+				<NavContainer id="appPanel"/>
+			</content>
+		</Page>
+	</App>
 </mvc:View>

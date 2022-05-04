@@ -5,7 +5,7 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<title>EvoNotify Order Overview</title>
+	<title>EvoManage Dependency Overview</title>
 
 	<!-- Bootstrap the unified shell in sandbox mode for standalone usage.
 
@@ -37,7 +37,7 @@
 			},
 			applications: {
                 "super-cockpit": {
-                    additionalInformation: "SAPUI5.Component=com.evorait.evosuite.evomanagedepend",
+                    additionalInformation: "SAPUI5.Component=com.evorait.evosuite.evoorderrelate",
                 	applicationType: "URL",
             		url: "../",
                 	description: "Dependencies Overview",
@@ -55,7 +55,7 @@
 			data-sap-ui-libs="sap.m, sap.ui.layout, sap.ushell, sap.ndc"
 			data-sap-ui-theme="sap_belize"
 			data-sap-ui-compatVersion="edge"
-			data-sap-ui-resourceroots='{"com.evorait.evosuite.evomanagedepend": "../"}'
+			data-sap-ui-resourceroots='{"com.evorait.evosuite.evoorderrelate": "../"}'
 			data-sap-ui-frameOptions='allow'> // NON-SECURE setting for testing environment
 	</script>
 
@@ -64,7 +64,7 @@
 		sap.ui.getCore().attachInit(function() {
 
 			sap.ui.require([
-				"com/evorait/evosuite/evomanagedepend/localService/mockserver"
+				"com/evorait/evosuite/evoorderrelate/localService/mockserver"
 			], function (mockserver) {
 				// set up test service for local testing
 				mockserver.init();

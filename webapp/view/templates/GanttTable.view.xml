@@ -1,0 +1,122 @@
+<mvc:View height="100%" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:gantt="sap.gantt.simple"
+	xmlns:axistime="sap.gantt.axistime" xmlns:config="sap.gantt.config" xmlns:shapes="sap.gantt.simple.shapes" xmlns:table="sap.ui.table"
+	xmlns:dnd="sap.ui.core.dnd" controllerName="com.evorait.evosuite.evoorderrelate.controller.GanttTable" xmlns:f="sap.ui.layout.form"
+	xmlns:html="http://www.w3.org/1999/xhtml" xmlns:template="http://schemas.sap.com/sapui5/extension/sap.ui.core.template/1">
+	<template:alias name=".AH" value="sap.ui.model.odata.AnnotationHelper">
+		<template:alias name=".evoAH" value="com.evorait.evosuite.evoorderrelate.model.AnnotationHelper">
+			<template:with path="templateProperties>/" var="tempProps">
+				<Page id="idGanttViewPage" showFooter="false" class="sapUiNoContentPadding" showSubHeader="false" enableScrolling="false">
+					<customHeader>
+						<OverflowToolbar id="idCustomHeaderToolbar">
+							<FlexBox>
+								<core:Fragment fragmentName="com.evorait.evosuite.evoorderrelate.view.fragments.NetworkSelection" type="XML"/>
+							</FlexBox>
+							<Button id="idBtnCreateNewNetwork" text="{i18n>btn.createNewNetwork}" tooltip="{i18n>btn.createNewNetwork}" press="onPressCreateNewNetwork"
+								visible="{= ${user>/ENABLE_NETWORK_CREATE} === 'X'}"/>
+							<core:ExtensionPoint name="PageExtP|GanttTable|WONetworkHeader|CustomHeader|Left"/>
+							<ToolbarSpacer id="idGanttTableToolbarSpacer"/>
+							<Button id="idBtnSave" type="Emphasized" tooltip="{i18n>btn.save}" text="{i18n>btn.save}" press="onPressNetworkSave"
+								enabled="{viewModel>/pendingChanges}"/>
+							<Button id="idBtnCancel" type="Accept" tooltip="{i18n>btn.cancel}" text="{i18n>btn.cancel}" press="onPressNetwokCancel"
+								enabled="{viewModel>/pendingChanges}"/>
+							<Button id="idBtnDeleteNetwork" icon="sap-icon://delete" tooltip="{i18n>btn.delete}" press="onPressNetworkDelete"
+								visible="{= ${user>/ENABLE_NETWORK_DELETE} === 'X'}"/>
+							<core:ExtensionPoint name="PageExtP|GanttTable|WONetworkHeader|CustomHeader|Right"/>
+						</OverflowToolbar>
+					</customHeader>
+					<content>
+						<gantt:GanttChartContainer busy="{viewModel>/gantBusy}" busyIndicatorDelay="{viewModel>/delay}">
+							<gantt:toolbar>
+								<gantt:ContainerToolbar showDisplayTypeButton="true">
+									<gantt:content>
+										<Button id="idBtnTop" tooltip="{i18n>btn.top}" icon="sap-icon://collapse-group" press="onPressTop"/>
+										<Button id="idBtnUp" tooltip="{i18n>btn.up}" icon="sap-icon://navigation-up-arrow" press="onPressUp"/>
+										<Button id="idBtnDown" tooltip="{i18n>btn.down}" icon="sap-icon://navigation-down-arrow" press="onPressDown"/>
+										<Button id="idBtnBottom" tooltip="{i18n>btn.bottom}" icon="sap-icon://expand-group" press="onPressBottom"/>
+										<core:ExtensionPoint name="GanttExtP|GanttTable|WONetworkHeader|GanttToolbar"/>
+									</gantt:content>
+								</gantt:ContainerToolbar>
+							</gantt:toolbar>
+							<gantt:GanttChartWithTable id="gantt" shapeSelectionMode="Single" selectionPanelSize="40%">
+								<gantt:axisTimeStrategy>
+									<axistime:StepwiseZoomStrategy id="idOrderRelatePlanGanttZoom" zoomLevels="3">
+										<axistime:totalHorizon>
+											<config:TimeHorizon id="idOrderRelatePlanGanttTimeHorizon" startTime="{viewModel>/gantt/defaultStartDate}"
+												endTime="{viewModel>/gantt/defaultEndDate}"/>
+										</axistime:totalHorizon>
+									</axistime:StepwiseZoomStrategy>
+								</gantt:axisTimeStrategy>
+								<gantt:table>
+									<table:Table id="idTableGanttTable" selectionMode="Single" rows="{path:'ganttModel>/NetworkHeaderToOperations/results'}"
+										visibleRowCountMode="Auto" selectionBehavior="RowOnly" fixedRowCount="1" rowActionCount="1" rowSelectionChange="onGanttRowSelectionChange">
+										<template:with path="tempProps>/GanttConfigs/" var="tabItem">
+											<table:columns>
+												<template:repeat list="{path:'tabItem>lineItems/'}" var="lineItem">
+													<template:if test="{= ${path : 'lineItem>Value/Path'} === 'RELATION_TYPE' }">
+														<template:then>
+															<table:Column width="20%">
+																<Text text="{= '{/' + ${tabItem>entitySet} + '/' + ${lineItem>Value/Path} + '/##com.sap.vocabularies.Common.v1.Label/String}' }"/>
+																<table:template>
+																	<FlexBox fitContainer="true">
+																		<Select forceSelection="false" width="20%" items="{path:'/SHRelTypeSet', templateShareable: true}"
+																			visible="{parts:['ganttModel>SORT_ID','viewModel>/GanttRowCount'],formatter:'.formatter.handleRelationshipDropDownVisibility'}"
+																			change="onChangeType" selectedKey="{= '{ganttModel>' + ${path : 'lineItem>Value/Path'} + '}' }">
+																			<items>
+																				<core:Item key="{AOBKT}" text="{AOBKT}"/>
+																			</items>
+																		</Select>
+																	</FlexBox>
+																</table:template>
+															</table:Column>
+														</template:then>
+														<template:else>
+															<table:Column>
+																<Text text=" {='{/' + ${tabItem>entitySet} + '/' + ${lineItem>Value/Path} + '/##com.sap.vocabularies.Common.v1.Label/String}' }"/>
+																<table:template>
+																	<Text text="{= '{ganttModel>' + ${path : 'lineItem>Value/Path'} + '}' }"/>
+																</table:template>
+															</table:Column>
+														</template:else>
+													</template:if>
+												</template:repeat>
+											</table:columns>
+											<table:rowSettingsTemplate>
+												<gantt:GanttRowSettings rowId="{ganttModel>ObjectKey}"
+													relationships="{path:'ganttModel>NetworkOperationsToGantt/results', templateShareable: 'true'}">
+													<gantt:shapes1>
+														<gantt:BaseRectangle shapeId="{ganttModel>ObjectKey}"
+															time="{parts:['ganttModel>EARLIEST_START_DATE','ganttModel>EARLIEST_START_TIME'],formatter:'.formatter.mergeDateTime'}"
+															endTime="{parts:['ganttModel>EARLIEST_END_DATE','ganttModel>EARLIEST_END_TIME'],formatter:'.formatter.mergeDateTime'}" fill="#0092D1"
+															hoverable="true" connectable="true"/>
+													</gantt:shapes1>
+													<gantt:relationships>
+														<gantt:Relationship shapeId="{ganttModel>ObjectKey}" predecessor="{ganttModel>SUC_OBJECT_KEY}" successor="{ganttModel>PRE_OBJECT_KEY}"
+															type="{path:'ganttModel>REL_KEY',formatter:'.formatter.getRelationType'}"/>
+													</gantt:relationships>
+												</gantt:GanttRowSettings>
+											</table:rowSettingsTemplate>
+											<table:dragDropConfig>
+												<dnd:DropInfo groupName="OrderOperation" targetAggregation="rows" dropPosition="Between" drop="onDropGanttTableFromOperation"/>
+												<dnd:DragDropInfo sourceAggregation="rows" targetAggregation="rows" dropPosition="Between" dragStart="onGanttTableDragStart"
+													drop="onDropGanttTable" dragEnter="onDragEnter"/>
+											</table:dragDropConfig>
+											<table:rowActionTemplate>
+												<table:RowAction>
+													<table:items>
+														<table:RowActionItem type="Custom" icon="sap-icon://delete" tooltip="{i18n>btn.delete}"
+															visible="{parts:['ganttModel>SORT_ID','ganttModel>ALLOW_DELETE'],formatter:'.formatter.deleteNetworkOperation'}"
+															press="onPressDeleteDependency"/>
+													</table:items>
+												</table:RowAction>
+											</table:rowActionTemplate>
+										</template:with>
+									</table:Table>
+								</gantt:table>
+							</gantt:GanttChartWithTable>
+						</gantt:GanttChartContainer>
+					</content>
+				</Page>
+			</template:with>
+		</template:alias>
+	</template:alias>
+</mvc:View>

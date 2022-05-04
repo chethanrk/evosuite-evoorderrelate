@@ -1,0 +1,4 @@
+<core:FragmentDefinition xmlns="sap.ui.comp.valuehelpdialog" xmlns:core="sap.ui.core">
+	<ValueHelpDialog title="{i18n>lbl.networks}" ok=".onNetworkValueHelpOkPress" cancel=".onNetworkValueHelpCancelPress"
+		afterClose=".onNetworkValueHelpAfterClose" supportMultiselect="false"></ValueHelpDialog>
+</core:FragmentDefinition>

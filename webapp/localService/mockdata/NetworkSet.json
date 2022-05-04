@@ -1,0 +1,29 @@
+{
+	"d": {
+		"results": [{
+			"__metadata": {
+				"id": "https://eq1.evorait.net:50103/sap/opu/odata/EVORA/EO_MAIN_SRV/NetworkSet('827963_0010')",
+				"uri": "https://eq1.evorait.net:50103/sap/opu/odata/EVORA/EO_MAIN_SRV/NetworkSet('827963_0010')",
+				"type": "com.evorait.evoorder.Network"
+			},
+			"NETWORK_ID": "827963_0010",
+			"ORDER_NUMBER": "827963"
+		},{
+			"__metadata": {
+				"id": "https://eq1.evorait.net:50103/sap/opu/odata/EVORA/EO_MAIN_SRV/NetworkSet('827963_0010')",
+				"uri": "https://eq1.evorait.net:50103/sap/opu/odata/EVORA/EO_MAIN_SRV/NetworkSet('827963_0010')",
+				"type": "com.evorait.evoorder.Network"
+			},
+			"NETWORK_ID": "827964_0010",
+			"ORDER_NUMBER": "827964"
+		},{
+			"__metadata": {
+				"id": "https://eq1.evorait.net:50103/sap/opu/odata/EVORA/EO_MAIN_SRV/NetworkSet('827963_0010')",
+				"uri": "https://eq1.evorait.net:50103/sap/opu/odata/EVORA/EO_MAIN_SRV/NetworkSet('827963_0010')",
+				"type": "com.evorait.evoorder.Network"
+			},
+			"NETWORK_ID": "827965_0010",
+			"ORDER_NUMBER": "827965"
+		}]
+	}
+}

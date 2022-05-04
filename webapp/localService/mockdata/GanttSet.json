@@ -1,0 +1,226 @@
+{
+	"d": {
+		"results": [{
+			"__metadata": {
+				"id": "https://eq1.evorait.net:50103/sap/opu/odata/EVORA/EO_MAIN_SRV/GanttSet('0001')",
+				"uri": "https://eq1.evorait.net:50103/sap/opu/odata/EVORA/EO_MAIN_SRV/GanttSet('0001')",
+				"type": "com.evorait.evoorder.WOHeader"
+			},
+			"ObjectKey": "0001",
+			"SORTID": "001",
+			"ORDER_NUMBER": "827963",
+			"NETWORK_ID": "827963_0010",
+			"OPERATION_NUMBER": "0010",
+			"TYPE": "FS",
+			"TYPE_DESCRIPTION": "FinishToStart",
+			"ASSIGNMENT": "OPEN",
+			"SCHEDULE_TYPE": "Successer",
+			"START_DATE": "/Date(1463011200000)/",
+			"END_DATE": "/Date(1502668800000)/",
+			"GanttToRelationship": {
+				"__deferred": {
+					"uri": "https://eq1.evorait.net:50103/sap/opu/odata/EVORA/EO_MAIN_SRV/GanttSet('0001')/GanttToRelationship"
+				}
+			}
+
+		}, {
+			"__metadata": {
+				"id": "https://eq1.evorait.net:50103/sap/opu/odata/EVORA/EO_MAIN_SRV/GanttSet('0002')",
+				"uri": "https://eq1.evorait.net:50103/sap/opu/odata/EVORA/EO_MAIN_SRV/GanttSet('0002')",
+				"type": "com.evorait.evoorder.WOHeader"
+			},
+			"ObjectKey": "0002",
+			"SORTID": "002",
+			"ORDER_NUMBER": "827964",
+			"NETWORK_ID": "827963_0010",
+			"OPERATION_NUMBER": "0020",
+			"TYPE": "FF",
+			"TYPE_DESCRIPTION": "FinishToFinish",
+			"ASSIGNMENT": "OPEN",
+			"SCHEDULE_TYPE": "Successor",
+			"START_DATE": "/Date(1467011200000)/",
+			"END_DATE": "/Date(1473011200000)/",
+			"GanttToRelationship": {
+				"__deferred": {
+					"uri": "https://eq1.evorait.net:50103/sap/opu/odata/EVORA/EO_MAIN_SRV/GanttSet('0002')/GanttToRelationship"
+				}
+			}
+		}, {
+			"__metadata": {
+				"id": "https://eq1.evorait.net:50103/sap/opu/odata/EVORA/EO_MAIN_SRV/GanttSet('0003')",
+				"uri": "https://eq1.evorait.net:50103/sap/opu/odata/EVORA/EO_MAIN_SRV/GanttSet('0003')",
+				"type": "com.evorait.evoorder.WOHeader"
+			},
+			"ObjectKey": "0003",
+			"SORTID": "003",
+			"ORDER_NUMBER": "827965",
+			"NETWORK_ID": "827963_0010",
+			"OPERATION_NUMBER": "0030",
+			"TYPE": "FS",
+			"TYPE_DESCRIPTION": "FinishToStart",
+			"ASSIGNMENT": "OPEN",
+			"SCHEDULE_TYPE": "Successor",
+			"START_DATE": "/Date(1469011200000)/",
+			"END_DATE": "/Date(1471000200000)/",
+			"GanttToRelationship": {
+				"__deferred": {
+					"uri": "https://eq1.evorait.net:50103/sap/opu/odata/EVORA/EO_MAIN_SRV/GanttSet('0003')/GanttToRelationship"
+				}
+			}
+		}, {
+			"__metadata": {
+				"id": "https://eq1.evorait.net:50103/sap/opu/odata/EVORA/EO_MAIN_SRV/GanttSet('0004')",
+				"uri": "https://eq1.evorait.net:50103/sap/opu/odata/EVORA/EO_MAIN_SRV/GanttSet('0004')",
+				"type": "com.evorait.evoorder.WOHeader"
+			},
+			"ObjectKey": "0004",
+			"SORTID": "004",
+			"ORDER_NUMBER": "827965",
+			"NETWORK_ID": "827963_0010",
+			"OPERATION_NUMBER": "0040",
+			"TYPE": "FS",
+			"TYPE_DESCRIPTION": "FinishToStart",
+			"ASSIGNMENT": "OPEN",
+			"SCHEDULE_TYPE": "Successor",
+			"START_DATE": "/Date(1464015200000)/",
+			"END_DATE": "/Date(1460011000000)/",
+			"GanttToRelationship": {
+				"__deferred": {
+					"uri": "https://eq1.evorait.net:50103/sap/opu/odata/EVORA/EO_MAIN_SRV/GanttSet('0004')/GanttToRelationship"
+				}
+			}
+		}, {
+			"__metadata": {
+				"id": "https://eq1.evorait.net:50103/sap/opu/odata/EVORA/EO_MAIN_SRV/GanttSet('0005')",
+				"uri": "https://eq1.evorait.net:50103/sap/opu/odata/EVORA/EO_MAIN_SRV/GanttSet('0005')",
+				"type": "com.evorait.evoorder.WOHeader"
+			},
+			"ObjectKey": "0005",
+			"SORTID": "005",
+			"ORDER_NUMBER": "827965",
+			"NETWORK_ID": "827963_0010",
+			"OPERATION_NUMBER": "0050",
+			"TYPE": "SS",
+			"TYPE_DESCRIPTION": "StartToStart",
+			"ASSIGNMENT": "OPEN",
+			"SCHEDULE_TYPE": "Successor",
+			"START_DATE": "/Date(1465016200000)/",
+			"END_DATE": "/Date(1461668800000)/",
+			"GanttToRelationship": {
+				"__deferred": {
+					"uri": "https://eq1.evorait.net:50103/sap/opu/odata/EVORA/EO_MAIN_SRV/GanttSet('0005')/GanttToRelationship"
+				}
+			}
+		}, {
+			"__metadata": {
+				"id": "https://eq1.evorait.net:50103/sap/opu/odata/EVORA/EO_MAIN_SRV/GanttSet('0006')",
+				"uri": "https://eq1.evorait.net:50103/sap/opu/odata/EVORA/EO_MAIN_SRV/GanttSet('0006')",
+				"type": "com.evorait.evoorder.WOHeader"
+			},
+			"ObjectKey": "0006",
+			"SORTID": "006",
+			"ORDER_NUMBER": "827966",
+			"NETWORK_ID": "827963_0010",
+			"OPERATION_NUMBER": "0060",
+			"TYPE": "SS",
+			"TYPE_DESCRIPTION": "StartToStart",
+			"ASSIGNMENT": "OPEN",
+			"SCHEDULE_TYPE": "Successor",
+			"START_DATE": "/Date(1466017200000)/",
+			"END_DATE": "/Date(1461008800000)/",
+			"GanttToRelationship": {
+				"__deferred": {
+					"uri": "https://eq1.evorait.net:50103/sap/opu/odata/EVORA/EO_MAIN_SRV/GanttSet('0006')/GanttToRelationship"
+				}
+			}
+		}, {
+			"__metadata": {
+				"id": "https://eq1.evorait.net:50103/sap/opu/odata/EVORA/EO_MAIN_SRV/GanttSet('0007')",
+				"uri": "https://eq1.evorait.net:50103/sap/opu/odata/EVORA/EO_MAIN_SRV/GanttSet('0007')",
+				"type": "com.evorait.evoorder.WOHeader"
+			},
+			"ObjectKey": "0007",
+			"SORTID": "001",
+			"ORDER_NUMBER": "827964",
+			"NETWORK_ID": "827964_0010",
+			"OPERATION_NUMBER": "0010",
+			"TYPE": "FS",
+			"TYPE_DESCRIPTION": "FinishToStart",
+			"ASSIGNMENT": "OPEN",
+			"SCHEDULE_TYPE": "Successor",
+			"START_DATE": "/Date(1467018200000)/",
+			"END_DATE": "/Date(1473011200000)/",
+			"GanttToRelationship": {
+				"__deferred": {
+					"uri": "https://eq1.evorait.net:50103/sap/opu/odata/EVORA/EO_MAIN_SRV/GanttSet('0007')/GanttToRelationship"
+				}
+			}
+		}, {
+			"__metadata": {
+				"id": "https://eq1.evorait.net:50103/sap/opu/odata/EVORA/EO_MAIN_SRV/GanttSet('0008')",
+				"uri": "https://eq1.evorait.net:50103/sap/opu/odata/EVORA/EO_MAIN_SRV/GanttSet('0008')",
+				"type": "com.evorait.evoorder.WOHeader"
+			},
+			"ObjectKey": "0008",
+			"SORTID": "002",
+			"ORDER_NUMBER": "827965",
+			"NETWORK_ID": "827964_0010",
+			"OPERATION_NUMBER": "0030",
+			"TYPE": "FS",
+			"TYPE_DESCRIPTION": "FinishToStart",
+			"ASSIGNMENT": "OPEN",
+			"SCHEDULE_TYPE": "Successor",
+			"START_DATE": "/Date(1468019200000)/",
+			"END_DATE": "/Date(1471000200000)/",
+			"GanttToRelationship": {
+				"__deferred": {
+					"uri": "https://eq1.evorait.net:50103/sap/opu/odata/EVORA/EO_MAIN_SRV/GanttSet('0008')/GanttToRelationship"
+				}
+			}
+		}, {
+			"__metadata": {
+				"id": "https://eq1.evorait.net:50103/sap/opu/odata/EVORA/EO_MAIN_SRV/GanttSet('0009')",
+				"uri": "https://eq1.evorait.net:50103/sap/opu/odata/EVORA/EO_MAIN_SRV/GanttSet('0009')",
+				"type": "com.evorait.evoorder.WOHeader"
+			},
+			"ObjectKey": "0009",
+			"SORTID": "001",
+			"ORDER_NUMBER": "827965",
+			"NETWORK_ID": "827965_0010",
+			"OPERATION_NUMBER": "0010",
+			"TYPE": "FS",
+			"TYPE_DESCRIPTION": "FinishToStart",
+			"ASSIGNMENT": "OPEN",
+			"SCHEDULE_TYPE": "Successor",
+			"START_DATE": "/Date(1469019600000)/",
+			"END_DATE": "/Date(1460011000000)/",
+			"GanttToRelationship": {
+				"__deferred": {
+					"uri": "https://eq1.evorait.net:50103/sap/opu/odata/EVORA/EO_MAIN_SRV/GanttSet('0009')/GanttToRelationship"
+				}
+			}
+		}, {
+			"__metadata": {
+				"id": "https://eq1.evorait.net:50103/sap/opu/odata/EVORA/EO_MAIN_SRV/GanttSet('0010')",
+				"uri": "https://eq1.evorait.net:50103/sap/opu/odata/EVORA/EO_MAIN_SRV/GanttSet('0010')",
+				"type": "com.evorait.evoorder.WOHeader"
+			},
+			"ObjectKey": "0010",
+			"SORTID": "002",
+			"ORDER_NUMBER": "827965",
+			"NETWORK_ID": "827965_0010",
+			"OPERATION_NUMBER": "0010",
+			"TYPE": "SS",
+			"TYPE_DESCRIPTION": "StartToStart",
+			"ASSIGNMENT": "OPEN",
+			"SCHEDULE_TYPE": "Successor",
+			"START_DATE": "/Date(1471019800000)/",
+			"END_DATE": "/Date(1461668800000)/",
+			"GanttToRelationship": {
+				"__deferred": {
+					"uri": "https://eq1.evorait.net:50103/sap/opu/odata/EVORA/EO_MAIN_SRV/GanttSet('0010')/GanttToRelationship"
+				}
+			}
+		}]
+	}
+}

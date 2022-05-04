@@ -3,7 +3,7 @@ sap.ui.define([
 ], function (Opa5) {
 	"use strict";
 
-	return Opa5.extend("com.evorait.evosuite.evomanagedepend.test.integration.arrangements.Startup", {
+	return Opa5.extend("com.evorait.evosuite.evoorderrelate.test.integration.arrangements.Startup", {
 
 		iStartMyApp: function (oOptionsParameter) {
 			var oOptions = oOptionsParameter || {};
@@ -14,7 +14,7 @@ sap.ui.define([
 			// start the app UI component
 			this.iStartMyUIComponent({
 				componentConfig: {
-					name: "com.evorait.evosuite.evomanagedepend",
+					name: "com.evorait.evosuite.evoorderrelate",
 					async: true
 				},
 				hash: oOptions.hash,

@@ -1,6 +1,6 @@
 sap.ui.define([
 	"sap/ui/test/Opa5",
-	"com/evorait/evosuite/evomanagedepend/test/integration/pages/Common"
+	"com/evorait/evosuite/evoorderrelate/test/integration/pages/Common"
 ], function (Opa5, Common) {
 	"use strict";
 

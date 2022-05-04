@@ -16,6 +16,7 @@
 				<Property Name="HeaderObjectKey" Type="Edm.String" MaxLength="65" sap:label="Object Key" sap:creatable="false" sap:updatable="false"/>
 				<Property Name="ORDER_NUMBER" Type="Edm.String" MaxLength="12" sap:label="Order" sap:creatable="false" sap:updatable="false"
 					sap:is-extension-field="true"/>
+				<Property Name="OPERATION_NUMBER" Type="Edm.String" MaxLength="10" sap:label="Operation" sap:updatable="false" sap:is-extension-field="true"/>
 				<Property Name="ORDER_TYPE" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="Order Type" sap:updatable="false"
 					sap:is-extension-field="true"/>
 				<Property Name="ORDER_TYPE_DESCRIPTION" Type="Edm.String" MaxLength="40" sap:label="Short Text" sap:is-extension-field="true"/>
@@ -25,9 +26,113 @@
 				<Property Name="WORKCENTRE_DESCRIPTION" Type="Edm.String" MaxLength="40" sap:label="Short Description" sap:creatable="false"
 					sap:updatable="false" sap:is-extension-field="true"/>
 			</EntityType>
+			<EntityType Name="Gantt" sap:content-version="1">
+				<Key>
+					<PropertyRef Name="ObjectKey"/>
+				</Key>
+				<Property Name="ObjectKey" Type="Edm.String" Nullable="false" MaxLength="65" sap:label="Object Key" sap:creatable="false"
+					sap:updatable="false"/>
+				<Property Name="SORTID" Type="Edm.String" Nullable="false" MaxLength="4" sap:label="Sort Id" sap:creatable="false" sap:updatable="false"/>
+				<Property Name="NETWORK_ID" Type="Edm.String" MaxLength="10" sap:label="NETWORK ID" sap:creatable="true" sap:updatable="false"
+					sap:is-extension-field="true"/>
+				<Property Name="ORDER_NUMBER" Type="Edm.String" MaxLength="10" sap:label="Order" sap:creatable="false" sap:updatable="false"
+					sap:is-extension-field="true"/>
+				<Property Name="OPERATION_NUMBER" Type="Edm.String" MaxLength="10" sap:label="Operation" sap:updatable="false" sap:is-extension-field="true"/>
+				<Property Name="TYPE" Type="Edm.String" MaxLength="5" sap:label="Type" sap:updatable="true" sap:is-extension-field="true"/>
+				<Property Name="TYPE_DESCRIPTION" Type="Edm.String" MaxLength="15" sap:label="Type" sap:updatable="true" sap:is-extension-field="true"/>
+				<Property Name="ASSIGNMENT" Type="Edm.String" MaxLength="5" sap:label="Assignment" sap:updatable="true" sap:is-extension-field="true"/>
+				<Property Name="SCHEDULE_TYPE" Type="Edm.String" MaxLength="10" sap:label="Schedule" sap:updatable="true" sap:is-extension-field="true"/>
+				<Property Name="START_DATE" Type="Edm.DateTime" Precision="7" sap:label="Start Date" sap:creatable="false" sap:updatable="true"
+					sap:sortable="false" sap:filterable="false"/>
+				<Property Name="END_DATE" Type="Edm.DateTime" Precision="7" sap:label="End Date" sap:creatable="false" sap:updatable="true"
+					sap:sortable="false" sap:filterable="false"/>
+				<NavigationProperty Name="GanttToRelationship" Relationship="com.evorait.evoorder.GanttToRelationship"
+					FromRole="FromRole_GanttToRelationship" ToRole="ToRole_GanttToRelationship"/>
+			</EntityType>
+			<EntityType Name="Relationship" sap:content-version="1">
+				<Key>
+					<PropertyRef Name="ObjectKey"/>
+				</Key>
+				<Property Name="ObjectKey" Type="Edm.String" MaxLength="15" sap:label="ObjectKey" sap:updatable="false" sap:is-extension-field="true"/>
+				<Property Name="HeaderObjectKey" Type="Edm.String" MaxLength="15" sap:label="Header ObjectKey" sap:updatable="false"
+					sap:is-extension-field="true"/>
+				<Property Name="predecessor" Type="Edm.String" MaxLength="15" sap:label="predecessor" sap:updatable="false" sap:is-extension-field="true"/>
+				<Property Name="successor" Type="Edm.String" MaxLength="15" sap:label="successor" sap:updatable="false" sap:is-extension-field="true"/>
+				<Property Name="type" Type="Edm.String" MaxLength="15" sap:label="type" sap:updatable="false" sap:is-extension-field="true"/>
+			</EntityType>
+			<EntityType Name="Type" sap:content-version="1">
+				<Key>
+					<PropertyRef Name="TYPE"/>
+				</Key>
+				<Property Name="TYPE" Type="Edm.String" MaxLength="5" sap:label="Postion" sap:updatable="false" sap:is-extension-field="true"/>
+				<Property Name="TYPE_DESCRIPTION" Type="Edm.String" MaxLength="15" sap:label="Postion" sap:updatable="false" sap:is-extension-field="true"/>
+			</EntityType>
+			<EntityType Name="Network" sap:content-version="1">
+				<Key>
+					<PropertyRef Name="NETWORK_ID"/>
+				</Key>
+				<Property Name="NETWORK_ID" Type="Edm.String" MaxLength="15" sap:label="Network Id" sap:updatable="false" sap:is-extension-field="true"/>
+				<Property Name="ORDER_NUMBER" Type="Edm.String" MaxLength="10" sap:label="Order" sap:updatable="false" sap:is-extension-field="true"/>
+				<Property Name="OPERATION_NUMBER" Type="Edm.String" MaxLength="10" sap:label="Operation" sap:updatable="false" sap:is-extension-field="true"/>
+				<Property Name="COUNTER" Type="Edm.String" MaxLength="3" sap:label="Counter" sap:updatable="false" sap:is-extension-field="true"/>
+			</EntityType>
+			<EntityType Name="SHOrderNumber" sap:content-version="1">
+				<Key>
+					<PropertyRef Name="AUFNR"/>
+				</Key>
+				<Property Name="AUFNR" Type="Edm.String" Nullable="false" MaxLength="12" sap:label="Order"/>
+				<Property Name="AUART" Type="Edm.String" Nullable="false" MaxLength="4" sap:label="Order Type"/>
+				<Property Name="KTEXT" Type="Edm.String" Nullable="false" MaxLength="40" sap:label="Description"/>
+				<Property Name="WERKS" Type="Edm.String" Nullable="false" MaxLength="4" sap:label="Plant"/>
+				<Property Name="ERNAM" Type="Edm.String" Nullable="false" MaxLength="12" sap:label="Entered by"/>
+				<Property Name="ERDAT" Type="Edm.DateTime" Nullable="false" Precision="7" sap:label="Created on"/>
+			</EntityType>
+			<EntityType Name="SystemInformation" sap:content-version="1">
+				<Key>
+					<PropertyRef Name="Username"/>
+				</Key>
+				<Property Name="Username" Type="Edm.String" Nullable="false" MaxLength="12" sap:label="User Name"/>
+				<Property Name="PersNo" Type="Edm.String" Nullable="false" MaxLength="8" sap:label="Personnel No."/>
+				<Property Name="Firstname" Type="Edm.String" Nullable="false" MaxLength="40" sap:label="First name"/>
+				<Property Name="Lastname" Type="Edm.String" Nullable="false" MaxLength="40" sap:label="Last name"/>
+				<Property Name="Fullname" Type="Edm.String" Nullable="false" MaxLength="80" sap:label="Full Name"/>
+				<Property Name="ServerPath" Type="Edm.String" Nullable="false" sap:label="Server path"/>
+				<Property Name="CoreVersion" Type="Edm.String" Nullable="false" sap:label="Core version"/>
+				<Property Name="Client" Type="Edm.String" Nullable="false" MaxLength="3" sap:label="Client"/>
+				<Property Name="Systemid" Type="Edm.String" Nullable="false" MaxLength="8" sap:label="SAP System ID"/>
+				<Property Name="UserProfile" Type="Edm.String" Nullable="false" MaxLength="20" sap:label="User Profile"/>
+				<Property Name="EnableCreateNetwork" Type="Edm.String" Nullable="false" MaxLength="1" sap:label="Enable IAM"/>
+			</EntityType>
 			<EntityContainer Name="com_evorait_evoorder_Entities" m:IsDefaultEntityContainer="true" sap:supported-formats="atom json xlsx">
 				<EntitySet Name="WOHeaderSet" EntityType="com.evorait.evoorder.WOHeader" sap:content-version="1"/>
+				<EntitySet Name="GanttSet" EntityType="com.evorait.evoorder.Gantt" sap:content-version="1"/>
+				<EntitySet Name="TypeSet" EntityType="com.evorait.evoorder.Type" sap:content-version="1"/>
+				<EntitySet Name="NetworkSet" EntityType="com.evorait.evoorder.Network" sap:content-version="1"/>
+				<EntitySet Name="RelationshipSet" EntityType="com.evorait.evoorder.Relationship" sap:content-version="1"/>
+				<EntitySet Name="SystemInformationSet" EntityType="com.evorait.evoorder.SystemInformation" sap:content-version="1"/>
+				<EntitySet Name="SHOrderNumberSet" EntityType="com.evorait.evoorder.SHOrderNumber" sap:content-version="1"/>
+				<Association Name="GanttToRelationship" sap:content-version="1">
+					<End Type="com.evorait.evoorder.Gantt" Multiplicity="1" Role="FromRole_GanttToRelationship"/>
+					<End Type="com.evorait.evoorder.Relationship" Multiplicity="*" Role="ToRole_GanttToRelationship"/>
+					<ReferentialConstraint>
+						<Principal Role="FromRole_GanttToRelationship">
+							<PropertyRef Name="ObjectKey"/>
+						</Principal>
+						<Dependent Role="ToRole_GanttToRelationship">
+							<PropertyRef Name="HeaderObjectKey"/>
+						</Dependent>
+					</ReferentialConstraint>
+				</Association>
+				<FunctionImport Name="CheckIfNetworkExists" EntitySet="NetworkSet" m:HttpMethod="GET">
+					<Parameter Name="ORDER_NUMBER" Type="Edm.String" Mode="In"/>
+					<Parameter Name="OPERATION_NUMBER" Type="Edm.String" Mode="In"/>
+				</FunctionImport>
 			</EntityContainer>
+			<AssociationSet Name="GanttToRelationshipSet" Association="com.evorait.evoorder.GanttToRelationship" sap:creatable="false"
+				sap:updatable="false" sap:deletable="false" sap:content-version="1">
+				<End EntitySet="GanttSet" Role="FromRole_GanttToRelationship"/>
+				<End EntitySet="RelationshipSet" Role="ToRole_GanttToRelationship"/>
+			</AssociationSet>
 		</Schema>
 	</edmx:DataServices>
 </edmx:Edmx>
