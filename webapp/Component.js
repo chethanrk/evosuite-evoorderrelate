@@ -60,8 +60,12 @@ sap.ui.define([
 				pendingChanges: false,
 				networkKey: null,
 				gantt: {
-					defaultStartDate: moment().startOf("month").subtract(1, "months").toDate(),
-					defaultEndDate: moment().endOf("month").add(1, "months").toDate()
+					defaultStartDate: moment().startOf("month").subtract(2, "months").toDate(),
+					defaultEndDate: moment().endOf("month").add(2, "months").toDate()
+				},
+				visibleHorizon: {
+					visibleStartDate: moment().toDate(),
+					visibleEndDate: moment().toDate()
 				},
 				draggedData: null
 			};
