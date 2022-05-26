@@ -1,3 +1,4 @@
+/* globals moment */
 sap.ui.define([
 	"com/evorait/evosuite/evoorderrelate/controller/BaseController",
 	"sap/ui/core/Fragment",
@@ -496,6 +497,7 @@ sap.ui.define([
 				this.oBackupData = deepClone(oResult);
 				this.oUpdatedBackupData = deepClone(oResult);
 				this.refreshGanttModel(oResult);
+				this._setGanttTimeHorizon();
 				this.oViewModel.setProperty("/gantBusy", false);
 			}.bind(this), function (error) {
 				this.oBackupData = null;
@@ -649,6 +651,40 @@ sap.ui.define([
 		 */
 		_saveErrorFn: function () {
 
+		},
+
+		/**
+		 * To adjust gantt time horizon of gantt control
+		 */
+		_setGanttTimeHorizon: function () {
+			var oData = this.getModel("ganttModel").getData(),
+				oStartDate = this.oViewModel.getProperty("/visibleHorizon/visibleStartDate"),
+				sEndDate;
+
+			if (oData.NetworkHeaderToOperations && oData.NetworkHeaderToOperations.results && oData.NetworkHeaderToOperations.results.length) {
+				var oOpeartions = oData.NetworkHeaderToOperations.results;
+				oOpeartions.forEach(function (opr) {
+					if (oStartDate.getTime() > opr.EARLIEST_START_DATE.getTime()) {
+						oStartDate = opr.EARLIEST_START_DATE;
+					}
+				});
+
+				var date = moment(oStartDate);
+				oStartDate = date.startOf("day").subtract(1, "day").toDate();
+				sEndDate = date.endOf("day").add(1, "months").toDate();
+
+				var oAxisTimeStrategy = this.getView().byId("idOrderRelatePlanGanttZoom");
+				//Setting VisibleHorizon for Gantt for supporting Patch Versions (1.71.35)
+				if (oAxisTimeStrategy) {
+					oAxisTimeStrategy.setVisibleHorizon(new sap.gantt.config.TimeHorizon({
+						startTime: oStartDate,
+						endTime: sEndDate
+					}));
+				} else {
+					this.oViewModel.setProperty("/ganttSettings/visibleStartTime", oStartDate);
+					this.oViewModel.setProperty("/ganttSettings/visibleEndTime", sEndDate);
+				}
+			}
 		}
 	});
 });

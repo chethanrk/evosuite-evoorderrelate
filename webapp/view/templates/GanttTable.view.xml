@@ -44,6 +44,9 @@
 											<config:TimeHorizon id="idOrderRelatePlanGanttTimeHorizon" startTime="{viewModel>/gantt/defaultStartDate}"
 												endTime="{viewModel>/gantt/defaultEndDate}"/>
 										</axistime:totalHorizon>
+										<axistime:visibleHorizon>
+											<config:TimeHorizon startTime="{viewModel>/visibleHorizon/visibleStartDate}" endTime="{viewModel>/visibleHorizon/visibleEndDate}"/>
+										</axistime:visibleHorizon>
 									</axistime:StepwiseZoomStrategy>
 								</gantt:axisTimeStrategy>
 								<gantt:table>
