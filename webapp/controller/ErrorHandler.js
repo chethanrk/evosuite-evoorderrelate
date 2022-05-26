@@ -46,6 +46,13 @@ sap.ui.define([
 					this._showServiceError(oParams.response);
 				}
 			}, this);
+
+			this._oModel.attachBatchRequestCompleted(function (oEvent) {
+				var oParams = oEvent.getParameters();
+				if (oParams.success) {
+					this._oComponent.createMessages();
+				}
+			}, this);
 		},
 
 		/**

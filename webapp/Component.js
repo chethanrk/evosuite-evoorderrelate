@@ -46,6 +46,9 @@ sap.ui.define([
 
 			this.setModel(models.createMessageManagerModel(), "messageManager");
 
+			//Creating the Global message model for MessageManager
+			this.setModel(models.createMessageModel(), "message");
+
 			this.MessageManager = new MessageManager();
 
 			this.NewNetworkDialog = new NewNetworkDialog();
@@ -71,8 +74,6 @@ sap.ui.define([
 			this._getSystemInformation();
 
 			this._getTemplateProps();
-
-			this.setModel(oMessageManager.getMessageModel(), "message");
 
 			// enable routing
 			//this.getRouter().initialize();
@@ -257,6 +258,23 @@ sap.ui.define([
 					}
 				});
 			}.bind(this));
+		},
+
+		/**
+		 * Adds messages from MessageModel to local message model
+		 */
+		createMessages: function () {
+			var aMessages = [];
+			var oMessageModel = sap.ui.getCore().getMessageManager().getMessageModel();
+			var oData = oMessageModel.getData();
+
+			if (oData.length === 0) {
+				return;
+			}
+			for (var i = 0; i < oData.length; i++) {
+				aMessages.push(oData[i]);
+			}
+			this.getModel("message").setData(aMessages);
 		}
 	});
 });
