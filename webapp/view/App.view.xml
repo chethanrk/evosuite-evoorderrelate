@@ -3,9 +3,11 @@
 		<Page>
 			<customHeader>
 				<Bar>
-					<contentLeft></contentLeft>
+					<contentLeft>
+						<Image src="{viewModel>/logoUrl}" densityAware="false" height="30px" alt="EvoOrderRelate" id="idEvoOrderRelateImageLogo"/>
+					</contentLeft>
 					<contentMiddle>
-						<Title level="H1" text="{i18n>appTitle}"/>
+						<!--<Title level="H1" text="{i18n>appTitle}"/>-->
 					</contentMiddle>
 					<contentRight>
 						<Button id="idBtnMessageManager" icon="sap-icon://alert" text="{= ${message>/}.length }" type="Emphasized" press="onMessageManagerPress"/>

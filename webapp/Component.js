@@ -70,7 +70,9 @@ sap.ui.define([
 					visibleStartDate: moment().toDate(),
 					visibleEndDate: moment().toDate()
 				},
-				draggedData: null
+				draggedData: null,
+				logoUrl: sap.ui.require.toUrl("com/evorait/evosuite/evoorderrelate/assets/img/EvoOrderRelate.png")
+
 			};
 			this.setModel(models.createHelperModel(viewModelObj), "viewModel");
 			this.setModel(models.createGanttModel(), "ganttModel");
