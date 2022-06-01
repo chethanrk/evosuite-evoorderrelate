@@ -74,6 +74,9 @@ sap.ui.define([
 				//Bind table and filters
 				this._bindVHDTableWithSet(mCustomData, this._oNetworkSelectionDialog, aValueListParameter);
 
+				//Bind selected filters to dialog
+				this._bindPredefinedFilterValue(this._oNetworkSelectionDialog, "CREATED_BY");
+
 				this._oNetworkSelectionDialog.open();
 			}.bind(this));
 
@@ -205,9 +208,20 @@ sap.ui.define([
 				control: new sap.m.Input({
 					name: sValueListProperty,
 					enabled: true,
+					liveChange: sValueListProperty === "CREATED_BY" ? this._onLiveChange.bind(this, true) : this._onLiveChange.bind(this, false),
 					submit: this.onPressCustomFilterSubmit.bind(this)
 				})
 			});
+		},
+
+		/**
+		 * live change functionality for the created by 
+		 */
+		_onLiveChange: function (bContinue, oEvent) {
+			var oSource = oEvent.getSource();
+			if (bContinue) {
+				oSource.setValue(oSource.getValue().toUpperCase());
+			}
 		},
 
 		/**
@@ -307,19 +321,31 @@ sap.ui.define([
 		 * @param sProperty - property name
 		 */
 		_setFilterItemToDefaultValues: function (aFilterItems, sProperty) {
-			var oSmartFilterBar = this._oFilterBarLocation;
 			aFilterItems.forEach(function (aItem) {
-				var sFilterItem = aItem;
+				var sFilterItem = aItem,
+					oControl = sFilterItem.getControl(),
+					sUser = this._oView.getModel("user").getProperty("/Username");
 				//Set already selcted values & disable filter selection inside VHD
-				if (sFilterItem.getControl().getName() !== sProperty) {
-					var oCustomControl = oSmartFilterBar.getControlByKey(sFilterItem.getControl().getName());
-					if (oCustomControl.data().property) {
-						if (oCustomControl instanceof sap.m.Input && oCustomControl.getValue() !== "") {
-							sFilterItem.getControl().setValue([oCustomControl.getValue()]);
-						}
+				if (oControl.getName() === sProperty) {
+					if (oControl instanceof sap.m.Input && sUser) {
+						oControl.setValue(sUser);
 					}
 				}
 			}.bind(this));
+		},
+
+		/*
+		 * Bind selected filter values to the Custom filterbar 
+		 * @param {object} oFrag - value help dialog reference
+		 * @param {string} sProperty - Selected Property 
+		 */
+		_bindPredefinedFilterValue: function (oFrag, sProperty) {
+			var aFilterItems = [];
+			aFilterItems = oFrag.getFilterBar().getFilterGroupItems();
+			this._setFilterItemToDefaultValues(aFilterItems, sProperty);
+
+			//Trigger serach based on preselected values
+			oFrag.getFilterBar().fireSearch();
 		}
 	});
 });
