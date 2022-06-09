@@ -577,7 +577,7 @@ sap.ui.define([
 					}
 
 					data.REL_KEY = data.REL_KEY ? data.REL_KEY : this.getModel("user").getProperty("/DEFAULT_RELATION_KEY");
-					data.RELATION_TYPE = data.RELATION_TYPE ? data.RELATION_TYPE : "FS";
+					data.RELATION_TYPE = data.RELATION_TYPE ? data.RELATION_TYPE : this.getModel("user").getProperty("/DEFAULT_RELATION_TYPE");
 					obj.REL_KEY = data.REL_KEY;
 
 					obj.ObjectKey = data.ObjectKey;
