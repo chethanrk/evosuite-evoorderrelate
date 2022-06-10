@@ -1,39 +1,23 @@
-
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html>
-
-<head>
-	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link href="assets/img/favIcon.ico" rel="shortcut icon" type="image/x-icon" />
-
-	<title>EvoOrderRelate</title>
-
-	<script id="sap-ui-bootstrap"
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    	<link href="assets/img/favIcon.ico" rel="shortcut icon" type="image/x-icon" />
+	    
+		<title>EvoOrderRelate</title>
+		<script id="sap-ui-bootstrap"
 			src="https://sapui5.hana.ondemand.com/1.71.36/resources/sap-ui-core.js"
-			data-sap-ui-libs="sap.m, sap.ui.layout, sap.uxap"
 			data-sap-ui-theme="sap_fiori_3"
+			data-sap-ui-resourceroots='{"com.evorait.evosuite.evoorderrelate": "./"}'
 			data-sap-ui-compatVersion="edge"
-			data-sap-ui-xx-bindingSyntax="complex"
-			data-sap-ui-bindingSyntax="complex"
-			data-sap-ui-resourceroots='{"com.evorait.evosuite.evoorderrelate": "./"}'>
-	</script>
-
-	<script>
-        sap.ui.getCore().attachInit(function() {
-            new sap.m.Shell({
-                app: new sap.ui.core.ComponentContainer({
-                    height : "100%",
-                    name : "com.evorait.evosuite.evoorderrelate",
-                    async: true
-                })
-            }).placeAt("content");
-        });
-	</script>
-</head>
-
-<body class="sapUiBody" id="content">
-</body>
-
+			data-sap-ui-oninit="module:sap/ui/core/ComponentSupport"
+			data-sap-ui-async="true"
+			data-sap-ui-frameOptions="trusted">
+		</script>
+	</head>
+	<body class="sapUiBody">
+		<div data-sap-ui-component data-name="com.evorait.evosuite.evoorderrelate" data-id="container" data-settings='{"id" : "evoorderrelate"}'></div>
+	</body>
 </html>
