@@ -328,10 +328,11 @@ sap.ui.define([
 						obj.SORT_ID = "";
 						obj.NETWORK_KEY = oRowDroppedData.NETWORK_KEY;
 						obj.SCHEDULE_TYPE = oRowDroppedData.SCHEDULE_TYPE;
+						obj.AOB_KEY = oRowDroppedData.AOB_KEY;
 						obj.NetworkOperationsToGantt = {
 							"results": []
 						};
-						oDataPrepared.push(obj);
+						oDataPrepared.push(deepClone(obj));
 					}.bind(this));
 
 					resolve(oDataPrepared);

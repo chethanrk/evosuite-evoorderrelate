@@ -550,11 +550,13 @@ sap.ui.define([
 			}.bind(this));
 
 			//update sequesnce with relationship
-			this._updateRelationshipSequence(oData).then(function () {
+			this._updateRelationshipSequence(oData).then(function (formattedData) {
 				this.oViewModel.setProperty("/GanttRowCount", oData.length);
 
+				var modelData = this.oGanttModel.getData();
+				modelData.NetworkHeaderToOperations = formattedData;
 				//sort/delete code
-				this.validateNetworkOperations(this.oGanttModel.getData());
+				this.validateNetworkOperations(modelData);
 			}.bind(this));
 		},
 
@@ -565,7 +567,8 @@ sap.ui.define([
 		 */
 		_updateRelationshipSequence: function (aData) {
 			return new Promise(function (resolve) {
-				var iIndex = 0;
+				var iIndex = 0,
+					newArray = [];
 				aData.forEach(function (data) {
 					data.NetworkOperationsToGantt.results[0] = {};
 					var obj = data.NetworkOperationsToGantt.results[0];
@@ -573,6 +576,7 @@ sap.ui.define([
 					if (iIndex === aData.length - 1) {
 						data.REL_KEY = "";
 						data.RELATION_TYPE = "";
+						newArray.push(deepClone(data));
 						return;
 					}
 
@@ -592,8 +596,9 @@ sap.ui.define([
 						this._setDataBasedOnScheduleType(obj, aData[iIndex + 1], data);
 					}
 					iIndex++;
+					newArray.push(deepClone(data));
 				}.bind(this));
-				resolve();
+				resolve(newArray);
 			}.bind(this));
 		},
 
