@@ -179,18 +179,15 @@ sap.ui.define([
 		 * then App2App navigation happened and this app shoul show a detail page
 		 */
 		_getStartupParamFilter: function () {
-			var sKey1 = this.getLinkParameterByName(Constants.PROPERTY.EVOORDERRELATE[0]),
-				sKey2 = this.getLinkParameterByName(Constants.PROPERTY.EVOORDERRELATE[1]),
-				sKey3 = this.getLinkParameterByName(Constants.PROPERTY.EVOORDERRELATE[2]);
+			var sKey = this.getLinkParameterByName(Constants.PROPERTY.EVOORDREL);
+				
 
-			if (sKey1 && sKey2 && sKey3) {
+			if (sKey) {
 				return {
 					entitySet: "WONetworkHeaderSet",
 					filter: new Filter({
 						filters: [
-							new Filter(Constants.PROPERTY.EVOORDERRELATE[0], FilterOperator.EQ, sKey1),
-							new Filter(Constants.PROPERTY.EVOORDERRELATE[1], FilterOperator.EQ, sKey2),
-							new Filter(Constants.PROPERTY.EVOORDERRELATE[2], FilterOperator.EQ, sKey3)
+							new Filter(Constants.PROPERTY.EVOORDREL, FilterOperator.EQ, sKey)
 						],
 						and: true
 					})
