@@ -1,91 +1,244 @@
 <edmx:Edmx xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx"
 	xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns:sap="http://www.sap.com/Protocols/SAPData" Version="1.0">
 	<edmx:Reference xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx"
+		Uri="https://ed1.evorait.net:50103/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_COMMON',Version='0001',SAP__Origin='LOCAL')/$value">
+		<edmx:Include Namespace="com.sap.vocabularies.Common.v1"/>
+	</edmx:Reference>
+	<edmx:Reference xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx"
+		Uri="https://ed1.evorait.net:50103/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_CORE',Version='0001',SAP__Origin='LOCAL')/$value">
+		<edmx:Include Namespace="Org.OData.Core.V1"/>
+	</edmx:Reference>
+	<edmx:Reference xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx"
+		Uri="https://ed1.evorait.net:50103/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_COMMUNICATION',Version='0001',SAP__Origin='LOCAL')/$value">
+		<edmx:Include Namespace="com.sap.vocabularies.Communication.v1"/>
+	</edmx:Reference>
+	<edmx:Reference xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx"
+		Uri="https://ed1.evorait.net:50103/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_TIMELINE',Version='0001',SAP__Origin='LOCAL')/$value">
+		<edmx:Include Namespace="com.sap.vocabularies.Timeline.v1"/>
+	</edmx:Reference>
+	<edmx:Reference xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx"
 		Uri="https://ed1.evorait.net:50103/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_UI',Version='0001',SAP__Origin='LOCAL')/$value">
+		<edmx:Include Namespace="com.sap.vocabularies.UI.v1"/>
 		<edmx:Include Namespace="com.sap.vocabularies.UI.v1" Alias="UI"/>
 		<edmx:Include Namespace="com.sap.vocabularies.Common.v1" Alias="COMMON"/>
 	</edmx:Reference>
 	<edmx:DataServices m:DataServiceVersion="2.0">
-		<Schema xmlns="http://schemas.microsoft.com/ado/2008/09/edm" Namespace="com.evorait.evoorder" xml:lang="en" sap:schema-version="1">
-			<EntityType Name="WOHeader" sap:content-version="1">
+		<Schema xmlns="http://schemas.microsoft.com/ado/2008/09/edm" Namespace="com.evorait.evoorderrelate" xml:lang="en" sap:schema-version="1">
+			<EntityType Name="OrderOperations" sap:content-version="1">
 				<Key>
 					<PropertyRef Name="ObjectKey"/>
 				</Key>
-				<Property Name="ObjectKey" Type="Edm.String" Nullable="false" MaxLength="65" sap:label="Object Key" sap:creatable="false"
+				<Property Name="ObjectKey" Type="Edm.String" Nullable="false" MaxLength="200" sap:label="Object Key"/>
+				<Property Name="HeaderObjectKey" Type="Edm.String" Nullable="false" MaxLength="200" sap:label="Object Key" sap:creatable="false"
 					sap:updatable="false"/>
-				<Property Name="HeaderObjectKey" Type="Edm.String" MaxLength="65" sap:label="Object Key" sap:creatable="false" sap:updatable="false"/>
 				<Property Name="ORDER_NUMBER" Type="Edm.String" MaxLength="12" sap:label="Order" sap:creatable="false" sap:updatable="false"
 					sap:is-extension-field="true"/>
-				<Property Name="OPERATION_NUMBER" Type="Edm.String" MaxLength="10" sap:label="Operation" sap:updatable="false" sap:is-extension-field="true"/>
-				<Property Name="ORDER_TYPE" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="Order Type" sap:updatable="false"
+				<Property Name="OPERATION_NUMBER" Type="Edm.String" MaxLength="4" sap:label="Activity" sap:creatable="false" sap:updatable="false"
 					sap:is-extension-field="true"/>
-				<Property Name="ORDER_TYPE_DESCRIPTION" Type="Edm.String" MaxLength="40" sap:label="Short Text" sap:is-extension-field="true"/>
-				<Property Name="ORDER_DESCRIPTION" Type="Edm.String" MaxLength="40" sap:label="Description" sap:is-extension-field="true"/>
-				<Property Name="PLANT" Type="Edm.String" MaxLength="4" sap:label="Plant" sap:is-extension-field="true"/>
-				<Property Name="WORKCENTRE" Type="Edm.String" MaxLength="8" sap:label="Work center" sap:is-extension-field="true"/>
-				<Property Name="WORKCENTRE_DESCRIPTION" Type="Edm.String" MaxLength="40" sap:label="Short Description" sap:creatable="false"
+				<Property Name="OPERATION_DESCRIPTION" Type="Edm.String" MaxLength="40" sap:label="Opr. short text" sap:is-extension-field="true"/>
+				<Property Name="WORKCENTER" Type="Edm.String" MaxLength="8" sap:label="Work center" sap:creatable="false" sap:updatable="false"
+					sap:is-extension-field="true"/>
+				<Property Name="FUNCTIONAL_LOCATION" Type="Edm.String" MaxLength="40" sap:label="Functional Loc." sap:creatable="false"
 					sap:updatable="false" sap:is-extension-field="true"/>
+				<Property Name="EQUIPMENT_NUMBER" Type="Edm.String" MaxLength="18" sap:label="Equipment" sap:creatable="false" sap:updatable="false"
+					sap:is-extension-field="true"/>
+				<Property Name="OBJECT_NUMBER" Type="Edm.String" MaxLength="22" sap:label="Object number" sap:creatable="false" sap:updatable="false"
+					sap:is-extension-field="true"/>
+				<Property Name="MAINTENANCE_PLANNING_PLANT" Type="Edm.String" MaxLength="4" sap:label="Planning plant" sap:creatable="false"
+					sap:updatable="false" sap:is-extension-field="true"/>
+				<Property Name="ACTIVITY_TYPE" Type="Edm.String" MaxLength="6" sap:label="Activity Type" sap:creatable="false" sap:updatable="false"
+					sap:is-extension-field="true"/>
+				<Property Name="UNIT_OF_WORK" Type="Edm.String" MaxLength="3" sap:label="Unit for work" sap:is-extension-field="true"
+					sap:semantics="unit-of-measure"/>
+				<Property Name="BASIC_START_DATE" Type="Edm.DateTime" Precision="0" sap:label="Bas. start date" sap:creatable="false" sap:updatable="false"
+					sap:is-extension-field="true"/>
+				<Property Name="BASIC_FINISH_DATE" Type="Edm.DateTime" Precision="0" sap:label="Basic fin. date" sap:creatable="false" sap:updatable="false"
+					sap:is-extension-field="true"/>
+				<Property Name="EARLIEST_START_DATE" Type="Edm.DateTime" Precision="0" sap:label="Earl.start date" sap:is-extension-field="true"/>
+				<Property Name="EARLIEST_START_TIME" Type="Edm.Time" Precision="0" sap:label="Earl.start time" sap:is-extension-field="true"/>
+				<Property Name="EARLIEST_END_DATE" Type="Edm.DateTime" Precision="0" sap:label="EarliestEndDate" sap:is-extension-field="true"/>
+				<Property Name="EARLIEST_END_TIME" Type="Edm.Time" Precision="0" sap:label="Earliest finish" sap:is-extension-field="true"/>
+				<Property Name="LATEST_START_DATE" Type="Edm.DateTime" Precision="0" sap:label="Latest start" sap:is-extension-field="true"/>
+				<Property Name="LATEST_START_TIME" Type="Edm.Time" Precision="0" sap:label="Lat. start time" sap:is-extension-field="true"/>
+				<Property Name="LATEST_FINISH_DATE" Type="Edm.DateTime" Precision="0" sap:label="Lat.finish date" sap:is-extension-field="true"/>
+				<Property Name="LATEST_FINISH_TIME" Type="Edm.Time" Precision="0" sap:label="Latest fin.time" sap:is-extension-field="true"/>
+				<Property Name="ACTUAL_START_DATE" Type="Edm.DateTime" Precision="0" sap:label="Actual start" sap:is-extension-field="true"/>
+				<Property Name="ACTUAL_START_TIME" Type="Edm.Time" Precision="0" sap:label="Act. Start Time" sap:is-extension-field="true"/>
+				<Property Name="ACTUAL_FINISH_DATE" Type="Edm.DateTime" Precision="0" sap:label="Act.finish date" sap:is-extension-field="true"/>
+				<Property Name="ACTUAL_FINISH_TIME" Type="Edm.Time" Precision="0" sap:label="Actual finish" sap:is-extension-field="true"/>
+				<Property Name="ORDER_OBJECT_NUMBER" Type="Edm.String" MaxLength="22" sap:label="Object number" sap:creatable="false" sap:updatable="false"
+					sap:is-extension-field="true"/>
+				<Property Name="ROUTING_NUMBER" Type="Edm.String" MaxLength="10" sap:label="Plan no.f.oper." sap:is-extension-field="true"/>
+				<Property Name="OPERATION_COUNTER" Type="Edm.String" MaxLength="8" sap:label="Counter" sap:is-extension-field="true"/>
+				<Property Name="ORDER_STATUS_PROFILE" Type="Edm.String" MaxLength="8" sap:label="Status Profile" sap:is-extension-field="true"/>
+				<Property Name="ORDER_SYSTEM_STATUS" Type="Edm.String" MaxLength="255" sap:label="System Status" sap:creatable="false" sap:updatable="false"
+					sap:filterable="false" sap:is-extension-field="true"/>
+				<Property Name="ORDER_TYPE" Type="Edm.String" MaxLength="4" sap:label="Order Type" sap:is-extension-field="true"/>
+				<Property Name="PHASE" Type="Edm.String" MaxLength="1" sap:label="Phase" sap:is-extension-field="true"/>
 			</EntityType>
-			<EntityType Name="Gantt" sap:content-version="1">
+			<EntityType Name="GanttRelation" sap:content-version="1">
 				<Key>
 					<PropertyRef Name="ObjectKey"/>
 				</Key>
-				<Property Name="ObjectKey" Type="Edm.String" Nullable="false" MaxLength="65" sap:label="Object Key" sap:creatable="false"
+				<Property Name="ObjectKey" Type="Edm.String" Nullable="false" MaxLength="200" sap:label="Object Key" sap:creatable="false"
 					sap:updatable="false"/>
-				<Property Name="SORTID" Type="Edm.String" Nullable="false" MaxLength="4" sap:label="Sort Id" sap:creatable="false" sap:updatable="false"/>
-				<Property Name="NETWORK_ID" Type="Edm.String" MaxLength="10" sap:label="NETWORK ID" sap:creatable="true" sap:updatable="false"
+				<Property Name="HeaderObjectKey" Type="Edm.String" Nullable="false" MaxLength="200" sap:label="Object Key"/>
+				<Property Name="NETWORK_KEY" Type="Edm.String" MaxLength="20" sap:label="Network Key" sap:is-extension-field="true"/>
+				<Property Name="SORT_ID" Type="Edm.String" MaxLength="3" sap:label="Sort ID" sap:is-extension-field="true"/>
+				<Property Name="ORDER_NUMBER" Type="Edm.String" MaxLength="12" sap:label="Order" sap:is-extension-field="true"/>
+				<Property Name="OPERATION_NUMBER" Type="Edm.String" MaxLength="4" sap:label="Activity" sap:is-extension-field="true"/>
+				<Property Name="PRE_SORT_ID" Type="Edm.String" MaxLength="3" sap:label="Sort ID" sap:is-extension-field="true"/>
+				<Property Name="PRE_ORDER_NUMBER" Type="Edm.String" MaxLength="12" sap:label="Order" sap:is-extension-field="true"/>
+				<Property Name="PRE_OPERATION_NUMBER" Type="Edm.String" MaxLength="4" sap:label="Activity" sap:is-extension-field="true"/>
+				<Property Name="PRE_OBJECT_KEY" Type="Edm.String" MaxLength="200" sap:label="Object Key" sap:is-extension-field="true"/>
+				<Property Name="SUC_SORT_ID" Type="Edm.String" MaxLength="3" sap:label="Sort ID" sap:is-extension-field="true"/>
+				<Property Name="SUC_ORDER_NUMBER" Type="Edm.String" MaxLength="12" sap:label="Order" sap:is-extension-field="true"/>
+				<Property Name="SUC_OPERATION_NUMBER" Type="Edm.String" MaxLength="4" sap:label="Activity" sap:is-extension-field="true"/>
+				<Property Name="SUC_OBJECT_KEY" Type="Edm.String" MaxLength="200" sap:label="Object Key" sap:is-extension-field="true"/>
+				<Property Name="RELATION_PRE" Type="Edm.String" MaxLength="2" sap:label="Version Number Component" sap:is-extension-field="true"/>
+				<Property Name="RELATION_KEY_PRE" Type="Edm.String" MaxLength="1" sap:label="Rel. key" sap:is-extension-field="true"/>
+				<Property Name="RELATION_SUC" Type="Edm.String" MaxLength="3" sap:label="3-Byte field" sap:is-extension-field="true"/>
+				<Property Name="RELATION_KEY_SUC" Type="Edm.String" MaxLength="1" sap:label="Rel. key" sap:is-extension-field="true"/>
+				<Property Name="PRE_TIME_INTERVAL" Type="Edm.Decimal" Precision="5" Scale="1" sap:unit="PRE_TIME_UNIT" sap:label="Time Interval"
 					sap:is-extension-field="true"/>
-				<Property Name="ORDER_NUMBER" Type="Edm.String" MaxLength="10" sap:label="Order" sap:creatable="false" sap:updatable="false"
+				<Property Name="PRE_TIME_UNIT" Type="Edm.String" MaxLength="3" sap:label="Rel. unit" sap:is-extension-field="true"
+					sap:semantics="unit-of-measure"/>
+				<Property Name="SUC_TIME_INTERVAL" Type="Edm.Decimal" Precision="5" Scale="1" sap:unit="SUC_TIME_UNIT" sap:label="Time Interval"
 					sap:is-extension-field="true"/>
-				<Property Name="OPERATION_NUMBER" Type="Edm.String" MaxLength="10" sap:label="Operation" sap:updatable="false" sap:is-extension-field="true"/>
-				<Property Name="TYPE" Type="Edm.String" MaxLength="5" sap:label="Type" sap:updatable="true" sap:is-extension-field="true"/>
-				<Property Name="TYPE_DESCRIPTION" Type="Edm.String" MaxLength="15" sap:label="Type" sap:updatable="true" sap:is-extension-field="true"/>
-				<Property Name="ASSIGNMENT" Type="Edm.String" MaxLength="5" sap:label="Assignment" sap:updatable="true" sap:is-extension-field="true"/>
-				<Property Name="SCHEDULE_TYPE" Type="Edm.String" MaxLength="10" sap:label="Schedule" sap:updatable="true" sap:is-extension-field="true"/>
-				<Property Name="START_DATE" Type="Edm.DateTime" Precision="7" sap:label="Start Date" sap:creatable="false" sap:updatable="true"
-					sap:sortable="false" sap:filterable="false"/>
-				<Property Name="END_DATE" Type="Edm.DateTime" Precision="7" sap:label="End Date" sap:creatable="false" sap:updatable="true"
-					sap:sortable="false" sap:filterable="false"/>
-				<NavigationProperty Name="GanttToRelationship" Relationship="com.evorait.evoorder.GanttToRelationship"
-					FromRole="FromRole_GanttToRelationship" ToRole="ToRole_GanttToRelationship"/>
+				<Property Name="SUC_TIME_UNIT" Type="Edm.String" MaxLength="3" sap:label="Rel. unit" sap:is-extension-field="true"
+					sap:semantics="unit-of-measure"/>
+				<Property Name="REL_SORT_ID" Type="Edm.String" MaxLength="3" sap:label="Sort ID" sap:is-extension-field="true"/>
+				<Property Name="REL_ORDER_NUMBER" Type="Edm.String" MaxLength="12" sap:label="Order" sap:is-extension-field="true"/>
+				<Property Name="REL_OPERATION_NUMBER" Type="Edm.String" MaxLength="4" sap:label="Activity" sap:is-extension-field="true"/>
+				<Property Name="REL_OBJECT_KEY" Type="Edm.String" MaxLength="200" sap:label="Object Key" sap:is-extension-field="true"/>
+				<Property Name="REL_KEY" Type="Edm.String" MaxLength="1" sap:label="Rel. key" sap:is-extension-field="true"/>
+				<Property Name="REL_KEY_TEXT" Type="Edm.String" MaxLength="2" sap:label="Version Number Component" sap:is-extension-field="true"/>
 			</EntityType>
-			<EntityType Name="Relationship" sap:content-version="1">
+			<EntityType Name="SHRelType" sap:content-version="1">
+				<Key>
+					<PropertyRef Name="AOBKY"/>
+					<PropertyRef Name="AOBTX"/>
+				</Key>
+				<Property Name="AOBKY" Type="Edm.String" Nullable="false" MaxLength="1" sap:label="Rel. key"/>
+				<Property Name="AOBTX" Type="Edm.String" Nullable="false" MaxLength="20" sap:label="Relations. type"/>
+				<Property Name="AOBKT" Type="Edm.String" Nullable="false" MaxLength="2" sap:label="Rel. type"/>
+			</EntityType>
+			<EntityType Name="WONetworkHeader" sap:content-version="1">
 				<Key>
 					<PropertyRef Name="ObjectKey"/>
 				</Key>
-				<Property Name="ObjectKey" Type="Edm.String" MaxLength="15" sap:label="ObjectKey" sap:updatable="false" sap:is-extension-field="true"/>
-				<Property Name="HeaderObjectKey" Type="Edm.String" MaxLength="15" sap:label="Header ObjectKey" sap:updatable="false"
+				<Property Name="ObjectKey" Type="Edm.String" Nullable="false" MaxLength="200" sap:label="Object Key" sap:creatable="false"
+					sap:updatable="false"/>
+				<Property Name="HeaderObjectKey" Type="Edm.String" Nullable="false" MaxLength="200" sap:label="Object Key" sap:creatable="false"
+					sap:updatable="false"/>
+				<Property Name="NETWORK_KEY" Type="Edm.String" MaxLength="20" sap:label="Network Key" sap:is-extension-field="true"/>
+				<Property Name="ORDER_NUMBER" Type="Edm.String" MaxLength="12" sap:label="Order" sap:is-extension-field="true"/>
+				<Property Name="OPERATION_NUMBER" Type="Edm.String" MaxLength="4" sap:label="Activity" sap:is-extension-field="true"/>
+				<Property Name="NETWORK_DESCRIPTION" Type="Edm.String" MaxLength="40" sap:label="Network Desc" sap:is-extension-field="true"/>
+				<Property Name="NETWORK_COUNTER" Type="Edm.String" MaxLength="2" sap:label="Network Counter" sap:is-extension-field="true"/>
+				<Property Name="VALIDATION_INDICATOR" Type="Edm.Boolean" sap:label="Validation Indicator" sap:is-extension-field="true"/>
+				<Property Name="RELATIONSHIP_VIEW" Type="Edm.String" MaxLength="1" sap:label="Rel. view" sap:is-extension-field="true"/>
+				<Property Name="ALLOW_DELETE" Type="Edm.Boolean" sap:label="Allow Delete" sap:is-extension-field="true"/>
+				<Property Name="DELETE_INDICATOR" Type="Edm.Boolean" sap:label="Delete Indicator" sap:is-extension-field="true"/>
+				<Property Name="NETWORK_PROFILE" Type="Edm.String" MaxLength="7" sap:label="Network profile" sap:is-extension-field="true"/>
+				<NavigationProperty Name="NetworkHeaderToOperations" Relationship="com.evorait.evoorderrelate.NetworkHeaderToOperations"
+					FromRole="FromRole_NetworkHeaderToOperations" ToRole="ToRole_NetworkHeaderToOperations"/>
+			</EntityType>
+			<EntityType Name="WONetworkOperations" sap:content-version="1">
+				<Key>
+					<PropertyRef Name="ObjectKey"/>
+				</Key>
+				<Property Name="ObjectKey" Type="Edm.String" Nullable="false" MaxLength="200" sap:label="Object Key" sap:creatable="false"
+					sap:updatable="false"/>
+				<Property Name="HeaderObjectKey" Type="Edm.String" Nullable="false" MaxLength="200" sap:label="Object Key" sap:creatable="false"
+					sap:updatable="false"/>
+				<Property Name="NETWORK_KEY" Type="Edm.String" MaxLength="20" sap:label="Network Key" sap:updatable="false" sap:is-extension-field="true"/>
+				<Property Name="SORT_ID" Type="Edm.String" MaxLength="3" sap:label="Sort ID" sap:creatable="false" sap:updatable="false"
 					sap:is-extension-field="true"/>
-				<Property Name="predecessor" Type="Edm.String" MaxLength="15" sap:label="predecessor" sap:updatable="false" sap:is-extension-field="true"/>
-				<Property Name="successor" Type="Edm.String" MaxLength="15" sap:label="successor" sap:updatable="false" sap:is-extension-field="true"/>
-				<Property Name="type" Type="Edm.String" MaxLength="15" sap:label="type" sap:updatable="false" sap:is-extension-field="true"/>
+				<Property Name="ROUTING_NUMBER" Type="Edm.String" MaxLength="10" sap:label="Plan no.f.oper." sap:is-extension-field="true"/>
+				<Property Name="ORDER_NUMBER" Type="Edm.String" MaxLength="12" sap:label="Order" sap:creatable="false" sap:updatable="false"
+					sap:is-extension-field="true"/>
+				<Property Name="OPERATION_COUNTER" Type="Edm.String" MaxLength="8" sap:label="Counter" sap:is-extension-field="true"/>
+				<Property Name="OPERATION_NUMBER" Type="Edm.String" MaxLength="4" sap:label="Activity" sap:creatable="false" sap:updatable="false"
+					sap:is-extension-field="true"/>
+				<Property Name="REL_KEY" Type="Edm.String" MaxLength="1" sap:label="Rel. key" sap:is-extension-field="true"/>
+				<Property Name="RELATION_TYPE" Type="Edm.String" MaxLength="5" sap:label="Relation Type" sap:is-extension-field="true"/>
+				<Property Name="SCHEDULE_TYPE" Type="Edm.String" MaxLength="15" sap:label="Schedule Type" sap:creatable="false" sap:updatable="false"
+					sap:is-extension-field="true"/>
+				<Property Name="NETWORK_PROFILE" Type="Edm.String" MaxLength="7" sap:label="Network profile" sap:creatable="false" sap:updatable="false"
+					sap:is-extension-field="true"/>
+				<Property Name="AOB_KEY" Type="Edm.String" MaxLength="1" sap:label="Rel. view" sap:creatable="false" sap:updatable="false"
+					sap:is-extension-field="true"/>
+				<Property Name="ASSIGNMENT_TYPE" Type="Edm.String" MaxLength="4" sap:label="Assignment Type" sap:creatable="false" sap:updatable="false"
+					sap:is-extension-field="true"/>
+				<Property Name="EARLIEST_START_DATE" Type="Edm.DateTime" Precision="0" sap:label="Erl. start/rel." sap:is-extension-field="true"/>
+				<Property Name="EARLIEST_START_TIME" Type="Edm.Time" Precision="0" sap:label="EST / rel." sap:is-extension-field="true"/>
+				<Property Name="EARLIEST_END_DATE" Type="Edm.DateTime" Precision="0" sap:label="Earl. fin./rel." sap:is-extension-field="true"/>
+				<Property Name="EARLIEST_END_TIME" Type="Edm.Time" Precision="0" sap:label="ErlFinTime/Rel." sap:is-extension-field="true"/>
+				<Property Name="LATEST_START_DATE" Type="Edm.DateTime" Precision="0" sap:label="Latest strt-rel" sap:is-extension-field="true"/>
+				<Property Name="LATEST_START_TIME" Type="Edm.Time" Precision="0" sap:label="LST - rel." sap:is-extension-field="true"/>
+				<Property Name="LATEST_FINISH_DATE" Type="Edm.DateTime" Precision="0" sap:label="Latest fin.-rel" sap:is-extension-field="true"/>
+				<Property Name="LATEST_FINISH_TIME" Type="Edm.Time" Precision="0" sap:label="LateFinTime-rel" sap:is-extension-field="true"/>
+				<Property Name="VALIDATION_INDICATOR" Type="Edm.Boolean" sap:label="Assignment Type" sap:is-extension-field="true"/>
+				<Property Name="ALLOW_DELETE" Type="Edm.Boolean" sap:label="Allow Delete" sap:is-extension-field="true"/>
+				<Property Name="ACTIVITY_PREDECESSOR" Type="Edm.String" MaxLength="8" sap:label="Counter" sap:is-extension-field="true"/>
+				<Property Name="ACTIVITY_SUCCESSOR" Type="Edm.String" MaxLength="8" sap:label="Counter" sap:is-extension-field="true"/>
+				<Property Name="NETWORK_PREDECESSOR" Type="Edm.String" MaxLength="10" sap:label="Prdcsr ID no." sap:is-extension-field="true"/>
+				<Property Name="NETWORK_SUCCESSOR" Type="Edm.String" MaxLength="10" sap:label="No. identifying the network to which the successor belongs"
+					sap:is-extension-field="true"/>
+				<Property Name="OPERATION_DESCRIPTION" Type="Edm.String" MaxLength="40" sap:label="Opr. short text" sap:is-extension-field="true"/>
+				<Property Name="AUTO_ADDED" Type="Edm.Boolean" sap:label="X Flag" sap:is-extension-field="true"/>
+				<NavigationProperty Name="NetworkOperationsToGantt" Relationship="com.evorait.evoorderrelate.NetworkOperationsToGantt"
+					FromRole="FromRole_NetworkOperationsToGantt" ToRole="ToRole_NetworkOperationsToGantt"/>
 			</EntityType>
-			<EntityType Name="Type" sap:content-version="1">
+			<EntityType Name="SHNetwork" sap:content-version="1">
 				<Key>
-					<PropertyRef Name="TYPE"/>
+					<PropertyRef Name="NETWORK_KEY"/>
 				</Key>
-				<Property Name="TYPE" Type="Edm.String" MaxLength="5" sap:label="Postion" sap:updatable="false" sap:is-extension-field="true"/>
-				<Property Name="TYPE_DESCRIPTION" Type="Edm.String" MaxLength="15" sap:label="Postion" sap:updatable="false" sap:is-extension-field="true"/>
+				<Property Name="NETWORK_KEY" Type="Edm.String" Nullable="false" MaxLength="20" sap:label="Network Key"/>
+				<Property Name="NETWORK_DESCRIPTION" Type="Edm.String" Nullable="false" MaxLength="40" sap:label="Network Desc"/>
+				<Property Name="CREATED_BY" Type="Edm.String" Nullable="false" MaxLength="12" sap:label="Created by"/>
+				<Property Name="AUFNR" Type="Edm.String" Nullable="false" MaxLength="12" sap:label="Order"/>
 			</EntityType>
-			<EntityType Name="Network" sap:content-version="1">
+			<EntityType Name="SHFunctionalLoc" sap:content-version="1">
 				<Key>
-					<PropertyRef Name="NETWORK_ID"/>
+					<PropertyRef Name="TPLNR"/>
 				</Key>
-				<Property Name="NETWORK_ID" Type="Edm.String" MaxLength="15" sap:label="Network Id" sap:updatable="false" sap:is-extension-field="true"/>
-				<Property Name="ORDER_NUMBER" Type="Edm.String" MaxLength="10" sap:label="Order" sap:updatable="false" sap:is-extension-field="true"/>
-				<Property Name="OPERATION_NUMBER" Type="Edm.String" MaxLength="10" sap:label="Operation" sap:updatable="false" sap:is-extension-field="true"/>
-				<Property Name="COUNTER" Type="Edm.String" MaxLength="3" sap:label="Counter" sap:updatable="false" sap:is-extension-field="true"/>
+				<Property Name="TPLNR" Type="Edm.String" Nullable="false" MaxLength="40" sap:label="Functional loc."/>
+				<Property Name="PLTXT" Type="Edm.String" Nullable="false" MaxLength="40" sap:label="Description"/>
+				<Property Name="IWERK" Type="Edm.String" Nullable="false" MaxLength="4" sap:label="Planning plant"/>
+				<Property Name="ARBPL" Type="Edm.String" Nullable="false" MaxLength="8" sap:label="Work center"/>
+			</EntityType>
+			<EntityType Name="SHEquipment" sap:content-version="1">
+				<Key>
+					<PropertyRef Name="EQUNR"/>
+				</Key>
+				<Property Name="EQUNR" Type="Edm.String" Nullable="false" MaxLength="18" sap:label="Equipment"/>
+				<Property Name="WERK" Type="Edm.String" Nullable="false" MaxLength="4" sap:label="Plant"/>
+				<Property Name="TPLNR" Type="Edm.String" Nullable="false" MaxLength="40" sap:label="Functional loc."/>
+				<Property Name="EQKTX" Type="Edm.String" Nullable="false" MaxLength="40" sap:label="Description"/>
+				<Property Name="ARBPL" Type="Edm.String" Nullable="false" MaxLength="8" sap:label="Work center"/>
 			</EntityType>
 			<EntityType Name="SHOrderNumber" sap:content-version="1">
 				<Key>
 					<PropertyRef Name="AUFNR"/>
 				</Key>
 				<Property Name="AUFNR" Type="Edm.String" Nullable="false" MaxLength="12" sap:label="Order"/>
-				<Property Name="AUART" Type="Edm.String" Nullable="false" MaxLength="4" sap:label="Order Type"/>
 				<Property Name="KTEXT" Type="Edm.String" Nullable="false" MaxLength="40" sap:label="Description"/>
-				<Property Name="WERKS" Type="Edm.String" Nullable="false" MaxLength="4" sap:label="Plant"/>
+				<Property Name="VAPLZ" Type="Edm.String" Nullable="false" MaxLength="8" sap:label="Main WorkCtr"/>
+				<Property Name="TPLNR" Type="Edm.String" Nullable="false" MaxLength="40" sap:label="Functional loc."/>
+				<Property Name="EQUNR" Type="Edm.String" Nullable="false" MaxLength="18" sap:label="Equipment"/>
 				<Property Name="ERNAM" Type="Edm.String" Nullable="false" MaxLength="12" sap:label="Entered by"/>
-				<Property Name="ERDAT" Type="Edm.DateTime" Nullable="false" Precision="7" sap:label="Created on"/>
+				<Property Name="ERDAT" Type="Edm.DateTime" Precision="0" sap:label="Created on"/>
+			</EntityType>
+			<EntityType Name="SHOrderOperation" sap:content-version="1">
+				<Key>
+					<PropertyRef Name="AUFNR"/>
+					<PropertyRef Name="VORNR"/>
+				</Key>
+				<Property Name="AUFNR" Type="Edm.String" Nullable="false" MaxLength="12" sap:label="Order"/>
+				<Property Name="VORNR" Type="Edm.String" Nullable="false" MaxLength="4" sap:label="Activity"/>
+				<Property Name="LTXA1" Type="Edm.String" Nullable="false" MaxLength="40" sap:label="Opr. short text"/>
 			</EntityType>
 			<EntityType Name="SystemInformation" sap:content-version="1">
 				<Key>
@@ -101,38 +254,553 @@
 				<Property Name="Client" Type="Edm.String" Nullable="false" MaxLength="3" sap:label="Client"/>
 				<Property Name="Systemid" Type="Edm.String" Nullable="false" MaxLength="8" sap:label="SAP System ID"/>
 				<Property Name="UserProfile" Type="Edm.String" Nullable="false" MaxLength="20" sap:label="User Profile"/>
-				<Property Name="EnableCreateNetwork" Type="Edm.String" Nullable="false" MaxLength="1" sap:label="Enable IAM"/>
+				<Property Name="ENABLE_NETWORK_CREATE" Type="Edm.String" MaxLength="1" sap:label="Enable IAM" sap:is-extension-field="true"/>
+				<Property Name="ENABLE_NETWORK_EDIT" Type="Edm.String" MaxLength="1" sap:label="Enable Edit" sap:is-extension-field="true"/>
+				<Property Name="ENABLE_NETWORK_DELETE" Type="Edm.String" MaxLength="1" sap:label="Enable Delete" sap:is-extension-field="true"/>
+				<Property Name="DEFAULT_RELATION_KEY" Type="Edm.String" MaxLength="1" sap:label="Rel. key" sap:is-extension-field="true"/>
+				<Property Name="DEFAULT_RELATION_TYPE" Type="Edm.String" MaxLength="2" sap:label="Rel. type" sap:is-extension-field="true"/>
+				<Property Name="AUTH_CREATE_NETWORK" Type="Edm.String" MaxLength="1" sap:label="SAP Auth Create Network" sap:is-extension-field="true"/>
 			</EntityType>
-			<EntityContainer Name="com_evorait_evoorder_Entities" m:IsDefaultEntityContainer="true" sap:supported-formats="atom json xlsx">
-				<EntitySet Name="WOHeaderSet" EntityType="com.evorait.evoorder.WOHeader" sap:content-version="1"/>
-				<EntitySet Name="GanttSet" EntityType="com.evorait.evoorder.Gantt" sap:content-version="1"/>
-				<EntitySet Name="TypeSet" EntityType="com.evorait.evoorder.Type" sap:content-version="1"/>
-				<EntitySet Name="NetworkSet" EntityType="com.evorait.evoorder.Network" sap:content-version="1"/>
-				<EntitySet Name="RelationshipSet" EntityType="com.evorait.evoorder.Relationship" sap:content-version="1"/>
-				<EntitySet Name="SystemInformationSet" EntityType="com.evorait.evoorder.SystemInformation" sap:content-version="1"/>
-				<EntitySet Name="SHOrderNumberSet" EntityType="com.evorait.evoorder.SHOrderNumber" sap:content-version="1"/>
-				<Association Name="GanttToRelationship" sap:content-version="1">
-					<End Type="com.evorait.evoorder.Gantt" Multiplicity="1" Role="FromRole_GanttToRelationship"/>
-					<End Type="com.evorait.evoorder.Relationship" Multiplicity="*" Role="ToRole_GanttToRelationship"/>
-					<ReferentialConstraint>
-						<Principal Role="FromRole_GanttToRelationship">
-							<PropertyRef Name="ObjectKey"/>
-						</Principal>
-						<Dependent Role="ToRole_GanttToRelationship">
-							<PropertyRef Name="HeaderObjectKey"/>
-						</Dependent>
-					</ReferentialConstraint>
-				</Association>
-				<FunctionImport Name="CheckIfNetworkExists" EntitySet="NetworkSet" m:HttpMethod="GET">
-					<Parameter Name="ORDER_NUMBER" Type="Edm.String" Mode="In"/>
-					<Parameter Name="OPERATION_NUMBER" Type="Edm.String" Mode="In"/>
-				</FunctionImport>
+			<EntityType Name="SHWorkCenter" sap:content-version="1">
+				<Key>
+					<PropertyRef Name="WERKS"/>
+					<PropertyRef Name="ARBPL"/>
+				</Key>
+				<Property Name="WERKS" Type="Edm.String" Nullable="false" MaxLength="4" sap:label="Plant"/>
+				<Property Name="ARBPL" Type="Edm.String" Nullable="false" MaxLength="8" sap:label="Work center"/>
+				<Property Name="KTEXT" Type="Edm.String" Nullable="false" MaxLength="40" sap:label="Description"/>
+				<Property Name="OBJID" Type="Edm.String" Nullable="false" MaxLength="8" sap:label="Object ID"/>
+			</EntityType>
+			<EntityType Name="SHPlant" sap:content-version="1">
+				<Key>
+					<PropertyRef Name="WERKS"/>
+				</Key>
+				<Property Name="WERKS" Type="Edm.String" Nullable="false" MaxLength="4" sap:label="Plant"/>
+				<Property Name="NAME1" Type="Edm.String" Nullable="false" MaxLength="30" sap:label="Name 1"/>
+			</EntityType>
+			<Association Name="NetworkOperationsToGantt" sap:content-version="1">
+				<End Type="com.evorait.evoorderrelate.WONetworkOperations" Multiplicity="1" Role="FromRole_NetworkOperationsToGantt"/>
+				<End Type="com.evorait.evoorderrelate.GanttRelation" Multiplicity="*" Role="ToRole_NetworkOperationsToGantt"/>
+				<ReferentialConstraint>
+					<Principal Role="FromRole_NetworkOperationsToGantt">
+						<PropertyRef Name="ObjectKey"/>
+					</Principal>
+					<Dependent Role="ToRole_NetworkOperationsToGantt">
+						<PropertyRef Name="HeaderObjectKey"/>
+					</Dependent>
+				</ReferentialConstraint>
+			</Association>
+			<Association Name="NetworkHeaderToOperations" sap:content-version="1">
+				<End Type="com.evorait.evoorderrelate.WONetworkHeader" Multiplicity="1" Role="FromRole_NetworkHeaderToOperations"/>
+				<End Type="com.evorait.evoorderrelate.WONetworkOperations" Multiplicity="*" Role="ToRole_NetworkHeaderToOperations"/>
+				<ReferentialConstraint>
+					<Principal Role="FromRole_NetworkHeaderToOperations">
+						<PropertyRef Name="ObjectKey"/>
+					</Principal>
+					<Dependent Role="ToRole_NetworkHeaderToOperations">
+						<PropertyRef Name="HeaderObjectKey"/>
+					</Dependent>
+				</ReferentialConstraint>
+			</Association>
+			<EntityContainer Name="com_evorait_evoorderrelate_Entities" m:IsDefaultEntityContainer="true" sap:supported-formats="atom json xlsx">
+				<EntitySet Name="OrderOperationsSet" EntityType="com.evorait.evoorderrelate.OrderOperations" sap:content-version="1"/>
+				<EntitySet Name="GanttRelationSet" EntityType="com.evorait.evoorderrelate.GanttRelation" sap:content-version="1"/>
+				<EntitySet Name="SHRelTypeSet" EntityType="com.evorait.evoorderrelate.SHRelType" sap:content-version="1"/>
+				<EntitySet Name="WONetworkHeaderSet" EntityType="com.evorait.evoorderrelate.WONetworkHeader" sap:content-version="1"/>
+				<EntitySet Name="WONetworkOperationsSet" EntityType="com.evorait.evoorderrelate.WONetworkOperations" sap:content-version="1"/>
+				<EntitySet Name="SHNetworkSet" EntityType="com.evorait.evoorderrelate.SHNetwork" sap:content-version="1"/>
+				<EntitySet Name="SHFunctionalLocSet" EntityType="com.evorait.evoorderrelate.SHFunctionalLoc" sap:content-version="1"/>
+				<EntitySet Name="SHEquipmentSet" EntityType="com.evorait.evoorderrelate.SHEquipment" sap:content-version="1"/>
+				<EntitySet Name="SHOrderNumberSet" EntityType="com.evorait.evoorderrelate.SHOrderNumber" sap:content-version="1"/>
+				<EntitySet Name="SHOrderOperationSet" EntityType="com.evorait.evoorderrelate.SHOrderOperation" sap:content-version="1"/>
+				<EntitySet Name="SystemInformationSet" EntityType="com.evorait.evoorderrelate.SystemInformation" sap:content-version="1"/>
+				<EntitySet Name="SHWorkCenterSet" EntityType="com.evorait.evoorderrelate.SHWorkCenter" sap:content-version="1"/>
+				<EntitySet Name="SHPlantSet" EntityType="com.evorait.evoorderrelate.SHPlant" sap:content-version="1"/>
+				<AssociationSet Name="NetworkOperationsToGanttSet" Association="com.evorait.evoorderrelate.NetworkOperationsToGantt" sap:creatable="false"
+					sap:updatable="false" sap:deletable="false" sap:content-version="1">
+					<End EntitySet="WONetworkOperationsSet" Role="FromRole_NetworkOperationsToGantt"/>
+					<End EntitySet="GanttRelationSet" Role="ToRole_NetworkOperationsToGantt"/>
+				</AssociationSet>
+				<AssociationSet Name="NetworkHeaderToOperationsSet" Association="com.evorait.evoorderrelate.NetworkHeaderToOperations" sap:creatable="false"
+					sap:updatable="false" sap:deletable="false" sap:content-version="1">
+					<End EntitySet="WONetworkHeaderSet" Role="FromRole_NetworkHeaderToOperations"/>
+					<End EntitySet="WONetworkOperationsSet" Role="ToRole_NetworkHeaderToOperations"/>
+				</AssociationSet>
 			</EntityContainer>
-			<AssociationSet Name="GanttToRelationshipSet" Association="com.evorait.evoorder.GanttToRelationship" sap:creatable="false"
-				sap:updatable="false" sap:deletable="false" sap:content-version="1">
-				<End EntitySet="GanttSet" Role="FromRole_GanttToRelationship"/>
-				<End EntitySet="RelationshipSet" Role="ToRole_GanttToRelationship"/>
-			</AssociationSet>
+			<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="com.evorait.evoorderrelate.GanttRelation">
+				<Annotation Term="com.sap.vocabularies.UI.v1.LineItem">
+					<Collection/>
+				</Annotation>
+				<Annotation Term="com.sap.vocabularies.UI.v1.SelectionFields">
+					<Collection/>
+				</Annotation>
+				<Annotation Term="com.sap.vocabularies.UI.v1.PresentationVariant">
+					<Record Type="com.sap.vocabularies.UI.v1.PresentationVariantType">
+						<PropertyValue Property="SortOrder">
+							<Collection/>
+						</PropertyValue>
+						<PropertyValue Property="RequestAtLeast">
+							<Collection/>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+			</Annotations>
+			<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="com.evorait.evoorderrelate.GanttRelation/ObjectKey">
+				<Annotation Term="com.sap.vocabularies.Common.v1.FieldControl" EnumMember="com.sap.vocabularies.Common.v1.FieldControlType/Hidden"/>
+			</Annotations>
+			<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="com.evorait.evoorderrelate.OrderOperations">
+				<Annotation Term="com.sap.vocabularies.UI.v1.LineItem">
+					<Collection>
+						<Record Type="com.sap.vocabularies.UI.v1.DataField">
+							<PropertyValue Property="Value" Path="ORDER_NUMBER"/>
+							<PropertyValue Property="Position" Int="1"/>
+						</Record>
+						<Record Type="com.sap.vocabularies.UI.v1.DataField">
+							<PropertyValue Property="Value" Path="OPERATION_NUMBER"/>
+							<PropertyValue Property="Position" Int="2"/>
+						</Record>
+						<Record Type="com.sap.vocabularies.UI.v1.DataField">
+							<PropertyValue Property="Value" Path="WORKCENTER"/>
+							<PropertyValue Property="Position" Int="3"/>
+						</Record>
+						<Record Type="com.sap.vocabularies.UI.v1.DataField">
+							<PropertyValue Property="Value" Path="FUNCTIONAL_LOCATION"/>
+							<PropertyValue Property="Position" Int="4"/>
+						</Record>
+						<Record Type="com.sap.vocabularies.UI.v1.DataField">
+							<PropertyValue Property="Value" Path="EQUIPMENT_NUMBER"/>
+							<PropertyValue Property="Position" Int="5"/>
+						</Record>
+						<Record Type="com.sap.vocabularies.UI.v1.DataField">
+							<PropertyValue Property="Value" Path="MAINTENANCE_PLANNING_PLANT"/>
+							<PropertyValue Property="Position" Int="5"/>
+						</Record>
+					</Collection>
+				</Annotation>
+				<Annotation Term="com.sap.vocabularies.UI.v1.SelectionFields">
+					<Collection>
+						<PropertyPath>ORDER_NUMBER</PropertyPath>
+						<PropertyPath>OPERATION_NUMBER</PropertyPath>
+						<PropertyPath>WORKCENTER</PropertyPath>
+						<PropertyPath>FUNCTIONAL_LOCATION</PropertyPath>
+						<PropertyPath>EQUIPMENT_NUMBER</PropertyPath>
+						<PropertyPath>MAINTENANCE_PLANNING_PLANT</PropertyPath>
+					</Collection>
+				</Annotation>
+				<Annotation Term="com.sap.vocabularies.UI.v1.PresentationVariant">
+					<Record Type="com.sap.vocabularies.UI.v1.PresentationVariantType">
+						<PropertyValue Property="SortOrder">
+							<Collection/>
+						</PropertyValue>
+						<PropertyValue Property="RequestAtLeast">
+							<Collection/>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+			</Annotations>
+			<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="com.evorait.evoorderrelate.OrderOperations/HeaderObjectKey">
+				<Annotation Term="com.sap.vocabularies.Common.v1.FieldControl" EnumMember="com.sap.vocabularies.Common.v1.FieldControlType/Hidden"/>
+			</Annotations>
+			<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="com.evorait.evoorderrelate.OrderOperations/ORDER_OBJECT_NUMBER">
+				<Annotation Term="com.sap.vocabularies.Common.v1.FieldControl" EnumMember="com.sap.vocabularies.Common.v1.FieldControlType/Hidden"/>
+			</Annotations>
+			<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="com.evorait.evoorderrelate.OrderOperations/ORDER_NUMBER">
+				<Annotation Term="COMMON.ValueList">
+					<Record Type="COMMON.ValueListType">
+						<PropertyValue Property="CollectionPath" String="SHOrderNumberSet"/>
+						<PropertyValue Property="CollectionRoot" String=""/>
+						<PropertyValue Property="SearchSupported" Bool="false"/>
+						<PropertyValue Property="Parameters">
+							<Collection>
+								<Record Type="COMMON.ValueListParameterInOut">
+									<PropertyValue Property="LocalDataProperty" PropertyPath="ORDER_NUMBER"/>
+									<PropertyValue Property="ValueListProperty" String="AUFNR"/>
+								</Record>
+								<Record Type="COMMON.ValueListParameterDisplayOnly">
+									<PropertyValue Property="ValueListProperty" String="KTEXT"/>
+								</Record>
+								<Record Type="COMMON.ValueListParameterDisplayOnly">
+									<PropertyValue Property="ValueListProperty" String="VAPLZ"/>
+								</Record>
+								<Record Type="COMMON.ValueListParameterDisplayOnly">
+									<PropertyValue Property="ValueListProperty" String="TPLNR"/>
+								</Record>
+								<Record Type="COMMON.ValueListParameterDisplayOnly">
+									<PropertyValue Property="ValueListProperty" String="EQUNR"/>
+								</Record>
+								<Record Type="COMMON.ValueListParameterDisplayOnly">
+									<PropertyValue Property="ValueListProperty" String="ERNAM"/>
+								</Record>
+								<Record Type="COMMON.ValueListParameterDisplayOnly">
+									<PropertyValue Property="ValueListProperty" String="ERDAT"/>
+								</Record>
+							</Collection>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+			</Annotations>
+			<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="com.evorait.evoorderrelate.OrderOperations/OPERATION_NUMBER">
+				<Annotation Term="COMMON.ValueList">
+					<Record Type="COMMON.ValueListType">
+						<PropertyValue Property="CollectionPath" String="SHOrderOperationSet"/>
+						<PropertyValue Property="CollectionRoot" String=""/>
+						<PropertyValue Property="SearchSupported" Bool="false"/>
+						<PropertyValue Property="Parameters">
+							<Collection>
+								<Record Type="COMMON.ValueListParameterDisplayOnly">
+									<PropertyValue Property="ValueListProperty" String="AUFNR"/>
+								</Record>
+								<Record Type="COMMON.ValueListParameterInOut">
+									<PropertyValue Property="LocalDataProperty" PropertyPath="OPERATION_NUMBER"/>
+									<PropertyValue Property="ValueListProperty" String="VORNR"/>
+								</Record>
+								<Record Type="COMMON.ValueListParameterDisplayOnly">
+									<PropertyValue Property="ValueListProperty" String="LTXA1"/>
+								</Record>
+							</Collection>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+			</Annotations>
+			<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="com.evorait.evoorderrelate.OrderOperations/WORKCENTER">
+				<Annotation Term="COMMON.ValueList">
+					<Record Type="COMMON.ValueListType">
+						<PropertyValue Property="CollectionPath" String="SHWorkCenterSet"/>
+						<PropertyValue Property="CollectionRoot" String=""/>
+						<PropertyValue Property="SearchSupported" Bool="false"/>
+						<PropertyValue Property="Parameters">
+							<Collection>
+								<Record Type="COMMON.ValueListParameterDisplayOnly">
+									<PropertyValue Property="ValueListProperty" String="SPRAS"/>
+								</Record>
+								<Record Type="COMMON.ValueListParameterDisplayOnly">
+									<PropertyValue Property="ValueListProperty" String="WERKS"/>
+								</Record>
+								<Record Type="COMMON.ValueListParameterInOut">
+									<PropertyValue Property="LocalDataProperty" PropertyPath="WORKCENTER"/>
+									<PropertyValue Property="ValueListProperty" String="ARBPL"/>
+								</Record>
+								<Record Type="COMMON.ValueListParameterDisplayOnly">
+									<PropertyValue Property="ValueListProperty" String="KTEXT"/>
+								</Record>
+								<Record Type="COMMON.ValueListParameterDisplayOnly">
+									<PropertyValue Property="ValueListProperty" String="OBJID"/>
+								</Record>
+							</Collection>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+			</Annotations>
+			<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="com.evorait.evoorderrelate.OrderOperations/FUNCTIONAL_LOCATION">
+				<Annotation Term="COMMON.ValueList">
+					<Record Type="COMMON.ValueListType">
+						<PropertyValue Property="CollectionPath" String="SHFunctionalLocSet"/>
+						<PropertyValue Property="CollectionRoot" String=""/>
+						<PropertyValue Property="SearchSupported" Bool="false"/>
+						<PropertyValue Property="Parameters">
+							<Collection>
+								<Record Type="COMMON.ValueListParameterInOut">
+									<PropertyValue Property="LocalDataProperty" PropertyPath="FUNCTIONAL_LOCATION"/>
+									<PropertyValue Property="ValueListProperty" String="TPLNR"/>
+								</Record>
+								<Record Type="COMMON.ValueListParameterInOut">
+									<PropertyValue Property="LocalDataProperty" PropertyPath=""/>
+									<PropertyValue Property="ValueListProperty" String="PLTXT"/>
+								</Record>
+							</Collection>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+			</Annotations>
+			<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="com.evorait.evoorderrelate.OrderOperations/EQUIPMENT_NUMBER">
+				<Annotation Term="COMMON.ValueList">
+					<Record Type="COMMON.ValueListType">
+						<PropertyValue Property="CollectionPath" String="SHEquipmentSet"/>
+						<PropertyValue Property="CollectionRoot" String=""/>
+						<PropertyValue Property="SearchSupported" Bool="false"/>
+						<PropertyValue Property="Parameters">
+							<Collection>
+								<Record Type="COMMON.ValueListParameterInOut">
+									<PropertyValue Property="LocalDataProperty" PropertyPath="EQUIPMENT_NUMBER"/>
+									<PropertyValue Property="ValueListProperty" String="EQUNR"/>
+								</Record>
+								<Record Type="COMMON.ValueListParameterDisplayOnly">
+									<PropertyValue Property="ValueListProperty" String="WERK"/>
+								</Record>
+								<Record Type="COMMON.ValueListParameterDisplayOnly">
+									<PropertyValue Property="ValueListProperty" String="TPLNR"/>
+								</Record>
+								<Record Type="COMMON.ValueListParameterDisplayOnly">
+									<PropertyValue Property="ValueListProperty" String="EQKTX"/>
+								</Record>
+								<Record Type="COMMON.ValueListParameterDisplayOnly">
+									<PropertyValue Property="ValueListProperty" String="ARBPL"/>
+								</Record>
+							</Collection>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+			</Annotations>
+			<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="com.evorait.evoorderrelate.OrderOperations/MAINTENANCE_PLANNING_PLANT">
+				<Annotation Term="COMMON.ValueList">
+					<Record Type="COMMON.ValueListType">
+						<PropertyValue Property="CollectionPath" String="SHPlantSet"/>
+						<PropertyValue Property="CollectionRoot" String=""/>
+						<PropertyValue Property="SearchSupported" Bool="false"/>
+						<PropertyValue Property="Parameters">
+							<Collection>
+								<Record Type="COMMON.ValueListParameterInOut">
+									<PropertyValue Property="LocalDataProperty" PropertyPath="MAINTENANCE_PLANNING_PLANT"/>
+									<PropertyValue Property="ValueListProperty" String="WERKS"/>
+								</Record>
+								<Record Type="COMMON.ValueListParameterInOut">
+									<PropertyValue Property="LocalDataProperty" PropertyPath="MAINT_PLAN_PLANT_DESC"/>
+									<PropertyValue Property="ValueListProperty" String="NAME1"/>
+								</Record>
+							</Collection>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+			</Annotations>
+			<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="com.evorait.evoorderrelate.OrderOperations/ORDER_NUMBER">
+				<Annotation Term="com.sap.vocabularies.Common.v1.Label" String="Order"/>
+			</Annotations>
+			<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="com.evorait.evoorderrelate.OrderOperations/OPERATION_NUMBER">
+				<Annotation Term="com.sap.vocabularies.Common.v1.Label" String="Operation"/>
+			</Annotations>
+			<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="com.evorait.evoorderrelate.OrderOperations/WORKCENTER">
+				<Annotation Term="com.sap.vocabularies.Common.v1.Label" String="Work Center"/>
+			</Annotations>
+			<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="com.evorait.evoorderrelate.OrderOperations/FUNCTIONAL_LOCATION">
+				<Annotation Term="com.sap.vocabularies.Common.v1.Label" String="Functional Location"/>
+			</Annotations>
+			<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="com.evorait.evoorderrelate.OrderOperations/EQUIPMENT_NUMBER">
+				<Annotation Term="com.sap.vocabularies.Common.v1.Label" String="Equipment"/>
+			</Annotations>
+			<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="com.evorait.evoorderrelate.SHEquipment">
+				<Annotation Term="com.sap.vocabularies.UI.v1.SelectionFields">
+					<Collection/>
+				</Annotation>
+			</Annotations>
+			<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="com.evorait.evoorderrelate.SHFunctionalLoc">
+				<Annotation Term="com.sap.vocabularies.UI.v1.SelectionFields">
+					<Collection/>
+				</Annotation>
+			</Annotations>
+			<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="com.evorait.evoorderrelate.SHNetwork">
+				<Annotation Term="com.sap.vocabularies.UI.v1.SelectionFields">
+					<Collection/>
+				</Annotation>
+			</Annotations>
+			<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="com.evorait.evoorderrelate.SHOrderNumber">
+				<Annotation Term="com.sap.vocabularies.UI.v1.SelectionFields">
+					<Collection/>
+				</Annotation>
+			</Annotations>
+			<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="com.evorait.evoorderrelate.SHOrderOperation">
+				<Annotation Term="com.sap.vocabularies.UI.v1.SelectionFields">
+					<Collection/>
+				</Annotation>
+			</Annotations>
+			<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="com.evorait.evoorderrelate.SHPlant">
+				<Annotation Term="com.sap.vocabularies.UI.v1.SelectionFields">
+					<Collection/>
+				</Annotation>
+			</Annotations>
+			<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="com.evorait.evoorderrelate.SHRelType">
+				<Annotation Term="com.sap.vocabularies.UI.v1.SelectionFields">
+					<Collection/>
+				</Annotation>
+			</Annotations>
+			<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="com.evorait.evoorderrelate.SHWorkCenter">
+				<Annotation Term="com.sap.vocabularies.UI.v1.SelectionFields">
+					<Collection/>
+				</Annotation>
+			</Annotations>
+			<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="com.evorait.evoorderrelate.SystemInformation">
+				<Annotation Term="com.sap.vocabularies.UI.v1.SelectionFields">
+					<Collection/>
+				</Annotation>
+			</Annotations>
+			<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="com.evorait.evoorderrelate.WONetworkHeader">
+				<Annotation Term="com.sap.vocabularies.UI.v1.LineItem">
+					<Collection/>
+				</Annotation>
+				<Annotation Term="com.sap.vocabularies.UI.v1.SelectionFields">
+					<Collection/>
+				</Annotation>
+				<Annotation Term="com.sap.vocabularies.UI.v1.PresentationVariant">
+					<Record Type="com.sap.vocabularies.UI.v1.PresentationVariantType">
+						<PropertyValue Property="SortOrder">
+							<Collection/>
+						</PropertyValue>
+						<PropertyValue Property="RequestAtLeast">
+							<Collection>
+								<PropertyPath>NETWORK_DESCRIPTION</PropertyPath>
+							</Collection>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+			</Annotations>
+			<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="com.evorait.evoorderrelate.WONetworkHeader/ORDER_NUMBER">
+				<Annotation Term="COMMON.ValueList">
+					<Record Type="COMMON.ValueListType">
+						<PropertyValue Property="CollectionPath" String="SHOrderNumberSet"/>
+						<PropertyValue Property="CollectionRoot" String=""/>
+						<PropertyValue Property="SearchSupported" Bool="false"/>
+						<PropertyValue Property="Parameters">
+							<Collection>
+								<Record Type="COMMON.ValueListParameterInOut">
+									<PropertyValue Property="LocalDataProperty" PropertyPath="ORDER_NUMBER"/>
+									<PropertyValue Property="ValueListProperty" String="AUFNR"/>
+								</Record>
+								<Record Type="COMMON.ValueListParameterDisplayOnly">
+									<PropertyValue Property="ValueListProperty" String="KTEXT"/>
+								</Record>
+								<Record Type="COMMON.ValueListParameterDisplayOnly">
+									<PropertyValue Property="ValueListProperty" String="VAPLZ"/>
+								</Record>
+								<Record Type="COMMON.ValueListParameterDisplayOnly">
+									<PropertyValue Property="ValueListProperty" String="TPLNR"/>
+								</Record>
+								<Record Type="COMMON.ValueListParameterDisplayOnly">
+									<PropertyValue Property="ValueListProperty" String="EQUNR"/>
+								</Record>
+								<Record Type="COMMON.ValueListParameterDisplayOnly">
+									<PropertyValue Property="ValueListProperty" String="ERNAM"/>
+								</Record>
+								<Record Type="COMMON.ValueListParameterDisplayOnly">
+									<PropertyValue Property="ValueListProperty" String="ERDAT"/>
+								</Record>
+							</Collection>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+			</Annotations>
+			<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="com.evorait.evoorderrelate.WONetworkHeader/OPERATION_NUMBER">
+				<Annotation Term="COMMON.ValueList">
+					<Record Type="COMMON.ValueListType">
+						<PropertyValue Property="CollectionPath" String="SHOrderOperationSet"/>
+						<PropertyValue Property="CollectionRoot" String=""/>
+						<PropertyValue Property="SearchSupported" Bool="false"/>
+						<PropertyValue Property="Parameters">
+							<Collection>
+								<Record Type="COMMON.ValueListParameterIn">
+									<PropertyValue Property="LocalDataProperty" PropertyPath="ORDER_NUMBER"/>
+									<PropertyValue Property="ValueListProperty" String="AUFNR"/>
+								</Record>
+								<Record Type="COMMON.ValueListParameterInOut">
+									<PropertyValue Property="LocalDataProperty" PropertyPath="OPERATION_NUMBER"/>
+									<PropertyValue Property="ValueListProperty" String="VORNR"/>
+								</Record>
+							</Collection>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+			</Annotations>
+			<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="com.evorait.evoorderrelate.WONetworkHeader/NETWORK_KEY">
+				<Annotation Term="COMMON.ValueList">
+					<Record Type="COMMON.ValueListType">
+						<PropertyValue Property="CollectionPath" String="SHNetworkSet"/>
+						<PropertyValue Property="CollectionRoot" String=""/>
+						<PropertyValue Property="SearchSupported" Bool="false"/>
+						<PropertyValue Property="Parameters">
+							<Collection>
+								<Record Type="COMMON.ValueListParameterInOut">
+									<PropertyValue Property="LocalDataProperty" PropertyPath="NETWORK_KEY"/>
+									<PropertyValue Property="ValueListProperty" String="NETWORK_KEY"/>
+								</Record>
+								<Record Type="COMMON.ValueListParameterInOut">
+									<PropertyValue Property="LocalDataProperty" PropertyPath="NETWORK_KEY"/>
+									<PropertyValue Property="ValueListProperty" String="NETWORK_DESCRIPTION"/>
+								</Record>
+								<Record Type="COMMON.ValueListParameterDisplayOnly">
+									<PropertyValue Property="ValueListProperty" String="CREATED_BY"/>
+								</Record>
+								<Record Type="COMMON.ValueListParameterDisplayOnly">
+									<PropertyValue Property="ValueListProperty" String="AUFNR"/>
+								</Record>
+							</Collection>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+			</Annotations>
+			<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="com.evorait.evoorderrelate.WONetworkHeader/OPERATION_NUMBER">
+				<Annotation Term="com.sap.vocabularies.Common.v1.Label" String="Operation"/>
+			</Annotations>
+			<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="com.evorait.evoorderrelate.WONetworkOperations">
+				<Annotation Term="com.sap.vocabularies.UI.v1.LineItem">
+					<Collection>
+						<Record Type="com.sap.vocabularies.UI.v1.DataField">
+							<PropertyValue Property="Value" Path="SORT_ID"/>
+							<PropertyValue Property="Position" Int="1"/>
+						</Record>
+						<Record Type="com.sap.vocabularies.UI.v1.DataField">
+							<PropertyValue Property="Value" Path="ORDER_NUMBER"/>
+							<PropertyValue Property="Position" Int="2"/>
+						</Record>
+						<Record Type="com.sap.vocabularies.UI.v1.DataField">
+							<PropertyValue Property="Value" Path="OPERATION_NUMBER"/>
+							<PropertyValue Property="Position" Int="3"/>
+						</Record>
+						<Record Type="com.sap.vocabularies.UI.v1.DataField">
+							<PropertyValue Property="Value" Path="RELATION_TYPE"/>
+							<PropertyValue Property="Position" Int="4"/>
+						</Record>
+						<Record Type="com.sap.vocabularies.UI.v1.DataField">
+							<PropertyValue Property="Value" Path="SCHEDULE_TYPE"/>
+							<PropertyValue Property="Position" Int="6"/>
+						</Record>
+					</Collection>
+				</Annotation>
+				<Annotation Term="com.sap.vocabularies.UI.v1.SelectionFields">
+					<Collection/>
+				</Annotation>
+				<Annotation Term="com.sap.vocabularies.UI.v1.PresentationVariant">
+					<Record Type="com.sap.vocabularies.UI.v1.PresentationVariantType">
+						<PropertyValue Property="SortOrder">
+							<Collection/>
+						</PropertyValue>
+						<PropertyValue Property="RequestAtLeast">
+							<Collection/>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+			</Annotations>
+			<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="com.evorait.evoorderrelate.WONetworkOperations/AOB_KEY">
+				<Annotation Term="com.sap.vocabularies.Common.v1.FieldControl" EnumMember="com.sap.vocabularies.Common.v1.FieldControlType/Hidden"/>
+			</Annotations>
+			<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="com.evorait.evoorderrelate.WONetworkOperations/ObjectKey">
+				<Annotation Term="com.sap.vocabularies.Common.v1.FieldControl" EnumMember="com.sap.vocabularies.Common.v1.FieldControlType/Hidden"/>
+			</Annotations>
+			<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="com.evorait.evoorderrelate.WONetworkOperations/NETWORK_PROFILE">
+				<Annotation Term="com.sap.vocabularies.Common.v1.FieldControl" EnumMember="com.sap.vocabularies.Common.v1.FieldControlType/Hidden"/>
+			</Annotations>
+			<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="com.evorait.evoorderrelate.WONetworkOperations/HeaderObjectKey">
+				<Annotation Term="com.sap.vocabularies.Common.v1.FieldControl" EnumMember="com.sap.vocabularies.Common.v1.FieldControlType/Hidden"/>
+			</Annotations>
+			<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="com.evorait.evoorderrelate.WONetworkOperations/RELATION_TYPE">
+				<Annotation Term="com.sap.vocabularies.Common.v1.FieldControl" EnumMember="com.sap.vocabularies.Common.v1.FieldControlType/Mandatory"/>
+			</Annotations>
+			<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="com.evorait.evoorderrelate.WONetworkOperations/ORDER_NUMBER">
+				<Annotation Term="com.sap.vocabularies.Common.v1.Label" String="Order"/>
+			</Annotations>
+			<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="com.evorait.evoorderrelate.WONetworkOperations/OPERATION_NUMBER">
+				<Annotation Term="com.sap.vocabularies.Common.v1.Label" String="Operations"/>
+			</Annotations>
+			<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="com.evorait.evoorderrelate.WONetworkOperations/RELATION_TYPE">
+				<Annotation Term="com.sap.vocabularies.Common.v1.Label" String="Relation Type"/>
+			</Annotations>
+			<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="com.evorait.evoorderrelate.WONetworkOperations/ASSIGNMENT_TYPE">
+				<Annotation Term="com.sap.vocabularies.Common.v1.Label" String="Assignment Type"/>
+			</Annotations>
+			<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="com.evorait.evoorderrelate.WONetworkOperations/SCHEDULE_TYPE">
+				<Annotation Term="com.sap.vocabularies.Common.v1.Label" String="Schedule Type"/>
+			</Annotations>
+			<atom:link xmlns:atom="http://www.w3.org/2005/Atom" rel="self"
+				href="https://ed1.evorait.net:50103/sap/opu/odata/EVORA/EOR_MAIN_SRV/$metadata"/>
+			<atom:link xmlns:atom="http://www.w3.org/2005/Atom" rel="latest-version"
+				href="https://ed1.evorait.net:50103/sap/opu/odata/EVORA/EOR_MAIN_SRV/$metadata"/>
 		</Schema>
 	</edmx:DataServices>
 </edmx:Edmx>
