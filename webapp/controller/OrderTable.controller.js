@@ -176,6 +176,12 @@ sap.ui.define([
 		 * @param {sap.ui.base.Event} oEvent - the drag event
 		 */
 		onDragStart: function (oEvent) {
+			var sCreateAuth = this.getModel("user").getProperty("/AUTH_CREATE_NETWORK"),
+				sMsg = this.getResourceBundle().getText("msg.notAuthorizedForCreate");
+			if (!sCreateAuth) {
+				this.showMessageToast(sMsg);
+				return;
+			}
 			var oDragSession = oEvent.getParameter("dragSession"),
 				oDraggedControl = oDragSession.getDragControl(),
 				aContext = this.oOrderOperationTable.getSelectedContexts("OrderOperation"),
