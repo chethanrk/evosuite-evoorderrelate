@@ -135,6 +135,16 @@ sap.ui.define([
 				return 0;
 			}
 			return parseInt(sMaxLength, 10);
+		},
+
+		/**
+		 * Handles enabling of Create netwrok button
+		 */
+		enableCreateBtn: function (bPMAuth, bEnable) {
+			if (bPMAuth) {
+				return Boolean(bEnable);
+			}
+			return false;
 		}
 
 	};
