@@ -1,18 +1,22 @@
 {
 	"d": {
 		"results": [{
-
-			"Username": "SMEGHARAJ",
-			"PersNo": "00067109",
-			"Firstname": "Megharaj",
-			"Lastname": "S",
-			"Fullname": "Megharaj S",
+			"Username": "RANAWATB",
+			"PersNo": "00000000",
+			"Firstname": "Bhumika",
+			"Lastname": "Ranawat",
+			"Fullname": "Bhumika Ranawat",
 			"ServerPath": "ed1.evorait.net:50103",
-			"CoreVersion": "2201.1.0",
+			"CoreVersion": "2209.1.0",
 			"Client": "800",
 			"Systemid": "ED1",
 			"UserProfile": "/EVORA/EOR_DEFAULT",
-			"EnableCreateNetwork": ""
+			"ENABLE_NETWORK_CREATE": "X",
+			"ENABLE_NETWORK_EDIT": "X",
+			"ENABLE_NETWORK_DELETE": "X",
+			"DEFAULT_RELATION_KEY": "1",
+			"DEFAULT_RELATION_TYPE": "FS",
+			"AUTH_CREATE_NETWORK": "X"
 		}]
 	}
 }
