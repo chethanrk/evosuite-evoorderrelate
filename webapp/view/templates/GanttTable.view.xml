@@ -13,7 +13,7 @@
 							</FlexBox>
 							<Button id="idBtnCreateNewNetwork" text="{i18n>btn.createNewNetwork}" tooltip="{i18n>btn.createNewNetwork}" press="onPressCreateNewNetwork"
 								visible="{= ${user>/ENABLE_NETWORK_CREATE} === 'X'}"
-								enabled="{parts:['user>ENABLE_PM_AUTH_CHECK','user>/ENABLE_IW32_AUTH_CHECK'], formatter:'.formatter.enableCreateBtn'}"/>
+								enabled="{parts:['viewModel>/authorizeCheck','user>/ENABLE_IW32_AUTH_CHECK'], formatter:'.formatter.enableCreateBtn'}"/>
 							<core:ExtensionPoint name="PageExtP|GanttTable|WONetworkHeader|CustomHeader|Left"/>
 							<ToolbarSpacer id="idGanttTableToolbarSpacer"/>
 							<Button id="idBtnSave" type="Emphasized" tooltip="{i18n>btn.save}" text="{i18n>btn.save}" press="onPressNetworkSave"
@@ -21,7 +21,8 @@
 							<Button id="idBtnCancel" type="Accept" tooltip="{i18n>btn.cancel}" text="{i18n>btn.cancel}" press="onPressNetwokCancel"
 								enabled="{viewModel>/pendingChanges}"/>
 							<Button id="idBtnDeleteNetwork" icon="sap-icon://delete" tooltip="{i18n>btn.delete}" press="onPressNetworkDelete"
-								visible="{= ${user>/ENABLE_NETWORK_DELETE} === 'X'}"/>
+								visible="{= ${user>/ENABLE_NETWORK_DELETE} === 'X'}"
+								enabled="{parts:['viewModel>/authorizeCheck','user>/ENABLE_IW32_AUTH_CHECK'], formatter:'.formatter.enableCreateBtn'}"/>
 							<core:ExtensionPoint name="PageExtP|GanttTable|WONetworkHeader|CustomHeader|Right"/>
 						</OverflowToolbar>
 					</customHeader>

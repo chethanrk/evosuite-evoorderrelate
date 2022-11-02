@@ -37,7 +37,8 @@
 						<ToolbarSpacer/>
 						<core:ExtensionPoint name="TableExtP|OrderTable|OrderOperationsSet|CustomToolbar|Right"/>
 						<Button id="idBtnAddNewOperations" text="{i18n>btn.addOperationsToNetwork}" tooltip="{i18n>btn.addOperationsToNetwork}"
-							press="onPresAddNewOperations"/>
+							press="onPresAddNewOperations"
+							enabled="{parts:['viewModel>/authorizeCheck','user>/ENABLE_IW32_AUTH_CHECK'], formatter:'.formatter.enableCreateBtn'}"/>
 						<Button text="{i18n>btn.filers}" press="onOrderFilterOpen"/>
 					</OverflowToolbar>
 				</smartTable:customToolbar>

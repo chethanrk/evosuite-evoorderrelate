@@ -138,15 +138,14 @@ sap.ui.define([
 		},
 
 		/**
-		 * Handles enabling of Create netwrok button
+		 * Handles enabling of Authorization check button
 		 */
-		enableCreateBtn: function (bPMAuth, bEnable) {
-			if (bPMAuth) {
+		enableCreateBtn: function (bAuthCheck, bEnable) {
+			if (bAuthCheck) {
 				return Boolean(bEnable);
 			}
-			return false;
+			return true;
 		}
-
 	};
 
 });
