@@ -71,8 +71,8 @@ sap.ui.define([
 					visibleEndDate: moment().toDate()
 				},
 				draggedData: null,
-				logoUrl: sap.ui.require.toUrl("com/evorait/evosuite/evoorderrelate/assets/img/EvoOrderRelate.png")
-
+				logoUrl: sap.ui.require.toUrl("com/evorait/evosuite/evoorderrelate/assets/img/EvoOrderRelate.png"),
+				authorizeCheck: false
 			};
 			this.setModel(models.createHelperModel(viewModelObj), "viewModel");
 			this.setModel(models.createGanttModel(), "ganttModel");
@@ -180,7 +180,6 @@ sap.ui.define([
 		 */
 		_getStartupParamFilter: function () {
 			var sKey = this.getLinkParameterByName(Constants.PROPERTY.EVOORDREL);
-				
 
 			if (sKey) {
 				return {
@@ -219,6 +218,7 @@ sap.ui.define([
 			this.oSystemInfoProm = new Promise(function (resolve) {
 				this.readData("/SystemInformationSet", []).then(function (oData) {
 					this.getModel("user").setData(oData.results[0]);
+					this.getModel("viewModel").setProperty("/authorizeCheck", oData.results[0].ENABLE_PM_AUTH_CHECK);
 					resolve(oData.results[0]);
 				}.bind(this));
 			}.bind(this));
