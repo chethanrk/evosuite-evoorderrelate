@@ -17,7 +17,7 @@
 							<core:ExtensionPoint name="PageExtP|GanttTable|WONetworkHeader|CustomHeader|Left"/>
 							<ToolbarSpacer id="idGanttTableToolbarSpacer"/>
 							<Button id="idBtnSave" type="Emphasized" tooltip="{i18n>btn.save}" text="{i18n>btn.save}" press="onPressNetworkSave"
-								enabled="{viewModel>/pendingChanges}"/>
+								enabled="{parts:['viewModel>/pendingChanges','viewModel>/authorizeCheck','user>/ENABLE_IW32_AUTH_CHECK'], formatter:'.formatter.enableSaveBtn'}"/>
 							<Button id="idBtnCancel" type="Accept" tooltip="{i18n>btn.cancel}" text="{i18n>btn.cancel}" press="onPressNetwokCancel"
 								enabled="{viewModel>/pendingChanges}"/>
 							<Button id="idBtnDeleteNetwork" icon="sap-icon://delete" tooltip="{i18n>btn.delete}" press="onPressNetworkDelete"
@@ -31,10 +31,14 @@
 							<gantt:toolbar>
 								<gantt:ContainerToolbar showDisplayTypeButton="true">
 									<gantt:content>
-										<Button id="idBtnTop" tooltip="{i18n>btn.top}" icon="sap-icon://collapse-group" press="onPressTop"/>
-										<Button id="idBtnUp" tooltip="{i18n>btn.up}" icon="sap-icon://navigation-up-arrow" press="onPressUp"/>
-										<Button id="idBtnDown" tooltip="{i18n>btn.down}" icon="sap-icon://navigation-down-arrow" press="onPressDown"/>
-										<Button id="idBtnBottom" tooltip="{i18n>btn.bottom}" icon="sap-icon://expand-group" press="onPressBottom"/>
+										<Button id="idBtnTop" tooltip="{i18n>btn.top}" icon="sap-icon://collapse-group" press="onPressTop"
+											enabled="{parts:['viewModel>/authorizeCheck','user>/ENABLE_IW32_AUTH_CHECK'], formatter:'.formatter.enableCreateBtn'}"/>
+										<Button id="idBtnUp" tooltip="{i18n>btn.up}" icon="sap-icon://navigation-up-arrow" press="onPressUp"
+											enabled="{parts:['viewModel>/authorizeCheck','user>/ENABLE_IW32_AUTH_CHECK'], formatter:'.formatter.enableCreateBtn'}"/>
+										<Button id="idBtnDown" tooltip="{i18n>btn.down}" icon="sap-icon://navigation-down-arrow" press="onPressDown"
+											enabled="{parts:['viewModel>/authorizeCheck','user>/ENABLE_IW32_AUTH_CHECK'], formatter:'.formatter.enableCreateBtn'}"/>
+										<Button id="idBtnBottom" tooltip="{i18n>btn.bottom}" icon="sap-icon://expand-group" press="onPressBottom"
+											enabled="{parts:['viewModel>/authorizeCheck','user>/ENABLE_IW32_AUTH_CHECK'], formatter:'.formatter.enableCreateBtn'}"/>
 										<core:ExtensionPoint name="GanttExtP|GanttTable|WONetworkHeader|GanttToolbar"/>
 									</gantt:content>
 								</gantt:ContainerToolbar>
@@ -65,7 +69,8 @@
 																	<FlexBox fitContainer="true">
 																		<Select forceSelection="false" width="20%" items="{path:'/SHRelTypeSet', templateShareable: true}"
 																			visible="{parts:['ganttModel>SORT_ID','viewModel>/GanttRowCount'],formatter:'.formatter.handleRelationshipDropDownVisibility'}"
-																			change="onChangeType" selectedKey="{= '{ganttModel>' + ${path : 'lineItem>Value/Path'} + '}' }">
+																			change="onChangeType" selectedKey="{= '{ganttModel>' + ${path : 'lineItem>Value/Path'} + '}' }"
+																			enabled="{parts:['viewModel>/authorizeCheck','user>/ENABLE_IW32_AUTH_CHECK'], formatter:'.formatter.enableCreateBtn'}">
 																			<items>
 																				<core:Item key="{AOBKT}" text="{AOBKT}"/>
 																			</items>
@@ -109,7 +114,7 @@
 												<table:RowAction>
 													<table:items>
 														<table:RowActionItem type="Custom" icon="sap-icon://delete" tooltip="{i18n>btn.delete}"
-															visible="{parts:['ganttModel>SORT_ID','ganttModel>ALLOW_DELETE'],formatter:'.formatter.deleteNetworkOperation'}"
+															visible="{parts:['ganttModel>SORT_ID','ganttModel>ALLOW_DELETE','viewModel>/authorizeCheck','user>/ENABLE_IW32_AUTH_CHECK'],formatter:'.formatter.deleteNetworkOperation'}"
 															press="onPressDeleteDependency"/>
 													</table:items>
 												</table:RowAction>

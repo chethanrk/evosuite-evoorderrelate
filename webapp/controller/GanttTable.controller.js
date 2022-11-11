@@ -259,6 +259,12 @@ sap.ui.define([
 		 * @param {sap.ui.base.Event} oEvent - the drag event
 		 */
 		onGanttTableDragStart: function (oEvent) {
+			var sMsg = this.getResourceBundle().getText("msg.notAuthorizedForCreate");
+			if (this.getModel("viewModel").getProperty("/authorizeCheck") && !this.getModel("user").getProperty("/ENABLE_IW32_AUTH_CHECK")) {
+				this.showMessageToast(sMsg);
+				oEvent.preventDefault();
+				return;
+			}
 			var oDraggedRow = oEvent.getParameter("target"),
 				oDragSession = oEvent.getParameter("dragSession"),
 				oDragBindingContext = oDraggedRow.getBindingContext("ganttModel");
