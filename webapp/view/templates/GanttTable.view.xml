@@ -12,15 +12,15 @@
 								<core:Fragment fragmentName="com.evorait.evosuite.evoorderrelate.view.fragments.NetworkSelection" type="XML"/>
 							</FlexBox>
 							<Button id="idBtnCreateNewNetwork" text="{i18n>btn.createNewNetwork}" tooltip="{i18n>btn.createNewNetwork}" press="onPressCreateNewNetwork"
-								visible="{= ${user>/ENABLE_NETWORK_CREATE} === 'X'}"/>
+								visible="{= ${user>/ENABLE_NETWORK_CREATE} === 'X'}" enabled="{viewModel>/validateIW32Auth}"/>
 							<core:ExtensionPoint name="PageExtP|GanttTable|WONetworkHeader|CustomHeader|Left"/>
 							<ToolbarSpacer id="idGanttTableToolbarSpacer"/>
 							<Button id="idBtnSave" type="Emphasized" tooltip="{i18n>btn.save}" text="{i18n>btn.save}" press="onPressNetworkSave"
-								enabled="{viewModel>/pendingChanges}"/>
+								enabled="{parts:['viewModel>/pendingChanges', 'viewModel>/validateIW32Auth'], formatter:'.formatter.enableSaveBtn'}"/>
 							<Button id="idBtnCancel" type="Accept" tooltip="{i18n>btn.cancel}" text="{i18n>btn.cancel}" press="onPressNetwokCancel"
 								enabled="{viewModel>/pendingChanges}"/>
 							<Button id="idBtnDeleteNetwork" icon="sap-icon://delete" tooltip="{i18n>btn.delete}" press="onPressNetworkDelete"
-								visible="{= ${user>/ENABLE_NETWORK_DELETE} === 'X'}"/>
+								visible="{= ${user>/ENABLE_NETWORK_DELETE} === 'X'}" enabled="{viewModel>/validateIW32Auth}"/>
 							<core:ExtensionPoint name="PageExtP|GanttTable|WONetworkHeader|CustomHeader|Right"/>
 						</OverflowToolbar>
 					</customHeader>
@@ -29,10 +29,12 @@
 							<gantt:toolbar>
 								<gantt:ContainerToolbar showDisplayTypeButton="true">
 									<gantt:content>
-										<Button id="idBtnTop" tooltip="{i18n>btn.top}" icon="sap-icon://collapse-group" press="onPressTop"/>
-										<Button id="idBtnUp" tooltip="{i18n>btn.up}" icon="sap-icon://navigation-up-arrow" press="onPressUp"/>
-										<Button id="idBtnDown" tooltip="{i18n>btn.down}" icon="sap-icon://navigation-down-arrow" press="onPressDown"/>
-										<Button id="idBtnBottom" tooltip="{i18n>btn.bottom}" icon="sap-icon://expand-group" press="onPressBottom"/>
+										<Button id="idBtnTop" tooltip="{i18n>btn.top}" icon="sap-icon://collapse-group" press="onPressTop" enabled="{viewModel>/validateIW32Auth}"/>
+										<Button id="idBtnUp" tooltip="{i18n>btn.up}" icon="sap-icon://navigation-up-arrow" press="onPressUp" enabled="{viewModel>/validateIW32Auth}"/>
+										<Button id="idBtnDown" tooltip="{i18n>btn.down}" icon="sap-icon://navigation-down-arrow" press="onPressDown"
+											enabled="{viewModel>/validateIW32Auth}"/>
+										<Button id="idBtnBottom" tooltip="{i18n>btn.bottom}" icon="sap-icon://expand-group" press="onPressBottom"
+											enabled="{viewModel>/validateIW32Auth}"/>
 										<core:ExtensionPoint name="GanttExtP|GanttTable|WONetworkHeader|GanttToolbar"/>
 									</gantt:content>
 								</gantt:ContainerToolbar>
@@ -63,7 +65,7 @@
 																	<FlexBox fitContainer="true">
 																		<Select forceSelection="false" width="20%" items="{path:'/SHRelTypeSet', templateShareable: true}"
 																			visible="{parts:['ganttModel>SORT_ID','viewModel>/GanttRowCount'],formatter:'.formatter.handleRelationshipDropDownVisibility'}"
-																			change="onChangeType" selectedKey="{= '{ganttModel>' + ${path : 'lineItem>Value/Path'} + '}' }">
+																			change="onChangeType" selectedKey="{= '{ganttModel>' + ${path : 'lineItem>Value/Path'} + '}' }" enabled="{viewModel>/validateIW32Auth}">
 																			<items>
 																				<core:Item key="{AOBKT}" text="{AOBKT}"/>
 																			</items>
@@ -107,7 +109,7 @@
 												<table:RowAction>
 													<table:items>
 														<table:RowActionItem type="Custom" icon="sap-icon://delete" tooltip="{i18n>btn.delete}"
-															visible="{parts:['ganttModel>SORT_ID','ganttModel>ALLOW_DELETE'],formatter:'.formatter.deleteNetworkOperation'}"
+															visible="{parts:['ganttModel>SORT_ID','ganttModel>ALLOW_DELETE','viewModel>/validateIW32Auth'],formatter:'.formatter.deleteNetworkOperation'}"
 															press="onPressDeleteDependency"/>
 													</table:items>
 												</table:RowAction>

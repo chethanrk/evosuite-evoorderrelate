@@ -176,6 +176,12 @@ sap.ui.define([
 		 * @param {sap.ui.base.Event} oEvent - the drag event
 		 */
 		onDragStart: function (oEvent) {
+			var sMsg = this.getResourceBundle().getText("msg.notAuthorizedForCreate");
+			if (!this.getModel("viewModel").getProperty("/validateIW32Auth")) {
+				this.showMessageToast(sMsg);
+				oEvent.preventDefault();
+				return;
+			}
 			var oDragSession = oEvent.getParameter("dragSession"),
 				oDraggedControl = oDragSession.getDragControl(),
 				aContext = this.oOrderOperationTable.getSelectedContexts("OrderOperation"),

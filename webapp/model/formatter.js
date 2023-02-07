@@ -64,8 +64,8 @@ sap.ui.define([
 		 * @param sSortId - SortId of first network operation
 		 * @param bAllowDelete - ALLOW_DELETE of selected newtwork operation
 		 */
-		deleteNetworkOperation: function (sSortId, bAllowDelete) {
-			if (sSortId !== '001' || bAllowDelete) {
+		deleteNetworkOperation: function (sSortId, bAllowDelete, bAuthCheck) {
+			if ((sSortId !== '001' || bAllowDelete) && bAuthCheck) {
 				return true;
 			}
 			return false;
@@ -135,8 +135,14 @@ sap.ui.define([
 				return 0;
 			}
 			return parseInt(sMaxLength, 10);
-		}
+		},
 
+		/**
+		 * Handles enabling of Save button
+		 */
+		enableSaveBtn: function (bChanges, bAuthCheck) {
+			return Boolean(bChanges && bAuthCheck);
+		}
 	};
 
 });
