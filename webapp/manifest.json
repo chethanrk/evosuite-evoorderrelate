@@ -1,183 +1,175 @@
 {
-    "_version": "1.12.0",
-    "sap.app": {
-        "id": "com.evorait.evosuite.evoorderrelate",
-        "type": "application",
-        "i18n": "i18n/i18n.properties",
-        "applicationVersion": {
-            "version": "2301.0.0"
-        },
-        "title": "{{appTitle}}",
-        "description": "{{appDescription}}",
-        "sourceTemplate": {
-            "id": "ui5template.basicSAPUI5ApplicationProject",
-            "version": "1.40.12",
-            "toolsId": "8129401b-4bce-4cee-90bd-c3e2a01e55d2"
-        },
-        "dataSources": {
-            "mainService": {
-                "uri": "/sap/opu/odata/EVORA/EOR_MAIN_SRV/",
-                "type": "OData",
-                "settings": {
-                    "odataVersion": "2.0",
-                    "localUri": "localService/metadata.xml",
-                    "annotations": [
-                        "annotations"
-                    ]
-                }
-            },
-            "annotations": {
-                "uri": "annotations/annotations.xml",
-                "type": "ODataAnnotation",
-                "settings": {
-                    "localUri": "annotations/annotations.xml"
-                }
-            }
-        }
-    },
-    "sap.ui": {
-        "technology": "UI5",
-        "icons": {
-            "icon": "",
-            "favIcon": "",
-            "phone": "",
-            "phone@2": "",
-            "tablet": "",
-            "tablet@2": ""
-        },
-        "deviceTypes": {
-            "desktop": true,
-            "tablet": true,
-            "phone": true
-        }
-    },
-    "sap.ui5": {
-        "flexEnabled": true,
-        "config": {
-            "fullWidth": true
-        },
-        "rootView": {
-            "viewName": "com.evorait.evosuite.evoorderrelate.view.App",
-            "type": "XML",
-            "async": true,
-            "id": "App"
-        },
-        "dependencies": {
-            "minUI5Version": "1.65.6",
-            "libs": {
-                "sap.ui.layout": {},
-                "sap.ui.core": {},
-                "sap.m": {}
-            }
-        },
-        "contentDensities": {
-            "compact": true,
-            "cozy": true
-        },
-        "models": {
-            "i18n": {
-                "type": "sap.ui.model.resource.ResourceModel",
-                "settings": {
-                    "bundleName": "com.evorait.evosuite.evoorderrelate.i18n.i18n"
-                }
-            },
-            "": {
-                "type": "sap.ui.model.odata.v2.ODataModel",
-                "dataSource": "mainService",
-                "settings": {
-                    "defaultBindingMode": "TwoWay"
-                }
-            },
-            "OrderOperation": {
-                "type": "sap.ui.model.odata.v2.ODataModel",
-                "dataSource": "mainService",
-                "settings": {
-                    "defaultBindingMode": "TwoWay"
-                }
-            },
-            "@i18n": {
-                "type": "sap.ui.model.resource.ResourceModel",
-                "uri": "i18n/i18n.properties"
-            }
-        },
-        "resources": {
-            "css": [
-                {
-                    "uri": "assets/css/style.css"
-                }
-            ],
-            "js": [
-                {
-                    "uri": "assets/js/url-search-params.min.js"
-                },
-                {
-                    "uri": "assets/js/moment-with-locales.min.js"
-                }
-            ]
-        },
-        "routing": {
-            "config": {
-                "routerClass": "sap.m.routing.Router",
-                "viewType": "XML",
-                "viewPath": "com.evorait.evosuite.evoorderrelate.view",
-                "controlAggregation": "pages",
-                "controlId": "appPanel",
-                "clearControlAggregation": false,
-                "bypassed": {
-                    "target": [
-                        "splitNavigation"
-                    ]
-                },
-                "async": true
-            },
-            "routes": [
-                {
-                    "name": "ManageDependencies",
-                    "pattern": "",
-                    "target": [
-                        "Dependencies",
-                        "OrderTable"
-                    ]
-                }
-            ],
-            "targets": {
-                "splitNavigation": {
-                    "viewType": "XML",
-                    "viewName": "SplitView",
-                    "viewLevel": 1,
-                    "controlId": "appPanel",
-                    "viewId": "EvoOrderRelateSplitNavi"
-                },
-                "Dependencies": {
-                    "viewType": "XML",
-                    "viewName": "Dependencies",
-                    "viewLevel": 2,
-                    "controlId": "topPanel",
-                    "parent": "splitNavigation",
-                    "viewId": "EvoOrderRelateDependencies"
-                },
-                "OrderTable": {
-                    "viewType": "XML",
-                    "viewName": "OrderTable",
-                    "viewLevel": 2,
-                    "controlId": "bottomPanel",
-                    "parent": "splitNavigation",
-                    "viewId": "EvoOrderOrderTable"
-                },
-                "GanttTable": {
-                    "viewType": "XML",
-                    "viewName": "GanttTable",
-                    "viewId": "EvoOrderRelateGantt"
-                }
-            }
-        }
-    },
-    "sap.platform.abap": {
-        "uri": "/sap/bc/ui5_ui5/evora/eor_ui5/webapp",
-        "_version": "1.1.0"
-    },
-    "sap.platform.hcp": {
-        "uri": "webapp",
-        "_version": "1.1.0"
-    }
+	"_version": "1.12.0",
+	"sap.app": {
+		"id": "com.evorait.evosuite.evoorderrelate",
+		"type": "application",
+		"i18n": "i18n/i18n.properties",
+		"applicationVersion": {
+			"version": "2305.0.0"
+		},
+		"title": "{{appTitle}}",
+		"description": "{{appDescription}}",
+		"sourceTemplate": {
+			"id": "ui5template.basicSAPUI5ApplicationProject",
+			"version": "1.40.12"
+		},
+		"dataSources": {
+			"mainService": {
+				"uri": "/sap/opu/odata/EVORA/EOR_MAIN_SRV/",
+				"type": "OData",
+				"settings": {
+					"odataVersion": "2.0",
+					"localUri": "localService/metadata.xml",
+					"annotations": [
+						"annotations"
+					]
+				}
+			},
+			"annotations": {
+				"uri": "annotations/annotations.xml",
+				"type": "ODataAnnotation",
+				"settings": {
+					"localUri": "annotations/annotations.xml"
+				}
+			}
+		}
+	},
+	"sap.ui": {
+		"technology": "UI5",
+		"icons": {
+			"icon": "",
+			"favIcon": "",
+			"phone": "",
+			"phone@2": "",
+			"tablet": "",
+			"tablet@2": ""
+		},
+		"deviceTypes": {
+			"desktop": true,
+			"tablet": true,
+			"phone": true
+		}
+	},
+	"sap.ui5": {
+		"flexEnabled": true,
+		"config": {
+			"fullWidth": true
+		},
+		"rootView": {
+			"viewName": "com.evorait.evosuite.evoorderrelate.view.App",
+			"type": "XML",
+			"async": true,
+			"id": "App"
+		},
+		"dependencies": {
+			"minUI5Version": "1.65.6",
+			"libs": {
+				"sap.ui.layout": {},
+				"sap.ui.core": {},
+				"sap.m": {}
+			}
+		},
+		"contentDensities": {
+			"compact": true,
+			"cozy": true
+		},
+		"models": {
+			"i18n": {
+				"type": "sap.ui.model.resource.ResourceModel",
+				"settings": {
+					"bundleName": "com.evorait.evosuite.evoorderrelate.i18n.i18n"
+				}
+			},
+			"": {
+				"type": "sap.ui.model.odata.v2.ODataModel",
+				"dataSource": "mainService",
+				"settings": {
+					"defaultBindingMode": "TwoWay"
+				}
+			},
+			"OrderOperation": {
+				"type": "sap.ui.model.odata.v2.ODataModel",
+				"dataSource": "mainService",
+				"settings": {
+					"defaultBindingMode": "TwoWay"
+				}
+			},
+			"@i18n": {
+				"type": "sap.ui.model.resource.ResourceModel",
+				"uri": "i18n/i18n.properties"
+			}
+		},
+		"resources": {
+			"css": [{
+				"uri": "assets/css/style.css"
+			}],
+			"js": [{
+				"uri": "assets/js/url-search-params.min.js"
+			}, {
+				"uri": "assets/js/moment-with-locales.min.js"
+			}]
+		},
+		"routing": {
+			"config": {
+				"routerClass": "sap.m.routing.Router",
+				"viewType": "XML",
+				"viewPath": "com.evorait.evosuite.evoorderrelate.view",
+				"controlAggregation": "pages",
+				"controlId": "appPanel",
+				"clearControlAggregation": false,
+				"bypassed": {
+					"target": [
+						"splitNavigation"
+					]
+				},
+				"async": true
+			},
+			"routes": [{
+				"name": "ManageDependencies",
+				"pattern": "",
+				"target": [
+					"Dependencies",
+					"OrderTable"
+				]
+			}],
+			"targets": {
+				"splitNavigation": {
+					"viewType": "XML",
+					"viewName": "SplitView",
+					"viewLevel": 1,
+					"controlId": "appPanel",
+					"viewId": "EvoOrderRelateSplitNavi"
+				},
+				"Dependencies": {
+					"viewType": "XML",
+					"viewName": "Dependencies",
+					"viewLevel": 2,
+					"controlId": "topPanel",
+					"parent": "splitNavigation",
+					"viewId": "EvoOrderRelateDependencies"
+				},
+				"OrderTable": {
+					"viewType": "XML",
+					"viewName": "OrderTable",
+					"viewLevel": 2,
+					"controlId": "bottomPanel",
+					"parent": "splitNavigation",
+					"viewId": "EvoOrderOrderTable"
+				},
+				"GanttTable": {
+					"viewType": "XML",
+					"viewName": "GanttTable",
+					"viewId": "EvoOrderRelateGantt"
+				}
+			}
+		}
+	},
+	"sap.platform.abap": {
+		"uri": "/sap/bc/ui5_ui5/evora/eor_ui5/webapp",
+		"_version": "1.1.0"
+	},
+	"sap.platform.hcp": {
+		"uri": "webapp",
+		"_version": "1.1.0"
+	}
 }
