@@ -20,6 +20,6 @@ builder:
           name: /EVORA/EOR_UI5
           description: EvoOrderRelate Deployment
           package: /EVORA/EOR_UI_UI5
-          transport: ED1K919634
+          transport: ED1K919128
         exclude:
           - /test/
