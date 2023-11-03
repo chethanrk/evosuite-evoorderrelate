@@ -13,6 +13,7 @@ sap.ui.define([
 		},
 
 		oViewModel: null,
+		sNetworkid: null,
 
 		/**
 		 * Called when a controller is instantiated and its View controls (if available) are already created.
@@ -75,9 +76,9 @@ sap.ui.define([
 		 */
 		_afterBindSuccess: function () {
 			this.oViewModel.setProperty("/busy", false);
-			if (this.networkid){
+			if (this.sNetworkid){
 				this.eventBus.publish("GanttTable", "refreshGantt", {
-					networkid:this.networkid
+					networkid:this.sNetworkid
 				});
 			}
 		},
