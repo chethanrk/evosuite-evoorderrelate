@@ -113,10 +113,12 @@ sap.ui.define([
 			this.oViewModel = this.getModel("viewModel");
 			this.oGanttModel = this.getModel("ganttModel");
 			this.oNetworkSelection = this.getView().byId("idNetworkKey");
+			this.oRouter = this.getRouter();
 
 			var eventBus = sap.ui.getCore().getEventBus();
 			//Binnding has changed in TemplateRenderController.js
 			eventBus.subscribe("TemplateRendererNetworkOperation", "changedBinding", this._changedBinding, this);
+			eventBus.subscribe("GanttTable", "refreshGantt", this._refreshGantt, this);
 		},
 
 		onAfterRendering: function (oEvent) {
@@ -460,7 +462,10 @@ sap.ui.define([
 				var successFn = function () {
 					this.refreshGanttModel(deepClone(this.oBackupData));
 					this.oViewModel.setProperty("/pendingChanges", false);
-					this._getGanttdata(svalue);
+					// this._getGanttdata(svalue);
+					this.oRouter.navTo("ManageDependencies",{
+						networkid:svalue
+					});
 				};
 				var errorFn = function () {
 					var sNetworkKey = this.oBackupData.NETWORK_KEY;
@@ -470,7 +475,10 @@ sap.ui.define([
 				this.showConfirmDialog(sTitle, sMsg, successFn.bind(this), errorFn.bind(this));
 			} else {
 				oEvent.getSource().setValue(svalue);
-				this._getGanttdata(svalue);
+				// this._getGanttdata(svalue);
+				this.oRouter.navTo("ManageDependencies",{
+					networkid:svalue
+				});
 			}
 		},
 
@@ -695,6 +703,12 @@ sap.ui.define([
 					this.oViewModel.setProperty("/ganttSettings/visibleStartTime", oStartDate);
 					this.oViewModel.setProperty("/ganttSettings/visibleEndTime", sEndDate);
 				}
+			}
+		},
+		_refreshGantt: function(sChannel, sEvent, oData){
+			if (oData){
+				this.oNetworkSelection.setValue(oData.networkid);
+				this._getGanttdata(oData.networkid);
 			}
 		}
 	});

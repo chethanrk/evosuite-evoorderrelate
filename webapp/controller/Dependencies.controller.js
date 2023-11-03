@@ -21,6 +21,7 @@ sap.ui.define([
 		 */
 		onInit: function () {
 			this.oViewModel = this.getModel("viewModel");
+			this.eventBus = sap.ui.getCore().getEventBus();
 
 			var oRouter = this.getRouter();
 
@@ -29,8 +30,11 @@ sap.ui.define([
 					this.oViewModel.setProperty("/bDependencyPageRouteMatchAttached", true);
 
 					var sRouteName = oEvent.getParameter("name"),
+						sNetworkId = oEvent.getParameter("arguments").networkid,
 						sViewName = null;
-
+					if (sNetworkId){
+						this.sNetworkid = sNetworkId;
+					}
 					this.getOwnerComponent().oTemplatePropsProm.then(function () {
 						//route for page gantt view
 						if (sRouteName === "ManageDependencies") {
@@ -71,6 +75,11 @@ sap.ui.define([
 		 */
 		_afterBindSuccess: function () {
 			this.oViewModel.setProperty("/busy", false);
+			if (this.networkid){
+				this.eventBus.publish("GanttTable", "refreshGantt", {
+					networkid:this.networkid
+				});
+			}
 		},
 
 		/**
