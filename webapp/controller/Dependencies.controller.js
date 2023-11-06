@@ -32,6 +32,7 @@ sap.ui.define([
 
 					var sRouteName = oEvent.getParameter("name"),
 						sViewName = null;
+					// this.sNetworkId will store the selected Network
 					this.sNetworkId = oEvent.getParameter("arguments").networkid;
 					this.getOwnerComponent().oTemplatePropsProm.then(function () {
 						//route for page gantt view

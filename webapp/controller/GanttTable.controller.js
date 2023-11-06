@@ -462,7 +462,6 @@ sap.ui.define([
 				var successFn = function () {
 					this.refreshGanttModel(deepClone(this.oBackupData));
 					this.oViewModel.setProperty("/pendingChanges", false);
-					// this._getGanttdata(svalue);
 					this.oRouter.navTo("ManageDependencies",{
 						networkid:svalue
 					});
@@ -475,7 +474,6 @@ sap.ui.define([
 				this.showConfirmDialog(sTitle, sMsg, successFn.bind(this), errorFn.bind(this));
 			} else {
 				oEvent.getSource().setValue(svalue);
-				// this._getGanttdata(svalue);
 				this.oRouter.navTo("ManageDependencies",{
 					networkid:svalue
 				});
@@ -705,6 +703,12 @@ sap.ui.define([
 				}
 			}
 		},
+		/**
+		 * Event Bus - This event bus will refresh the gantt chart with the selected Network
+		 * @param { string } sChannel - Event Bus channel name 
+		 * @param { string } sEvent - Event Bus event name
+		 * @param { object } oData - Data passed the Event Bus
+		 */
 		_refreshGantt: function(sChannel, sEvent, oData){
 			if (oData){
 				this.oNetworkSelection.setValue(oData.networkid);
