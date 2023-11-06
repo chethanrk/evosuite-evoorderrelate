@@ -13,7 +13,7 @@ sap.ui.define([
 		},
 
 		oViewModel: null,
-		sNetworkid: null,
+		sNetworkId: null,
 
 		/**
 		 * Called when a controller is instantiated and its View controls (if available) are already created.
@@ -31,11 +31,8 @@ sap.ui.define([
 					this.oViewModel.setProperty("/bDependencyPageRouteMatchAttached", true);
 
 					var sRouteName = oEvent.getParameter("name"),
-						sNetworkId = oEvent.getParameter("arguments").networkid,
 						sViewName = null;
-					if (sNetworkId){
-						this.sNetworkid = sNetworkId;
-					}
+					this.sNetworkId = oEvent.getParameter("arguments").networkid;
 					this.getOwnerComponent().oTemplatePropsProm.then(function () {
 						//route for page gantt view
 						if (sRouteName === "ManageDependencies") {
@@ -76,9 +73,9 @@ sap.ui.define([
 		 */
 		_afterBindSuccess: function () {
 			this.oViewModel.setProperty("/busy", false);
-			if (this.sNetworkid){
+			if (this.sNetworkId){
 				this.eventBus.publish("GanttTable", "refreshGantt", {
-					networkid:this.sNetworkid
+					networkid:this.sNetworkId
 				});
 			}
 		},
