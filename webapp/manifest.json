@@ -126,7 +126,7 @@
 			},
 			"routes": [{
 				"name": "ManageDependencies",
-				"pattern": "",
+				"pattern": ":networkid:",
 				"target": [
 					"Dependencies",
 					"OrderTable"

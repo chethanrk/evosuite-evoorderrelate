@@ -13,6 +13,7 @@ sap.ui.define([
 		},
 
 		oViewModel: null,
+		sNetworkId: null,
 
 		/**
 		 * Called when a controller is instantiated and its View controls (if available) are already created.
@@ -21,6 +22,7 @@ sap.ui.define([
 		 */
 		onInit: function () {
 			this.oViewModel = this.getModel("viewModel");
+			this.eventBus = sap.ui.getCore().getEventBus();
 
 			var oRouter = this.getRouter();
 
@@ -30,7 +32,8 @@ sap.ui.define([
 
 					var sRouteName = oEvent.getParameter("name"),
 						sViewName = null;
-
+					// this.sNetworkId will store the selected Network
+					this.sNetworkId = oEvent.getParameter("arguments").networkid;
 					this.getOwnerComponent().oTemplatePropsProm.then(function () {
 						//route for page gantt view
 						if (sRouteName === "ManageDependencies") {
@@ -71,6 +74,11 @@ sap.ui.define([
 		 */
 		_afterBindSuccess: function () {
 			this.oViewModel.setProperty("/busy", false);
+			if (this.sNetworkId){
+				this.eventBus.publish("GanttTable", "refreshGantt", {
+					networkid:this.sNetworkId
+				});
+			}
 		},
 
 		/**
