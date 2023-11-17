@@ -72,7 +72,11 @@ sap.ui.define([
 				},
 				draggedData: null,
 				logoUrl: sap.ui.require.toUrl("com/evorait/evosuite/evoorderrelate/assets/img/EvoOrderRelate.png"),
-				validateIW32Auth: true
+				validateIW32Auth: true,
+				sDatePattern: "",
+				sDateTimePattern: "",
+				sTimePattern: "",
+				sTimePatternCode: ""
 			};
 			this.setModel(models.createHelperModel(viewModelObj), "viewModel");
 			this.setModel(models.createGanttModel(), "ganttModel");
@@ -221,6 +225,7 @@ sap.ui.define([
 				this.readData("/SystemInformationSet", []).then(function (oData) {
 					this.getModel("user").setData(oData.results[0]);
 					resolve(oData.results[0]);
+					this.fnSetDefaultDateTimePattern(oData.results[0]);
 				}.bind(this));
 			}.bind(this));
 		},
@@ -290,6 +295,29 @@ sap.ui.define([
 			if (bPMAuth) {
 				this.getModel("viewModel").setProperty("/validateIW32Auth", Boolean(bIW32Auth));
 			}
+		},
+
+		/**
+		 * Function to set Default date and time pattern in global models and it's properties
+		 * @param {object} oDefaultData
+		 */
+		fnSetDefaultDateTimePattern: function (oDefaultData) {
+			var oLocale, oDateFormat, oDateTimeFormat, oTimeFormat;
+			
+			if(!oDefaultData.ENABLE_READ_FIORI_FORMAT && sap.ushell?.cloudServices) {
+				oLocale = new sap.ui.core.Locale(sap.ui.getCore().getConfiguration().getLanguage()),
+				oDateFormat = sap.ui.core.format.DateFormat.getDateInstance({ style: "medium" }, oLocale).oFormatOptions['pattern'],
+				oDateTimeFormat = sap.ui.core.format.DateFormat.getDateTimeInstance({ style: "medium" }, oLocale).oFormatOptions['pattern'],
+				oTimeFormat = sap.ui.core.format.DateFormat.getTimeInstance({ style: "medium" }, oLocale).oFormatOptions['pattern'];
+			} else {				
+				oDateFormat = oDefaultData.DEFAULT_DATE_FORMAT,
+				oTimeFormat = Constants.TIMEFORMATS[oDefaultData.DEFAULT_TIME_FORMAT],
+				oDateTimeFormat = oDateFormat + ', ' + oTimeFormat;
+			}
+			this.getModel("viewModel").setProperty("/sDatePattern", oDateFormat);
+			this.getModel("viewModel").setProperty("/sTimePattern", oTimeFormat);
+			this.getModel("viewModel").setProperty("/sDateTimePattern", oDateTimeFormat);
+			this.getModel("viewModel").setProperty("/sTimePatternCode", oDefaultData.DEFAULT_TIME_FORMAT);
 		}
 	});
 });
