@@ -311,8 +311,8 @@ sap.ui.define([
 				oDateTimeFormat = sap.ui.core.format.DateFormat.getDateTimeInstance({ style: "medium" }, oLocale).oFormatOptions['pattern'],
 				oTimeFormat = sap.ui.core.format.DateFormat.getTimeInstance({ style: "medium" }, oLocale).oFormatOptions['pattern'];
 			} else {				
-				oDateFormat = oDefaultData.DEFAULT_DATE_FORMAT,
-				oTimeFormat = Constants.TIMEFORMATS[oDefaultData.DEFAULT_TIME_FORMAT], //set time format through constants based on time format code
+				oDateFormat = Constants.DATEFORMATS[oDefaultData.DEFAULT_DATE_FORMAT], //Set DateFomat through Constants based on date format code
+				oTimeFormat = Constants.TIMEFORMATS[oDefaultData.DEFAULT_TIME_FORMAT], //Set TimeFormat through constants based on time format code
 				oDateTimeFormat = oDateFormat + ', ' + oTimeFormat;
 			}
 			//set default date pattern to viewModel
